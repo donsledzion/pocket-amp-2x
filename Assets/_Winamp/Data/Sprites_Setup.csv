@@ -1,0 +1,44 @@
+bmp,element,width,height,states
+CBUTTONS.BMP,Prev,23,18,normal|pressed
+CBUTTONS.BMP,Play,23,18,normal|pressed
+CBUTTONS.BMP,Pause,23,18,normal|pressed
+CBUTTONS.BMP,Stop,23,18,normal|pressed
+CBUTTONS.BMP,Next,23,18,normal|pressed
+CBUTTONS.BMP,Eject,22,16,normal|pressed
+SHUFREP.BMP,Shuffle,47,15,off|on|pressed
+SHUFREP.BMP,Repeat,28,15,off|on|pressed
+SHUFREP.BMP,EQ,23,12,off|on|pressed
+SHUFREP.BMP,PL,23,12,off|on|pressed
+POSBAR.BMP,Position Bar BG,248,10,static
+POSBAR.BMP,Position Knob,29,10,normal|pressed
+VOLUME.BMP,Volume Bar BG,65,13,level_0-27
+VOLUME.BMP,Volume Knob,14,11,normal|pressed
+BALANCE.BMP,Balance Bar BG,38,13,left-center-right
+BALANCE.BMP,Balance Knob,14,11,normal|pressed
+MONOSTER.BMP,Stereo,29,12,off|on
+MONOSTER.BMP,Mono,27,12,off|on
+PLAYPAUS.BMP,Play Symbol,8,9,play
+PLAYPAUS.BMP,Pause Symbol,9,9,pause
+PLAYPAUS.BMP,Stop Symbol,9,9,stop
+PLAYPAUS.BMP,Separator,2,9,static
+PLAYPAUS.BMP,Net Indicator,3,9,idle|active
+NUMBERS.BMP,Digits,9,13,0-9
+NUMBERS.BMP,Blank,9,13,blank
+NUMS_EX.BMP,Digits,9,13,0-9
+NUMS_EX.BMP,Blank,9,13,blank
+NUMS_EX.BMP,Minus,9,13,minus
+TEXT.BMP,Glyph,5,6,charset
+EQMAIN.BMP,EQ Slider Slot,14,63,positions
+EQMAIN.BMP,EQ Slider Knob,11,11,normal|pressed
+EQMAIN.BMP,EQ OnOff,25,12,off|on
+EQMAIN.BMP,Auto Button,33,12,off|on
+EQMAIN.BMP,Presets Button,44,12,normal|pressed
+EQMAIN.BMP,EQ WindowShade,275,14,static
+EQ_EX.BMP,Volume Slider Track,97,7,static
+EQ_EX.BMP,Balance Slider Track,42,7,static
+EQ_EX.BMP,VolumeBalance Knob,3,7,positions
+EQ_EX.BMP,Small Button,9,9,normal|pressed
+TITLEBAR.BMP,Titlebar Focused,275,14,focused
+TITLEBAR.BMP,Titlebar Unfocused,275,14,unfocused
+TITLEBAR.BMP,Shade Mode Bar,275,14,shaded
+MAIN.BMP,Main Background,275,102,static
