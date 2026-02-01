@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using SimpleFileBrowser;
 
 namespace SoftAware
 {
@@ -11,6 +13,7 @@ namespace SoftAware
         [SerializeField] private Main panelMain;
         private AudioSource audioSource;
         private AudioClip currentClip => playlist.CurrentClip;
+        private Coroutine autoPlayNextClipCoroutine;
 
         private void Awake()
         {
@@ -30,14 +33,45 @@ namespace SoftAware
             panelMain.PauseButton.onClick.AddListener(Pause);
             panelMain.StopButton.onClick.AddListener(Stop);
             panelMain.NextButton.onClick.AddListener(PlayNext);
+            panelMain.EjectButton.onClick.AddListener(PickFolder);
+        }
+
+        private void PickFolder()
+        {
+            // SimpleFileBrowser supports folder selection and works on Windows/Android
+            FileBrowser.ShowLoadDialog((paths) =>
+            {
+                if (paths != null && paths.Length > 0)
+                {
+                    Debug.Log("Picked folder: " + paths[0]);
+                    playlist.AddDirectory(paths[0]);
+                }
+            }, 
+            null, 
+            FileBrowser.PickMode.Folders, 
+            false, 
+            null, 
+            null, 
+            "Select Audio Folder", 
+            "Select");
+        }
+
+        private IEnumerator PlayNextClipCoroutine()
+        {
+            yield return new WaitUntil(() => audioSource.isPlaying);
+            yield return new WaitUntil(() => !audioSource.isPlaying);
+            PlayNext();
         }
 
         private void Play()
         {
+            if(autoPlayNextClipCoroutine != null)
+                StopCoroutine(autoPlayNextClipCoroutine);
             if(!currentClip)
                 Debug.LogWarning("Missing currentClip!");
             audioSource.clip = currentClip;
             audioSource.Play();
+            autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
         }
 
         private void PlayNext()
@@ -70,6 +104,8 @@ namespace SoftAware
         private void Stop()
         {
             if(!audioSource.isPlaying) return;
+            if(autoPlayNextClipCoroutine != null)
+                StopCoroutine(autoPlayNextClipCoroutine);
             audioSource.Stop();
         }
         

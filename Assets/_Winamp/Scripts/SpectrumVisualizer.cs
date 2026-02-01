@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace SoftAware
 {
-    public class WinampVisualizer : MonoBehaviour, IPointerClickHandler
+    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler
     {
         public enum VisMode { Spectrum, Waveform }
 
@@ -16,10 +16,17 @@ namespace SoftAware
         [SerializeField] private VisMode currentMode = VisMode.Spectrum;
         [SerializeField] private int spectrumBars = 19; // Winamp has about 19-32 bars depending on scaling, 76/4 = 19
 
+        [Header("Peaks")]
+        [SerializeField] private bool showPeaks = true;
+        [SerializeField] private float peakFallSpeed = 0.5f;
+        [SerializeField] private float peakHoldTime = 0.1f;
+
         private Texture2D visualizerTexture;
         private Color[] palette;
         private float[] spectrumData = new float[512];
         private float[] waveformData = new float[512];
+        private float[] peakHeights;
+        private float[] peakTimers;
         private Color colorTransparent;
 
         private const int Width = 76;
@@ -29,6 +36,8 @@ namespace SoftAware
         {
             InitializePalette();
             CreateTexture();
+            peakHeights = new float[spectrumBars];
+            peakTimers = new float[spectrumBars];
         }
 
         private void InitializePalette()
@@ -85,6 +94,7 @@ namespace SoftAware
         {
             if (audioSource == null || !audioSource.isPlaying)
             {
+                UpdatePeaks(null);
                 ClearTexture();
                 visualizerTexture.Apply();
                 return;
@@ -103,18 +113,17 @@ namespace SoftAware
         private void DrawSpectrum()
         {
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+            UpdatePeaks(spectrumData);
 
             int barWidth = Width / spectrumBars;
             for (int i = 0; i < spectrumBars; i++)
             {
-                // Simple log-ish scaling for spectrum
-                float val = spectrumData[i + 1] * 20f; // Scale up
+                float val = spectrumData[i + 1] * 20f;
                 int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
+                // Draw bar
                 for (int y = 0; y < barHeight; y++)
                 {
-                    // Map y to palette colors 2 (top) to 17 (bottom)
-                    // Winamp top is color 2, bottom is 17
                     int colorIdx = 17 - y; 
                     if (colorIdx < 2) colorIdx = 2;
 
@@ -123,6 +132,43 @@ namespace SoftAware
                         visualizerTexture.SetPixel(i * barWidth + x, y, palette[colorIdx]);
                     }
                 }
+
+                // Draw peak
+                if (showPeaks)
+                {
+                    int peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
+                    for (int x = 0; x < barWidth - 1; x++)
+                    {
+                        visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
+                    }
+                }
+            }
+        }
+
+        private void UpdatePeaks(float[] data)
+        {
+            for (int i = 0; i < spectrumBars; i++)
+            {
+                float val = (data != null) ? data[i + 1] * 20f : 0;
+                
+                if (val >= peakHeights[i])
+                {
+                    peakHeights[i] = val;
+                    peakTimers[i] = peakHoldTime;
+                }
+                else
+                {
+                    if (peakTimers[i] > 0)
+                    {
+                        peakTimers[i] -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        peakHeights[i] -= peakFallSpeed * Time.deltaTime;
+                    }
+                }
+
+                peakHeights[i] = Mathf.Clamp(peakHeights[i], 0, 1f);
             }
         }
 
