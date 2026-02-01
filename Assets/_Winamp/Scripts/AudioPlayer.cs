@@ -23,6 +23,10 @@ namespace SoftAware
 
         private void Start()
         {
+            Application.runInBackground = true;
+            // Prevent Unity from pausing audio when pulling down the notification bar
+            AudioListener.pause = false; 
+
             BindButtons();
         }
 
@@ -31,14 +35,13 @@ namespace SoftAware
             panelMain.PrevButton.onClick.AddListener(PlayPrevious);
             panelMain.PlayButton.onClick.AddListener(Play);
             panelMain.PauseButton.onClick.AddListener(Pause);
-            panelMain.StopButton.onClick.AddListener(Stop);
+            panelMain.StopButton.onClick.AddListener(StopPlayback);
             panelMain.NextButton.onClick.AddListener(PlayNext);
             panelMain.EjectButton.onClick.AddListener(PickFolder);
         }
 
         private void PickFolder()
         {
-            // SimpleFileBrowser supports folder selection and works on Windows/Android
             FileBrowser.ShowLoadDialog((paths) =>
             {
                 if (paths != null && paths.Length > 0)
@@ -67,46 +70,68 @@ namespace SoftAware
         {
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
+            
             if(!currentClip)
+            {
                 Debug.LogWarning("Missing currentClip!");
+                return;
+            }
+
             audioSource.clip = currentClip;
             audioSource.Play();
             autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
+            UpdateNotification();
         }
 
         private void PlayNext()
         {
-            Stop();
+            audioSource.Stop();
             playlist.GetNextClip();
             Play();
         }
 
         private void PlayPrevious()
         {
-            Stop();
+            audioSource.Stop();
             playlist.GetPreviousClip();
             Play();
         }
 
         private void Pause()
         {
-            if(!audioSource.isPlaying)
+            if(audioSource.isPlaying)
+                audioSource.Pause();
+            else if (audioSource.clip != null)
                 audioSource.UnPause();
-            audioSource.Pause();
+            
+            UpdateNotification();
         }
 
-        private void Unpause()
+        public void StopPlayback()
         {
-            if (audioSource.isPlaying) return;
-            audioSource.UnPause();
-        }
-
-        private void Stop()
-        {
-            if(!audioSource.isPlaying) return;
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
             audioSource.Stop();
+            AndroidMediaBridge.StopService();
+        }
+
+        private void UpdateNotification()
+        {
+            if (currentClip != null)
+            {
+                AndroidMediaBridge.UpdateMetadata(currentClip.name, "Winamp Android", audioSource.isPlaying);
+            }
+        }
+
+        // --- Native Callbacks (called from Java via UnitySendMessage) ---
+        public void OnNativePlay() { Play(); }
+        public void OnNativePause() { Pause(); }
+        public void OnNativeNext() { PlayNext(); }
+        public void OnNativePrev() { PlayPrevious(); }
+
+        private void OnApplicationQuit()
+        {
+            AndroidMediaBridge.StopService();
         }
         
         

@@ -101,7 +101,7 @@ namespace SoftAware
 
         private IEnumerator LoadDirectoryCoroutine(string path)
         {
-            LogDebug("Starting GetEntriesInDirectory...");
+            LogDebug("Scanning folder...", false);
             FileSystemEntry[] entries = null;
             try 
             {
@@ -119,26 +119,27 @@ namespace SoftAware
                 yield break;
             }
 
-            LogDebug($"ENTRIES COUNT: {entries.Length}");
+            LogDebug($"FOUND: {entries.Length} entries.");
 
-            int loopCount = 0;
+            int validAudioFound = 0;
             foreach (FileSystemEntry entry in entries)
             {
-                loopCount++;
                 if (entry.IsDirectory) continue;
 
-                // Defensive extension check without using System.IO.Path on potentially weird strings
                 string entryName = entry.Name.ToLower();
                 if (entryName.EndsWith(".mp3") || entryName.EndsWith(".wav") || entryName.EndsWith(".ogg"))
                 {
-                    LogDebug($"[#{loopCount}] TRIED: {entry.Name}");
-                    // Diagnostic step: Use StartCoroutine instead of yield return 
-                    // to see if the loop finishes even if loading hangs
-                    StartCoroutine(LoadAudioClip(entry.Path, entry.Name));
+                    validAudioFound++;
+                    LogDebug($"[#{validAudioFound}] Loading: {entry.Name}");
+                    
+                    // Sequential loading is more stable for Android file system (I/O)
+                    yield return LoadAudioClip(entry.Path, entry.Name);
+                    
+                    LogDebug($"Total Clips: {clips.Count}");
                 }
             }
 
-            LogDebug($"LOOP FINISHED: Processed {loopCount} entries.");
+            LogDebug($"FINISHED! Songs in playlist: {clips.Count}");
             yield break;
         }
 
