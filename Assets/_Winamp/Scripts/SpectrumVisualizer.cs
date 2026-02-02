@@ -92,6 +92,11 @@ namespace SoftAware
 
         private void Update()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // On Android, we don't use audioSource.isPlaying because we play natively
+            // We'll check if any music is loaded/playing via ANAMusic later, 
+            // but for now let's just draw if possible.
+#else
             if (audioSource == null || !audioSource.isPlaying)
             {
                 UpdatePeaks(null);
@@ -99,6 +104,7 @@ namespace SoftAware
                 visualizerTexture.Apply();
                 return;
             }
+#endif
 
             ClearTexture();
 
@@ -112,7 +118,11 @@ namespace SoftAware
 
         private void DrawSpectrum()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            spectrumData = AndroidVisualizerBridge.GetFFTData(512);
+#else
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+#endif
             UpdatePeaks(spectrumData);
 
             int barWidth = Width / spectrumBars;
@@ -174,7 +184,11 @@ namespace SoftAware
 
         private void DrawWaveform()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            waveformData = AndroidVisualizerBridge.GetWaveformData(512);
+#else
             audioSource.GetOutputData(waveformData, 0);
+#endif
 
             for (int x = 0; x < Width; x++)
             {

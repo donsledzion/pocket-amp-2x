@@ -27,11 +27,17 @@ namespace SoftAware
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
+        private static Playlist instance;
         
         private int currentIndex;
         internal SongInfo CurrentSong => songs.Count > 0 ? songs[currentIndex] : null;
         internal AudioClip CurrentClip => CurrentSong?.Clip;
         internal int Count => songs.Count;
+
+        private void Awake()
+        {
+            instance = this;
+        }
 
         private void Start()
         {
@@ -63,10 +69,11 @@ namespace SoftAware
 
             string audioPerm = "android.permission.READ_MEDIA_AUDIO";
             string storagePerm = Permission.ExternalStorageRead;
+            string micPerm = "android.permission.RECORD_AUDIO";
 
             if (Application.platform == RuntimePlatform.Android)
             {
-                // Request both permissions if they are not granted
+                // Request permissions if they are not granted
                 if (!Permission.HasUserAuthorizedPermission(audioPerm))
                 {
                     LogDebug("Requesting MediaAudio...");
@@ -77,6 +84,12 @@ namespace SoftAware
                 {
                     LogDebug("Requesting StorageRead...");
                     Permission.RequestUserPermission(storagePerm);
+                }
+                
+                if (!Permission.HasUserAuthorizedPermission(micPerm))
+                {
+                    LogDebug("Requesting RecordAudio (for visualizer)...");
+                    Permission.RequestUserPermission(micPerm);
                 }
 
                 // Poll for permission status (up to 10 seconds)
@@ -100,6 +113,12 @@ namespace SoftAware
             }
             #endif
             yield break;
+        }
+
+        public static void Log(string message)
+        {
+            if (instance != null) instance.LogDebug(message);
+            else Debug.Log("[PlaylistStatic] " + message);
         }
 
         private void LogDebug(string message, bool append = true)

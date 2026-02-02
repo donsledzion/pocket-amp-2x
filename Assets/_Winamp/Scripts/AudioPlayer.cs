@@ -99,6 +99,9 @@ namespace SoftAware
                 // Load file using absolute path (direct access)
                 currentMusicID = ANAMusic.load(currentSong.FilePath, false, false, (id) => 
                 {
+                    // Start visualizer after a short delay on the main thread
+                    StartCoroutine(InitVisualizerDelayed(id));
+
                     ANAMusic.play(id, (finishedID) => 
                     {
                         // Automatic song progression
@@ -204,6 +207,17 @@ namespace SoftAware
         public void OnNativePause() { Pause(); }
         public void OnNativeNext() { PlayNext(); }
         public void OnNativePrev() { PlayPrevious(); }
+
+        private IEnumerator InitVisualizerDelayed(int sessionId)
+        {
+            // Give Android a moment to activate the audio session
+            yield return new WaitForSeconds(0.5f);
+            
+            // For debugging: Force TestMode to true to see if UI can even render bars
+            // AndroidVisualizerBridge.TestMode = true; 
+            
+            AndroidVisualizerBridge.Initialize(sessionId);
+        }
 
         private void OnApplicationQuit()
         {
