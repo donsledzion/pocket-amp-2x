@@ -92,16 +92,30 @@ public static class ANAMusic
 	}
 
 
-	public static int load(string audioFile, bool usePersistentDataPath = false, bool loadAsync = false, Action<int> loadedCallback = null, bool playInBackground = false)
+	public static int load(string audioFile, bool usePersistentDataPath = false, bool loadAsync = false, Action<int> loadedCallback = null, bool playInBackground = false, bool isAbsolutePath = false)
 	{
 		if (DEBUG)
-			Debug.Log(_logPrefix + "load(\"" + audioFile + "\", " + usePersistentDataPath + ", " + loadAsync + ", " + loadedCallback + ", " + playInBackground + ")");
+			Debug.Log(_logPrefix + "load(\"" + audioFile + "\", " + usePersistentDataPath + ", " + loadAsync + ", " + loadedCallback + ", " + playInBackground + ", " + isAbsolutePath + ")");
 
 		var mediaPlayer = new AndroidJavaObject("android.media.MediaPlayer");
 
 		mediaPlayer.Call("setAudioStreamType", _streamMusic);
 
-		if (usePersistentDataPath)
+		if (isAbsolutePath)
+		{
+			if (audioFile.StartsWith("content://"))
+			{
+				var uriClass = new AndroidJavaClass("android.net.Uri");
+				var uriObject = uriClass.CallStatic<AndroidJavaObject>("parse", audioFile);
+				var context = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+				mediaPlayer.Call("setDataSource", context, uriObject);
+			}
+			else
+			{
+				mediaPlayer.Call("setDataSource", audioFile);
+			}
+		}
+		else if (usePersistentDataPath)
 			mediaPlayer.Call("setDataSource", Path.Combine(Application.persistentDataPath, audioFile));
 		else
 		{
@@ -352,9 +366,9 @@ public static class ANAMusic
 	/// <param name="loadedCallback">If given, the method to call when the load is complete.  Must take one int parameter which is the loaded music ID.</param>
 	/// <param name="playInBackground">If true, the music will continue playing when the game is not active.  If false, the music will be paused when the game is not active and resumed when it becomes active again.</param>
 	/// <returns>The ID of the loaded music.</returns>
-	public static int load(string audioFile, bool usePersistentDataPath = false, bool loadAsync = false, Action<int> loadedCallback = null, bool playInBackground = false)
+	public static int load(string audioFile, bool usePersistentDataPath = false, bool loadAsync = false, Action<int> loadedCallback = null, bool playInBackground = false, bool isAbsolutePath = false)
 	{
-		Debug.Log(_logPrefix + "load(\"" + audioFile + "\", " + usePersistentDataPath + ", " + loadAsync + ", " + loadedCallback + ", " + playInBackground + ")");
+		Debug.Log(_logPrefix + "load(\"" + audioFile + "\", " + usePersistentDataPath + ", " + loadAsync + ", " + loadedCallback + ", " + playInBackground + ", " + isAbsolutePath + ")");
 		return 1;
 	}
 

@@ -96,15 +96,15 @@ namespace SoftAware
                     currentMusicID = -1;
                 }
 
-                // Load file from persistent cache path (or where it was saved in Playlist)
-                currentMusicID = ANAMusic.load(currentSong.FilePath, true, false, (id) => 
+                // Load file using absolute path (direct access)
+                currentMusicID = ANAMusic.load(currentSong.FilePath, false, false, (id) => 
                 {
                     ANAMusic.play(id, (finishedID) => 
                     {
                         // Automatic song progression
                         PlayNext();
                     });
-                }, true); // playInBackground = true
+                }, true, true); // playInBackground = true, isAbsolutePath = true
             }
             else
             {

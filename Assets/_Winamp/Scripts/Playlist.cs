@@ -157,10 +157,23 @@ namespace SoftAware
                 if (entryName.EndsWith(".mp3") || entryName.EndsWith(".wav") || entryName.EndsWith(".ogg"))
                 {
                     validAudioFound++;
-                    LogDebug($"[#{validAudioFound}] Loading: {entry.Name}");
+                    LogDebug($"[#{validAudioFound}] Adding: {entry.Name}");
                     
-                    // Sequential loading is more stable for Android file system (I/O)
-                    yield return LoadAudioClip(entry.Path, entry.Name);
+                    if (Application.platform == RuntimePlatform.Android)
+                    {
+                        // FAST PATH: Just add to list without loading the whole audio into memory
+                        songs.Add(new SongInfo 
+                        { 
+                            Title = entry.Name, 
+                            Clip = null, // We'll load this only if needed (e.g. for editor/viz)
+                            FilePath = entry.Path 
+                        });
+                    }
+                    else
+                    {
+                        // Editor/Desktop: Still load the clip for preview/viz
+                        yield return LoadAudioClip(entry.Path, entry.Name);
+                    }
                     
                     LogDebug($"Total Songs: {songs.Count}");
                 }
@@ -184,23 +197,17 @@ namespace SoftAware
 
             if (Application.platform == RuntimePlatform.Android)
             {
-                // Use persistentDataPath for ANA compatibility
-                string cachePath = Path.Combine(Application.persistentDataPath, fileName);
-                
-                LogDebug($"> Copying to cache...");
-                
-                // FileBrowserHelpers.CopyFile returns void in some versions
-                FileBrowserHelpers.CopyFile(filePath, cachePath);
-                
-                if (File.Exists(cachePath))
+                // SimpleFileBrowser handles content:// URIs in its helpers
+                if (FileBrowserHelpers.FileExists(filePath))
                 {
-                    LogDebug($"> Copy SUCCESS");
-                    // Store only the filename for Android relative to persistentDataPath
-                    finalUrl = "file:///" + cachePath.TrimStart('/');
+                    LogDebug($"> Path validated: {filePath}");
+                    finalUrl = filePath; // SimpleFileBrowser paths are usually ready for UWR
+                    if (!finalUrl.StartsWith("content://") && !finalUrl.StartsWith("file://"))
+                        finalUrl = "file:///" + finalUrl.TrimStart('/');
                 }
                 else
                 {
-                    LogDebug($"> <color=red>Copy FAILED!</color>");
+                    LogDebug($"> <color=red>File not found: {filePath}</color>");
                     yield break;
                 }
             }
@@ -225,17 +232,11 @@ namespace SoftAware
                     { 
                         Title = fileName, 
                         Clip = clip, 
-                        // For Android, store relative to persistentDataPath (as required by ANAMusic)
-                        // For Editor, store absolute path.
-                        FilePath = Application.platform == RuntimePlatform.Android ? 
-                                   fileName : filePath 
+                        // Now we store the absolute original path for both Android and Editor
+                        FilePath = filePath 
                     });
 
                     LogDebug($"<color=green>SUCCESS: {clip.name}</color>");
-                    
-                    // Note: We NO LONGER delete the cached file here, 
-                    // because ANAMusic needs it to play natively on Android.
-                    // We should cleanup on application quit or when removing from playlist.
                 }
                 else
                 {
@@ -267,22 +268,7 @@ namespace SoftAware
 
         private void OnApplicationQuit()
         {
-            // Cleanup cached files on exit
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                foreach (var song in songs)
-                {
-                    // Check if file is in persistentDataPath before deleting
-                    if (!string.IsNullOrEmpty(song.FilePath))
-                    {
-                        string fullPath = Path.Combine(Application.persistentDataPath, song.FilePath);
-                        if (File.Exists(fullPath))
-                        {
-                            try { File.Delete(fullPath); } catch { }
-                        }
-                    }
-                }
-            }
+            // No cleanup needed anymore since we don't copy files!
         }
     }
 }
