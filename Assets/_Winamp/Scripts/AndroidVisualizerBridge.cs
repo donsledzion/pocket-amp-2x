@@ -104,12 +104,9 @@ namespace SoftAware
                         float real = rawData[idx];
                         float imag = rawData[idx+1];
                         float magnitude = Mathf.Sqrt(real * real + imag * imag);
-                        result[i] = magnitude / 64f; 
-                        sum += (long)magnitude;
+                        result[i] = magnitude / 1024; // Reduced sensitivity
                     }
                 }
-                
-                if (Time.frameCount % 120 == 0) Playlist.Log($"[Viz] FFT Sum: {sum}");
             }
 #endif
             return result;
