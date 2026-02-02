@@ -12,8 +12,11 @@ namespace SoftAware
         [SerializeField] private Playlist playlist;
         [SerializeField] private Main panelMain;
         private AudioSource audioSource;
-        private AudioClip currentClip => playlist.CurrentClip;
+        private Playlist.SongInfo currentSong => playlist.CurrentSong;
+        private AudioClip currentClip => currentSong?.Clip;
         private Coroutine autoPlayNextClipCoroutine;
+        
+        private int currentMusicID = -1;
 
         private void Awake()
         {
@@ -61,9 +64,15 @@ namespace SoftAware
 
         private IEnumerator PlayNextClipCoroutine()
         {
+            // This coroutine is now primarily for non-Android platforms
+            // On Android, we use ANAMusic completion callback
+#if UNITY_ANDROID && !UNITY_EDITOR
+            yield break;
+#else
             yield return new WaitUntil(() => audioSource.isPlaying);
             yield return new WaitUntil(() => !audioSource.isPlaying);
             PlayNext();
+#endif
         }
 
         private void Play()
@@ -71,38 +80,70 @@ namespace SoftAware
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
             
-            if(!currentClip)
+            if(currentSong == null)
             {
-                Debug.LogWarning("Missing currentClip!");
+                Debug.LogWarning("Missing currentSong!");
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Native Android Playback
+            if (currentMusicID != -1)
+            {
+                ANAMusic.release(currentMusicID);
+                currentMusicID = -1;
+            }
+
+            // Load file from persistent cache path (or where it was saved in Playlist)
+            currentMusicID = ANAMusic.load(currentSong.FilePath, true, false, (id) => 
+            {
+                ANAMusic.play(id, (finishedID) => 
+                {
+                    // Automatic song progression
+                    PlayNext();
+                });
+            }, true); // playInBackground = true
+#else
+            // Standard Unity Playback
             audioSource.clip = currentClip;
             audioSource.Play();
             autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
+#endif
             UpdateNotification();
         }
 
         private void PlayNext()
         {
+            StopNativeIfRunning();
             audioSource.Stop();
-            playlist.GetNextClip();
+            playlist.GetNextSong();
             Play();
         }
 
         private void PlayPrevious()
         {
+            StopNativeIfRunning();
             audioSource.Stop();
-            playlist.GetPreviousClip();
+            playlist.GetPreviousSong();
             Play();
         }
 
         private void Pause()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1)
+            {
+                if (ANAMusic.isPlaying(currentMusicID))
+                    ANAMusic.pause(currentMusicID);
+                else
+                    ANAMusic.play(currentMusicID);
+            }
+#else
             if(audioSource.isPlaying)
                 audioSource.Pause();
             else if (audioSource.clip != null)
                 audioSource.UnPause();
+#endif
             
             UpdateNotification();
         }
@@ -111,15 +152,34 @@ namespace SoftAware
         {
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
+            
+            StopNativeIfRunning();
             audioSource.Stop();
             AndroidMediaBridge.StopService();
         }
 
+        private void StopNativeIfRunning()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1)
+            {
+                ANAMusic.release(currentMusicID);
+                currentMusicID = -1;
+            }
+#endif
+        }
+
         private void UpdateNotification()
         {
-            if (currentClip != null)
+            if (currentSong != null)
             {
-                AndroidMediaBridge.UpdateMetadata(currentClip.name, "Winamp Android", audioSource.isPlaying);
+                bool isPlaying = false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+                if (currentMusicID != -1) isPlaying = ANAMusic.isPlaying(currentMusicID);
+#else
+                isPlaying = audioSource.isPlaying;
+#endif
+                AndroidMediaBridge.UpdateMetadata(currentSong.Title, "Winamp Android", isPlaying);
             }
         }
 

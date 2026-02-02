@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 54a1974a997b02540935e9f799fc3db9
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Examples/ANA GUI.guiskin
+  uploadId: 148497

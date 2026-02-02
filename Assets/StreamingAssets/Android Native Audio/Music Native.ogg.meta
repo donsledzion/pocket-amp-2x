@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3417e66b9ca22bb4bba9fe6dd57f5792
+AudioImporter:
+  serializedVersion: 4
+  format: 0
+  quality: .5
+  stream: 1
+  3D: 0
+  forceToMono: 0
+  useHardware: 0
+  loopable: 0
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/StreamingAssets/Android Native Audio/Music Native.ogg
+  uploadId: 148497

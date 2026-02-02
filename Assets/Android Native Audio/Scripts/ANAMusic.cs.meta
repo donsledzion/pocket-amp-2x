@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f10cb3a5ac5340f4bbbfbb51cf5b2695
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Scripts/ANAMusic.cs
+  uploadId: 148497

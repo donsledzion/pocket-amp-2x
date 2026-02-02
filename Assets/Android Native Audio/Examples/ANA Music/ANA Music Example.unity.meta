@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 5ae2270fa5e773c42bb50c87f889f9cc
+DefaultImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Examples/ANA Music/ANA Music Example.unity
+  uploadId: 148497

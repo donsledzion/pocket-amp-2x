@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3bb2d50d7c970c147b4bbe85cc85a9b8
+AudioImporter:
+  serializedVersion: 4
+  format: -1
+  quality: .5
+  stream: 1
+  3D: 0
+  forceToMono: 0
+  useHardware: 0
+  loopable: 0
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Examples/ANA/Tone Unity.wav
+  uploadId: 148497

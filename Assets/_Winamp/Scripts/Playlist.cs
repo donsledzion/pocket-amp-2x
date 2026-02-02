@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,18 +15,27 @@ namespace SoftAware
     [DisallowMultipleComponent]
     public class Playlist : MonoBehaviour
     {
-        [SerializeField] private List<AudioClip> clips = new List<AudioClip>();
+        [Serializable]
+        public class SongInfo
+        {
+            public string Title;
+            public AudioClip Clip;
+            public string FilePath;
+        }
+
+        [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
         
         private int currentIndex;
-        internal AudioClip CurrentClip => clips.Count > 0 ? clips[currentIndex] : null;
-        internal int Count => clips.Count;
+        internal SongInfo CurrentSong => songs.Count > 0 ? songs[currentIndex] : null;
+        internal AudioClip CurrentClip => CurrentSong?.Clip;
+        internal int Count => songs.Count;
 
         private void Start()
         {
             StartCoroutine(CheckPermissionsCoroutine());
 
-            if (clips.Count > 0)
+            if (songs.Count > 0)
                 SetCurrentClip(0);
         }
 
@@ -135,11 +145,11 @@ namespace SoftAware
                     // Sequential loading is more stable for Android file system (I/O)
                     yield return LoadAudioClip(entry.Path, entry.Name);
                     
-                    LogDebug($"Total Clips: {clips.Count}");
+                    LogDebug($"Total Songs: {songs.Count}");
                 }
             }
 
-            LogDebug($"FINISHED! Songs in playlist: {clips.Count}");
+            LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
             yield break;
         }
 
@@ -157,9 +167,8 @@ namespace SoftAware
 
             if (Application.platform == RuntimePlatform.Android)
             {
-                // The "Golden Fix": Copy the file to the app's internal cache
-                // where Unity has guaranteed read permissions.
-                string cachePath = Path.Combine(Application.temporaryCachePath, fileName);
+                // Use persistentDataPath for ANA compatibility
+                string cachePath = Path.Combine(Application.persistentDataPath, fileName);
                 
                 LogDebug($"> Copying to cache...");
                 
@@ -169,6 +178,7 @@ namespace SoftAware
                 if (File.Exists(cachePath))
                 {
                     LogDebug($"> Copy SUCCESS");
+                    // Store only the filename for Android relative to persistentDataPath
                     finalUrl = "file:///" + cachePath.TrimStart('/');
                 }
                 else
@@ -193,14 +203,22 @@ namespace SoftAware
                 {
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     clip.name = fileName;
-                    clips.Add(clip);
+                    
+                    songs.Add(new SongInfo 
+                    { 
+                        Title = fileName, 
+                        Clip = clip, 
+                        // For Android, store relative to persistentDataPath (as required by ANAMusic)
+                        // For Editor, store absolute path.
+                        FilePath = Application.platform == RuntimePlatform.Android ? 
+                                   fileName : filePath 
+                    });
+
                     LogDebug($"<color=green>SUCCESS: {clip.name}</color>");
                     
-                    // Cleanup: Delete the cached file after it's loaded to memory
-                    if (Application.platform == RuntimePlatform.Android)
-                    {
-                        try { File.Delete(Path.Combine(Application.temporaryCachePath, fileName)); } catch {}
-                    }
+                    // Note: We NO LONGER delete the cached file here, 
+                    // because ANAMusic needs it to play natively on Android.
+                    // We should cleanup on application quit or when removing from playlist.
                 }
                 else
                 {
@@ -211,23 +229,43 @@ namespace SoftAware
 
         private void SetCurrentClip(int index)
         {
-            if (clips.Count == 0) return;
-            if (index < 0 || index >= clips.Count) return;
+            if (songs.Count == 0) return;
+            if (index < 0 || index >= songs.Count) return;
             currentIndex = index;
         }
 
-        internal AudioClip GetNextClip()
+        internal SongInfo GetNextSong()
         {
-            if (clips.Count == 0) return null;
-            SetCurrentClip(currentIndex == clips.Count - 1 ? 0 : ++currentIndex);
-            return CurrentClip;
+            if (songs.Count == 0) return null;
+            SetCurrentClip(currentIndex == songs.Count - 1 ? 0 : ++currentIndex);
+            return CurrentSong;
         }
 
-        internal AudioClip GetPreviousClip()
+        internal SongInfo GetPreviousSong()
         {
-            if (clips.Count == 0) return null;
-            SetCurrentClip(currentIndex == 0 ? clips.Count - 1 : --currentIndex);
-            return CurrentClip;
+            if (songs.Count == 0) return null;
+            SetCurrentClip(currentIndex == 0 ? songs.Count - 1 : --currentIndex);
+            return CurrentSong;
+        }
+
+        private void OnApplicationQuit()
+        {
+            // Cleanup cached files on exit
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                foreach (var song in songs)
+                {
+                    // Check if file is in persistentDataPath before deleting
+                    if (!string.IsNullOrEmpty(song.FilePath))
+                    {
+                        string fullPath = Path.Combine(Application.persistentDataPath, song.FilePath);
+                        if (File.Exists(fullPath))
+                        {
+                            try { File.Delete(fullPath); } catch { }
+                        }
+                    }
+                }
+            }
         }
     }
 }

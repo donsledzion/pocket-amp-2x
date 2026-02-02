@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 2166b2fb649688349ac2a86aef830755
+DefaultImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Plugins/Android/com_android_vending_expansion_zipfile.jar
+  uploadId: 148497

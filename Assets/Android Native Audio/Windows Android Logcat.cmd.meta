@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 99f0ee8575ef03c4a8817e143a14b302
+DefaultImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Windows Android Logcat.cmd
+  uploadId: 148497

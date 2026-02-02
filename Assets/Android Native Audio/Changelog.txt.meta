@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 97d7c0e9c7873094581fe7c6d7628642
+TextScriptImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35295
+  packageName: Android Native Audio
+  packageVersion: 2.0.1
+  assetPath: Assets/Android Native Audio/Changelog.txt
+  uploadId: 148497
