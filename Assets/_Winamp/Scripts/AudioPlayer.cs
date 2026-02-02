@@ -87,22 +87,32 @@ namespace SoftAware
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // Native Android Playback
-            if (currentMusicID != -1)
+            // Native Android Playback only if we have a file path
+            if (currentSong.HasNativePath)
             {
-                ANAMusic.release(currentMusicID);
-                currentMusicID = -1;
-            }
-
-            // Load file from persistent cache path (or where it was saved in Playlist)
-            currentMusicID = ANAMusic.load(currentSong.FilePath, true, false, (id) => 
-            {
-                ANAMusic.play(id, (finishedID) => 
+                if (currentMusicID != -1)
                 {
-                    // Automatic song progression
-                    PlayNext();
-                });
-            }, true); // playInBackground = true
+                    ANAMusic.release(currentMusicID);
+                    currentMusicID = -1;
+                }
+
+                // Load file from persistent cache path (or where it was saved in Playlist)
+                currentMusicID = ANAMusic.load(currentSong.FilePath, true, false, (id) => 
+                {
+                    ANAMusic.play(id, (finishedID) => 
+                    {
+                        // Automatic song progression
+                        PlayNext();
+                    });
+                }, true); // playInBackground = true
+            }
+            else
+            {
+                Debug.LogWarning($"Song {currentSong.Title} has no native path! Falling back to AudioSource. (Background play may be limited)");
+                audioSource.clip = currentClip;
+                audioSource.Play();
+                autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
+            }
 #else
             // Standard Unity Playback
             audioSource.clip = currentClip;
@@ -137,6 +147,12 @@ namespace SoftAware
                     ANAMusic.pause(currentMusicID);
                 else
                     ANAMusic.play(currentMusicID);
+            }
+            else if (audioSource.clip != null)
+            {
+                // Fallback for non-native clips
+                if (audioSource.isPlaying) audioSource.Pause();
+                else audioSource.UnPause();
             }
 #else
             if(audioSource.isPlaying)

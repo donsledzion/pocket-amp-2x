@@ -21,6 +21,8 @@ namespace SoftAware
             public string Title;
             public AudioClip Clip;
             public string FilePath;
+            
+            public bool HasNativePath => !string.IsNullOrEmpty(FilePath);
         }
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
@@ -33,10 +35,25 @@ namespace SoftAware
 
         private void Start()
         {
+            InitializeInspectorSongs();
+
+#if UNITY_ANDROID && !UNITY_EDITOR
             StartCoroutine(CheckPermissionsCoroutine());
+#endif
 
             if (songs.Count > 0)
                 SetCurrentClip(0);
+        }
+
+        private void InitializeInspectorSongs()
+        {
+            foreach (var song in songs)
+            {
+                if (song.Clip != null && string.IsNullOrEmpty(song.Title))
+                {
+                    song.Title = song.Clip.name;
+                }
+            }
         }
 
         private IEnumerator CheckPermissionsCoroutine()
