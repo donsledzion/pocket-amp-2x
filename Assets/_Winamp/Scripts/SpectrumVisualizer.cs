@@ -92,28 +92,33 @@ namespace SoftAware
 
         private void Update()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // On Android, we don't use audioSource.isPlaying because we play natively
-            // We'll check if any music is loaded/playing via ANAMusic later, 
-            // but for now let's just draw if possible.
-#else
-            if (audioSource == null || !audioSource.isPlaying)
+            try
             {
-                UpdatePeaks(null);
-                ClearTexture();
-                visualizerTexture.Apply();
-                return;
-            }
+#if UNITY_ANDROID && !UNITY_EDITOR
+                // On Android, we don't use audioSource.isPlaying because we play natively
+#else
+                if (audioSource == null || !audioSource.isPlaying)
+                {
+                    UpdatePeaks(null);
+                    ClearTexture();
+                    visualizerTexture.Apply();
+                    return;
+                }
 #endif
 
-            ClearTexture();
+                ClearTexture();
 
-            if (currentMode == VisMode.Spectrum)
-                DrawSpectrum();
-            else
-                DrawWaveform();
+                if (currentMode == VisMode.Spectrum)
+                    DrawSpectrum();
+                else
+                    DrawWaveform();
 
-            visualizerTexture.Apply();
+                visualizerTexture.Apply();
+            }
+            catch (System.Exception e)
+            {
+                Playlist.Log($"[Vis] Update ERR: {e.Message}\n{e.StackTrace.Substring(0, Mathf.Min(e.StackTrace.Length, 100))}");
+            }
         }
 
         private void DrawSpectrum()
@@ -159,7 +164,7 @@ namespace SoftAware
         {
             for (int i = 0; i < spectrumBars; i++)
             {
-                float val = (data != null) ? data[i + 1] * 20f : 0;
+                float val = (data != null && i + 1 < data.Length) ? data[i + 1] * 20f : 0;
                 
                 if (val >= peakHeights[i])
                 {

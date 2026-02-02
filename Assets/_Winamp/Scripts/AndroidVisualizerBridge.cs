@@ -5,10 +5,7 @@ namespace SoftAware
 {
     public class AndroidVisualizerBridge : MonoBehaviour
     {
-        private static AndroidJavaObject visualizer;
-        private static IntPtr fftArrayPtr;
-        private static IntPtr waveArrayPtr;
-        private static int currentCaptureSize = 0;
+        private static AndroidJavaObject javaVisualizer;
         public static bool TestMode = false;
 
         public static void Initialize(int sessionId)
@@ -18,37 +15,15 @@ namespace SoftAware
             {
                 Release();
                 
-                // If sessionId is -1, try global session 0 (requires MODIFY_AUDIO_SETTINGS)
-                int targetSession = (sessionId == -1) ? 0 : sessionId;
-                Playlist.Log($"[Viz] Creating for session {targetSession}");
+                Playlist.Log($"[Viz] Java Init: {sessionId}");
+                javaVisualizer = new AndroidJavaObject("com.softaware.winamp.WinampVisualizer");
+                bool success = javaVisualizer.Call<bool>("initialize", sessionId);
                 
-                visualizer = new AndroidJavaObject("android.media.audiofx.Visualizer", targetSession);
-                
-                using (var visualizerClass = new AndroidJavaClass("android.media.audiofx.Visualizer"))
-                {
-                    int[] range = visualizerClass.CallStatic<int[]>("getCaptureSizeRange");
-                    int finalSize = (range != null && range.Length > 1) ? range[1] : 1024;
-                    // Limit to 1024 for performance if max is huge
-                    if (finalSize > 1024) finalSize = 1024;
-
-                    visualizer.Call<int>("setCaptureSize", finalSize);
-                    int enableStatus = visualizer.Call<int>("setEnabled", true);
-                    
-                    currentCaptureSize = finalSize;
-                    
-                    // Create persistent JNI arrays to avoid GC pressure
-                    fftArrayPtr = AndroidJNI.NewByteArray(finalSize);
-                    fftArrayPtr = AndroidJNI.NewGlobalRef(fftArrayPtr);
-                    
-                    waveArrayPtr = AndroidJNI.NewByteArray(finalSize);
-                    waveArrayPtr = AndroidJNI.NewGlobalRef(waveArrayPtr);
-
-                    Playlist.Log($"[Viz] Init status: {enableStatus}, Size: {finalSize}");
-                }
+                Playlist.Log($"[Viz] Java Init Result: {success}");
             }
             catch (Exception e)
             {
-                Playlist.Log($"[Viz] ERR: {e.Message}");
+                Playlist.Log($"[Viz] Java ERR: {e.Message}");
             }
 #endif
         }
@@ -56,57 +31,38 @@ namespace SoftAware
         public static void Release()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (visualizer != null)
+            if (javaVisualizer != null)
             {
-                visualizer.Call<int>("setEnabled", false);
-                visualizer.Call("release");
-                visualizer = null;
+                javaVisualizer.Call("release");
+                javaVisualizer.Dispose();
+                javaVisualizer = null;
             }
-            if (fftArrayPtr != IntPtr.Zero)
-            {
-                AndroidJNI.DeleteGlobalRef(fftArrayPtr);
-                fftArrayPtr = IntPtr.Zero;
-            }
-            if (waveArrayPtr != IntPtr.Zero)
-            {
-                AndroidJNI.DeleteGlobalRef(waveArrayPtr);
-                waveArrayPtr = IntPtr.Zero;
-            }
-            currentCaptureSize = 0;
 #endif
         }
 
+
+        private static int silenceCounter = 0;
+        private static float[] cachedFftData;
+
         public static float[] GetFFTData(int dataSize)
         {
-            if (TestMode)
-            {
-                float[] test = new float[dataSize];
-                for (int i = 0; i < dataSize; i++) test[i] = UnityEngine.Random.value * 0.5f;
-                return test;
-            }
+            if (TestMode) return GetTestData(dataSize);
 
             float[] result = new float[dataSize];
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (visualizer == null || fftArrayPtr == IntPtr.Zero) return result;
-
-            // Use direct JNI calls to fill our persistent Java array and copy it back
-            int status = visualizer.Call<int>("getFft", new AndroidJavaObject(fftArrayPtr));
-            if (status == 0)
+            if (javaVisualizer != null)
             {
-                sbyte[] rawData = AndroidJNI.FromSByteArray(fftArrayPtr);
-                long sum = 0;
-
-                for (int i = 0; i < dataSize; i++)
+                try
                 {
-                    int idx = i * 2 + 2; 
-                    if (idx + 1 < rawData.Length)
+                    float[] javaData = javaVisualizer.Call<float[]>("getFft", dataSize);
+                    if (javaData != null && javaData.Length == dataSize) 
                     {
-                        float real = rawData[idx];
-                        float imag = rawData[idx+1];
-                        float magnitude = Mathf.Sqrt(real * real + imag * imag);
-                        result[i] = magnitude / 1024; // Reduced sensitivity
+                        // Cache for waveform simulation if needed
+                        cachedFftData = javaData;
+                        return javaData;
                     }
                 }
+                catch {}
             }
 #endif
             return result;
@@ -116,26 +72,80 @@ namespace SoftAware
         {
             float[] result = new float[dataSize];
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (visualizer == null || waveArrayPtr == IntPtr.Zero) return result;
-
-            int status = visualizer.Call<int>("getWaveform", new AndroidJavaObject(waveArrayPtr));
-            if (status == 0)
+            if (javaVisualizer != null)
             {
-                sbyte[] rawData = AndroidJNI.FromSByteArray(waveArrayPtr);
-                for (int i = 0; i < dataSize; i++)
+                try
                 {
-                    int idx = i * (rawData.Length / dataSize);
-                    if (idx < rawData.Length)
+                    float[] javaData = javaVisualizer.Call<float[]>("getWaveform", dataSize);
+                    if (javaData != null && javaData.Length == dataSize) 
                     {
-                        // Waveform is 0..255 unsigned in Java, but in sbyte it's -128..127. 0 (Java 128) is silence.
-                        // So we cast to byte to get 0..255 then subtract 128.
-                        byte unsignedByte = (byte)rawData[idx];
-                        result[i] = (unsignedByte - 128) / 128f;
+                        // Check for silence
+                        bool isSilent = true;
+                        for(int i=0; i<dataSize; i+=10) { // Check every 10th sample for perf
+                            if (Mathf.Abs(javaData[i]) > 0.001f) {
+                                isSilent = false;
+                                break;
+                            }
+                        }
+                        
+                        if (isSilent) {
+                            silenceCounter++;
+                             // If silent for > 20 frames, switch to simulation
+                            if (silenceCounter > 20 && cachedFftData != null) {
+                                return SimulateWaveformFromFFT(dataSize);
+                            }
+                        } else {
+                            silenceCounter = 0;
+                        }
+                        
+                        // If not simulating, return real data (even if silent for first few frames)
+                        return javaData;
                     }
                 }
+                catch {}
             }
 #endif
             return result;
+        }
+
+        // Generate a plausible waveform from FFT data (Sum of Sines approximation)
+        private static float[] SimulateWaveformFromFFT(int size)
+        {
+             float[] simulated = new float[size];
+             if (cachedFftData == null) return simulated;
+
+             // Use first few FFT bins (bass/low-mids) to drive the main shape
+             // This is a simplified reconstruction for visual effect
+             float t = Time.time;
+             int binsToUse = Mathf.Min(cachedFftData.Length, 16); 
+             
+             for (int i = 0; i < size; i++)
+             {
+                 float val = 0f;
+                 float normalizedX = (float)i / size;
+                 
+                 for (int b = 0; b < binsToUse; b++)
+                 {
+                     // Frequency factor: higher bin = higher freq
+                     float freq = (b + 1) * 2f * Mathf.PI;
+                     // Amplitude from FFT
+                     float amp = cachedFftData[b];
+                     
+                     // Add sine wave: Amp * Sin(Freq * x + PhaseShift)
+                     // Phase shift moves with Time to create animation
+                     val += amp * Mathf.Sin(freq * normalizedX + t * (b + 1));
+                 }
+                 // Scale down to keep within -1..1 roughly
+                 simulated[i] = Mathf.Clamp(val * 0.5f, -1f, 1f);
+             }
+             return simulated;
+        }
+
+        private static float[] GetTestData(int dataSize)
+        {
+            float[] test = new float[dataSize];
+            for (int i = 0; i < dataSize; i++) test[i] = UnityEngine.Random.value * 0.5f;
+            return test;
         }
 
         private void OnDestroy()

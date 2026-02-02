@@ -17,6 +17,7 @@ namespace SoftAware
         private Coroutine autoPlayNextClipCoroutine;
         
         private int currentMusicID = -1;
+        private int pendingVisualizerSessionId = -1;
 
         private void Awake()
         {
@@ -27,10 +28,19 @@ namespace SoftAware
         private void Start()
         {
             Application.runInBackground = true;
-            // Prevent Unity from pausing audio when pulling down the notification bar
             AudioListener.pause = false; 
 
             BindButtons();
+        }
+
+        private void Update()
+        {
+            // Process visualizer initialization on the main thread
+            if (pendingVisualizerSessionId != -1)
+            {
+                StartCoroutine(InitVisualizerDelayed(pendingVisualizerSessionId));
+                pendingVisualizerSessionId = -1;
+            }
         }
 
         private void BindButtons()
@@ -99,8 +109,8 @@ namespace SoftAware
                 // Load file using absolute path (direct access)
                 currentMusicID = ANAMusic.load(currentSong.FilePath, false, false, (id) => 
                 {
-                    // Start visualizer after a short delay on the main thread
-                    StartCoroutine(InitVisualizerDelayed(id));
+                    // Set flag for main thread update
+                    pendingVisualizerSessionId = id;
 
                     ANAMusic.play(id, (finishedID) => 
                     {
