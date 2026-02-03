@@ -23,6 +23,9 @@ namespace SoftAware
         private int pendingVisualizerSessionId = -1;
         private bool isDraggingSlider = false;
 
+        private float currentVolume = 1f;
+        private float currentBalance = 0.5f; // 0.0 = Left, 1.0 = Right, 0.5 = Center
+
         private void Awake()
         {
             if (!TryGetComponent(out audioSource))
@@ -100,6 +103,7 @@ namespace SoftAware
 
             BindSlider();
             BindVolume();
+            BindBalance();
         }
 
         private void BindVolume()
@@ -112,19 +116,72 @@ namespace SoftAware
             }
         }
 
+        private void BindBalance()
+        {
+            if (panelMain.BalanceController != null && panelMain.BalanceController.Slider != null)
+            {
+                panelMain.BalanceController.Slider.onValueChanged.AddListener(SetBalance);
+                // Initialize balance
+                SetBalance(panelMain.BalanceController.Slider.value);
+            }
+        }
+
         private void SetVolume(float volume)
         {
+            currentVolume = volume;
+            ApplyVolumeBalance();
+        }
+
+        private void SetBalance(float balance)
+        {
+            currentBalance = balance;
+            ApplyVolumeBalance();
+        }
+
+        private void ApplyVolumeBalance()
+        {
 #if UNITY_ANDROID && !UNITY_EDITOR
-             // Native Volume Control
+             // Native Volume Control (Left/Right)
              if (currentMusicID != -1)
              {
-                 ANAMusic.setVolume(currentMusicID, volume);
+                 float left = currentVolume;
+                 float right = currentVolume;
+
+                 // Balance logic:
+                 // 0.5 is Center (Left=Vol, Right=Vol)
+                 // < 0.5 (Left side): Right fades out. Left stays at Vol.
+                 // > 0.5 (Right side): Left fades out. Right stays at Vol.
+                 
+                 if (currentBalance < 0.5f)
+                 {
+                     // Fading out Right
+                     // 0.0 -> Right=0
+                     // 0.5 -> Right=1 (multiplier)
+                     float multiplier = currentBalance * 2f;
+                     right *= multiplier;
+                 }
+                 else if (currentBalance > 0.5f)
+                 {
+                     // Fading out Left
+                     // 0.5 -> Left=1 (multiplier)
+                     // 1.0 -> Left=0
+                     float multiplier = (1f - currentBalance) * 2f;
+                     left *= multiplier;
+                 }
+
+                 ANAMusic.setVolume(currentMusicID, left, right);
              }
 #else
-            // Unity Volume Control
+            // Unity Volume Control + Pan
             if (audioSource != null)
             {
-                audioSource.volume = volume;
+                audioSource.volume = currentVolume;
+                // Map 0..1 to -1..1
+                // 0 -> -1
+                // 0.5 -> 0
+                // 1 -> 1
+                float pan = (currentBalance - 0.5f) * 2f;
+                audioSource.panStereo = pan;
             }
 #endif
         }
@@ -247,10 +304,7 @@ namespace SoftAware
                     pendingVisualizerSessionId = id;
                     
                     // Apply current volume to new track
-                    if (panelMain.VolumeController != null)
-                    {
-                        ANAMusic.setVolume(id, panelMain.VolumeController.Slider.value);
-                    }
+                    ApplyVolumeBalance();
 
                     ANAMusic.play(id, (finishedID) => 
                     {

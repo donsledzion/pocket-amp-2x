@@ -29,6 +29,10 @@ namespace SoftAware
         [SerializeField] private VolumeController volumeController;
         internal VolumeController VolumeController => volumeController;
 
+        [Header("Balance")]
+        [SerializeField] private BalanceController balanceController;
+        internal BalanceController BalanceController => balanceController;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();
