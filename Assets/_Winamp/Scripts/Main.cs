@@ -33,6 +33,10 @@ namespace SoftAware
         [SerializeField] private BalanceController balanceController;
         internal BalanceController BalanceController => balanceController;
 
+        [Header("Channels")]
+        [SerializeField] private ChannelsDisplay channelsDisplay;
+        internal ChannelsDisplay ChannelsDisplay => channelsDisplay;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();

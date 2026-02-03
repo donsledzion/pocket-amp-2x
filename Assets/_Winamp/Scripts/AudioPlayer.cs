@@ -22,6 +22,7 @@ namespace SoftAware
         private int currentMusicID = -1;
         private int pendingVisualizerSessionId = -1;
         private bool isDraggingSlider = false;
+        private bool isPaused = false;
 
         private float currentVolume = 1f;
         private float currentBalance = 0.5f; // 0.0 = Left, 1.0 = Right, 0.5 = Center
@@ -305,6 +306,10 @@ namespace SoftAware
                     
                     // Apply current volume to new track
                     ApplyVolumeBalance();
+                    
+                    // TODO: Native channel detection requires Java implementation
+                    // Defaulting to Stereo (2) for now for Native Audio
+                    UpdateChannelsDisplay(true, 2);
 
                     ANAMusic.play(id, (finishedID) => 
                     {
@@ -324,6 +329,7 @@ namespace SoftAware
                 {
                     audioSource.clip = currentClip;
                     audioSource.Play();
+                    UpdateChannelsDisplay(true, currentClip.channels);
                     autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
                 }
             }
@@ -336,6 +342,7 @@ namespace SoftAware
             {
                 audioSource.clip = currentClip;
                 audioSource.Play();
+                UpdateChannelsDisplay(true, currentClip.channels);
                 autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
             }
 #endif
@@ -382,6 +389,28 @@ namespace SoftAware
 #endif
             
             UpdateNotification();
+            
+            // Check playing status for UI update
+            bool currentlyPlaying = false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1) currentlyPlaying = ANAMusic.isPlaying(currentMusicID);
+#else 
+            currentlyPlaying = audioSource.isPlaying;
+#endif  
+            // Maintain channel info if just pausing
+            int channels = 2; // Default
+#if !UNITY_ANDROID || UNITY_EDITOR
+             if (currentClip != null) channels = currentClip.channels;
+#endif
+            UpdateChannelsDisplay(currentlyPlaying, channels);
+        }
+
+        private void UpdateChannelsDisplay(bool isPlaying, int channels)
+        {
+            if (panelMain.ChannelsDisplay != null)
+            {
+                panelMain.ChannelsDisplay.UpdateDisplay(isPlaying, channels);
+            }
         }
 
         public void StopPlayback()
@@ -393,6 +422,8 @@ namespace SoftAware
             StopNativeIfRunning();
             audioSource.Stop();
             AndroidMediaBridge.StopService();
+            UpdateChannelsDisplay(false, 0);
+            isPaused = false;
         }
 
         private void StopNativeIfRunning()
