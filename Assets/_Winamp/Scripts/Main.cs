@@ -21,6 +21,10 @@ namespace SoftAware
         internal Button NextButton => nextButton;
         internal Button EjectButton => ejectButton;
 
+        [Header("Progress")]
+        [SerializeField] private Slider progressSlider;
+        internal Slider ProgressSlider => progressSlider;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();

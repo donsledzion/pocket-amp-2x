@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using SimpleFileBrowser;
 
 namespace SoftAware
@@ -19,6 +21,7 @@ namespace SoftAware
         
         private int currentMusicID = -1;
         private int pendingVisualizerSessionId = -1;
+        private bool isDraggingSlider = false;
 
         private void Awake()
         {
@@ -42,6 +45,46 @@ namespace SoftAware
                 StartCoroutine(InitVisualizerDelayed(pendingVisualizerSessionId));
                 pendingVisualizerSessionId = -1;
             }
+
+            UpdateSlider();
+        }
+
+        private void UpdateSlider()
+        {
+            if (panelMain.ProgressSlider == null) return;
+
+            bool isPlaying = false;
+            float progress = 0f;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1)
+            {
+                if (ANAMusic.isPlaying(currentMusicID))
+                {
+                    isPlaying = true;
+                    int duration = ANAMusic.getDuration(currentMusicID);
+                    int current = ANAMusic.getCurrentPosition(currentMusicID);
+                    if (duration > 0) progress = (float)current / duration;
+                }
+            }
+#else
+            if (audioSource.clip != null && audioSource.isPlaying)
+            {
+                isPlaying = true;
+                if (audioSource.clip.length > 0) 
+                    progress = audioSource.time / audioSource.clip.length;
+            }
+#endif
+
+            // Handle Knob Visibility
+            if (panelMain.ProgressSlider.handleRect != null)
+                panelMain.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isDraggingSlider);
+
+            // Update Value (only if not dragging)
+            if (isPlaying && !isDraggingSlider)
+            {
+                panelMain.ProgressSlider.value = progress;
+            }
         }
 
         private void BindButtons()
@@ -52,6 +95,60 @@ namespace SoftAware
             panelMain.StopButton.onClick.AddListener(StopPlayback);
             panelMain.NextButton.onClick.AddListener(PlayNext);
             panelMain.EjectButton.onClick.AddListener(PickFolder);
+
+            BindSlider();
+        }
+
+        private void BindSlider()
+        {
+            if (panelMain.ProgressSlider == null) return;
+
+            // Add EventTrigger if not present
+            EventTrigger trigger = panelMain.ProgressSlider.gameObject.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = panelMain.ProgressSlider.gameObject.AddComponent<EventTrigger>();
+
+            // Pointer Down
+            EventTrigger.Entry entryDown = new EventTrigger.Entry();
+            entryDown.eventID = EventTriggerType.PointerDown;
+            entryDown.callback.AddListener((data) => { OnSliderDragStart(); });
+            trigger.triggers.Add(entryDown);
+
+            // Pointer Up
+            EventTrigger.Entry entryUp = new EventTrigger.Entry();
+            entryUp.eventID = EventTriggerType.PointerUp;
+            entryUp.callback.AddListener((data) => { OnSliderDragEnd(); });
+            trigger.triggers.Add(entryUp);
+        }
+
+        private void OnSliderDragStart()
+        {
+            isDraggingSlider = true;
+        }
+
+        private void OnSliderDragEnd()
+        {
+            isDraggingSlider = false;
+            if (panelMain.ProgressSlider != null)
+                SeekTo(panelMain.ProgressSlider.value);
+        }
+
+        private void SeekTo(float normalizedTime)
+        {
+            if (currentSong == null) return;
+            normalizedTime = Mathf.Clamp01(normalizedTime);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1)
+            {
+                int duration = ANAMusic.getDuration(currentMusicID);
+                ANAMusic.seekTo(currentMusicID, (int)(duration * normalizedTime));
+            }
+#else
+            if (audioSource.clip != null)
+            {
+                audioSource.time = audioSource.clip.length * normalizedTime;
+            }
+#endif
         }
 
         private void PickFolder()
