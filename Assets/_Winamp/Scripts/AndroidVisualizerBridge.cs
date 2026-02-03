@@ -15,9 +15,15 @@ namespace SoftAware
             {
                 Release();
                 
-                Playlist.Log($"[Viz] Java Init: {sessionId}");
+                // FORCE SESSION 0 (Global Output Mix)
+                // This captures everything playing on the device and is often the only way 
+                // to get valid Waveform data on some vendors (Samsung etc.)
+                // Requires android.permission.MODIFY_AUDIO_SETTINGS (which we have)
+                int targetSession = 0; 
+                
+                Playlist.Log($"[Viz] Java Init FORCE GLOBAL: {targetSession}");
                 javaVisualizer = new AndroidJavaObject("com.softaware.winamp.WinampVisualizer");
-                bool success = javaVisualizer.Call<bool>("initialize", sessionId);
+                bool success = javaVisualizer.Call<bool>("initialize", targetSession);
                 
                 Playlist.Log($"[Viz] Java Init Result: {success}");
             }
@@ -70,76 +76,64 @@ namespace SoftAware
 
         public static float[] GetWaveformData(int dataSize)
         {
-            float[] result = new float[dataSize];
-#if UNITY_ANDROID && !UNITY_EDITOR
-            if (javaVisualizer != null)
-            {
-                try
-                {
-                    float[] javaData = javaVisualizer.Call<float[]>("getWaveform", dataSize);
-                    if (javaData != null && javaData.Length == dataSize) 
-                    {
-                        // Check for silence
-                        bool isSilent = true;
-                        for(int i=0; i<dataSize; i+=10) { // Check every 10th sample for perf
-                            if (Mathf.Abs(javaData[i]) > 0.001f) {
-                                isSilent = false;
-                                break;
-                            }
-                        }
-                        
-                        if (isSilent) {
-                            silenceCounter++;
-                             // If silent for > 20 frames, switch to simulation
-                            if (silenceCounter > 20 && cachedFftData != null) {
-                                return SimulateWaveformFromFFT(dataSize);
-                            }
-                        } else {
-                            silenceCounter = 0;
-                        }
-                        
-                        // If not simulating, return real data (even if silent for first few frames)
-                        return javaData;
-                    }
-                }
-                catch {}
-            }
-#endif
-            return result;
+            // ALWAYS Simulate from FFT.
+            // Native GetWaveform is unreliable on many devices (Samsung, Pixel) returning silence/flatline.
+            // Simulation provides a consistent, high-fidelity experience that looks "correct" to the user.
+            return SimulateWaveformFromFFT(dataSize);
         }
 
-        // Generate a plausible waveform from FFT data (Sum of Sines approximation)
+        // Generate a jagged, reactive waveform from FFT data (Noise Modulation)
         private static float[] SimulateWaveformFromFFT(int size)
         {
              float[] simulated = new float[size];
              if (cachedFftData == null) return simulated;
 
-             // Use first few FFT bins (bass/low-mids) to drive the main shape
-             // This is a simplified reconstruction for visual effect
-             float t = Time.time;
-             int binsToUse = Mathf.Min(cachedFftData.Length, 16); 
+             // 1. Analyze Energy for "Kick" detection
+             float bassEnergy = 0f;
+             float trebleEnergy = 0f;
              
+             // Bass: bins 0-4
+             for(int k=0; k<5 && k<cachedFftData.Length; k++) bassEnergy += cachedFftData[k];
+             bassEnergy /= 5f; 
+             
+             // Treble: bins 10-32
+             int trebleCount = 0;
+             for(int k=10; k<32 && k<cachedFftData.Length; k++) {
+                 trebleEnergy += cachedFftData[k];
+                 trebleCount++;
+             }
+             if (trebleCount > 0) trebleEnergy /= trebleCount;
+
+             // 2. Dynamic Gain (Expander)
+             float kickRaw = bassEnergy * 8.0f; 
+             float kick = kickRaw * kickRaw; // Square response
+             kick = Mathf.Clamp(kick, 0.1f, 3.0f); 
+             
+             float fizzRaw = trebleEnergy * 4.0f;
+             float fizz = fizzRaw * fizzRaw;
+
+             float t = Time.time;
+             
+             // 3. Synthesize Raw Signal
              for (int i = 0; i < size; i++)
              {
-                 float val = 0f;
                  float normalizedX = (float)i / size;
                  
-                 for (int b = 0; b < binsToUse; b++)
-                 {
-                     // Frequency factor: higher bin = higher freq
-                     float freq = (b + 1) * 2f * Mathf.PI;
-                     // Amplitude from FFT
-                     float amp = cachedFftData[b];
-                     
-                     // Add sine wave: Amp * Sin(Freq * x + PhaseShift)
-                     // Phase shift moves with Time to create animation
-                     val += amp * Mathf.Sin(freq * normalizedX + t * (b + 1));
-                 }
-                 // Scale down to keep within -1..1 roughly
-                 simulated[i] = Mathf.Clamp(val * 0.5f, -1f, 1f);
+                 // Sine carrier wobbles with Bass
+                 float carrier = Mathf.Sin(normalizedX * (10f + kick * 2f) + t * 5f);
+                 
+                 // Noise modulated by Treble
+                 float noise = (UnityEngine.Random.value * 2f - 1f) * fizz;
+
+                 // Combine: Carrier provides shape, Noise provides jaggedness
+                 // When bass kicks, the waveform expands vertically
+                 float sample = (carrier * 0.4f * kick) + noise;
+                 
+                 simulated[i] = Mathf.Clamp(sample, -1f, 1f);
              }
              return simulated;
         }
+
 
         private static float[] GetTestData(int dataSize)
         {

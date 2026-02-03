@@ -178,21 +178,14 @@ namespace SoftAware
                     validAudioFound++;
                     LogDebug($"[#{validAudioFound}] Adding: {entry.Name}");
                     
-                    if (Application.platform == RuntimePlatform.Android)
-                    {
-                        // FAST PATH: Just add to list without loading the whole audio into memory
-                        songs.Add(new SongInfo 
-                        { 
-                            Title = entry.Name, 
-                            Clip = null, // We'll load this only if needed (e.g. for editor/viz)
-                            FilePath = entry.Path 
-                        });
-                    }
-                    else
-                    {
-                        // Editor/Desktop: Still load the clip for preview/viz
-                        yield return LoadAudioClip(entry.Path, entry.Name);
-                    }
+                    // Unified Fast Path for ALL platforms
+                    // We don't load the clip immediately anymore on Windows/Editor
+                    songs.Add(new SongInfo 
+                    { 
+                        Title = entry.Name, 
+                        Clip = null, 
+                        FilePath = entry.Path 
+                    });
                     
                     LogDebug($"Total Songs: {songs.Count}");
                 }
@@ -202,12 +195,14 @@ namespace SoftAware
             yield break;
         }
 
-        private IEnumerator LoadAudioClip(string filePath, string fileName)
+        public IEnumerator LoadSongClip(SongInfo song)
         {
-            LogDebug($"> Processing: {fileName}");
+            if (song == null || song.Clip != null) yield break;
+
+            LogDebug($"> Loading: {song.Title}");
 
             AudioType type = AudioType.UNKNOWN;
-            string ext = fileName.ToLower();
+            string ext = song.Title.ToLower();
             if (ext.EndsWith(".mp3")) type = AudioType.MPEG;
             else if (ext.EndsWith(".wav")) type = AudioType.WAV;
             else if (ext.EndsWith(".ogg")) type = AudioType.OGGVORBIS;
@@ -216,26 +211,22 @@ namespace SoftAware
 
             if (Application.platform == RuntimePlatform.Android)
             {
-                // SimpleFileBrowser handles content:// URIs in its helpers
-                if (FileBrowserHelpers.FileExists(filePath))
+                if (FileBrowserHelpers.FileExists(song.FilePath))
                 {
-                    LogDebug($"> Path validated: {filePath}");
-                    finalUrl = filePath; // SimpleFileBrowser paths are usually ready for UWR
+                    finalUrl = song.FilePath; 
                     if (!finalUrl.StartsWith("content://") && !finalUrl.StartsWith("file://"))
                         finalUrl = "file:///" + finalUrl.TrimStart('/');
                 }
                 else
                 {
-                    LogDebug($"> <color=red>File not found: {filePath}</color>");
+                    LogDebug($"> <color=red>File not found: {song.FilePath}</color>");
                     yield break;
                 }
             }
             else
             {
-                finalUrl = "file:///" + filePath.TrimStart('/');
+                finalUrl = "file:///" + song.FilePath.TrimStart('/');
             }
-
-            LogDebug($"> Requesting: {Path.GetFileName(finalUrl)}");
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(finalUrl, type))
             {
@@ -245,17 +236,10 @@ namespace SoftAware
                 if (www.result == UnityWebRequest.Result.Success)
                 {
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-                    clip.name = fileName;
-                    
-                    songs.Add(new SongInfo 
-                    { 
-                        Title = fileName, 
-                        Clip = clip, 
-                        // Now we store the absolute original path for both Android and Editor
-                        FilePath = filePath 
-                    });
+                    clip.name = song.Title;
+                    song.Clip = clip;
 
-                    LogDebug($"<color=green>SUCCESS: {clip.name}</color>");
+                    LogDebug($"<color=green>LOADED: {clip.name}</color>");
                 }
                 else
                 {

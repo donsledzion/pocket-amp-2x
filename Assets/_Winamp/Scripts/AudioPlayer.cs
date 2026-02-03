@@ -15,6 +15,7 @@ namespace SoftAware
         private Playlist.SongInfo currentSong => playlist.CurrentSong;
         private AudioClip currentClip => currentSong?.Clip;
         private Coroutine autoPlayNextClipCoroutine;
+        private Coroutine playCoroutine;
         
         private int currentMusicID = -1;
         private int pendingVisualizerSessionId = -1;
@@ -87,13 +88,19 @@ namespace SoftAware
 
         private void Play()
         {
+            if (playCoroutine != null) StopCoroutine(playCoroutine);
+            playCoroutine = StartCoroutine(PlayProcess());
+        }
+
+        private IEnumerator PlayProcess()
+        {
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
             
             if(currentSong == null)
             {
                 Debug.LogWarning("Missing currentSong!");
-                return;
+                yield break;
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -122,15 +129,28 @@ namespace SoftAware
             else
             {
                 Debug.LogWarning($"Song {currentSong.Title} has no native path! Falling back to AudioSource. (Background play may be limited)");
+                
+                if (currentClip == null && currentSong.HasNativePath)
+                    yield return playlist.LoadSongClip(currentSong);
+
+                if (currentClip != null)
+                {
+                    audioSource.clip = currentClip;
+                    audioSource.Play();
+                    autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
+                }
+            }
+#else
+            // Standard Unity Playback
+            if (currentClip == null && currentSong.HasNativePath)
+                yield return playlist.LoadSongClip(currentSong);
+
+            if (currentClip != null)
+            {
                 audioSource.clip = currentClip;
                 audioSource.Play();
                 autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
             }
-#else
-            // Standard Unity Playback
-            audioSource.clip = currentClip;
-            audioSource.Play();
-            autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
 #endif
             UpdateNotification();
         }
@@ -179,6 +199,7 @@ namespace SoftAware
 
         public void StopPlayback()
         {
+            if(playCoroutine != null) StopCoroutine(playCoroutine);
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
             
