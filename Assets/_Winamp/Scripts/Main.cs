@@ -25,6 +25,10 @@ namespace SoftAware
         [SerializeField] private Slider progressSlider;
         internal Slider ProgressSlider => progressSlider;
 
+        [Header("Volume")]
+        [SerializeField] private VolumeController volumeController;
+        internal VolumeController VolumeController => volumeController;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();

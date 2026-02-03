@@ -96,7 +96,37 @@ namespace SoftAware
             panelMain.NextButton.onClick.AddListener(PlayNext);
             panelMain.EjectButton.onClick.AddListener(PickFolder);
 
+            panelMain.EjectButton.onClick.AddListener(PickFolder);
+
             BindSlider();
+            BindVolume();
+        }
+
+        private void BindVolume()
+        {
+            if (panelMain.VolumeController != null && panelMain.VolumeController.Slider != null)
+            {
+                panelMain.VolumeController.Slider.onValueChanged.AddListener(SetVolume);
+                // Initialize volume
+                SetVolume(panelMain.VolumeController.Slider.value);
+            }
+        }
+
+        private void SetVolume(float volume)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+             // Native Volume Control
+             if (currentMusicID != -1)
+             {
+                 ANAMusic.setVolume(currentMusicID, volume);
+             }
+#else
+            // Unity Volume Control
+            if (audioSource != null)
+            {
+                audioSource.volume = volume;
+            }
+#endif
         }
 
         private void BindSlider()
@@ -215,6 +245,12 @@ namespace SoftAware
                 {
                     // Set flag for main thread update
                     pendingVisualizerSessionId = id;
+                    
+                    // Apply current volume to new track
+                    if (panelMain.VolumeController != null)
+                    {
+                        ANAMusic.setVolume(id, panelMain.VolumeController.Slider.value);
+                    }
 
                     ANAMusic.play(id, (finishedID) => 
                     {
