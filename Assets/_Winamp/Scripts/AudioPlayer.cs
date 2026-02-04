@@ -348,8 +348,9 @@ namespace SoftAware
                         ApplyVolumeBalance();
                         
                         // TODO: Native channel detection requires Java implementation
-                        // Defaulting to Stereo (2) for now for Native Audio
-                        UpdateChannelsDisplay(true, 2);
+                        // Now using bridge to get actual channels
+                        int channels = AndroidAudioInfoBridge.GetChannelCount(currentSong.FilePath);
+                        UpdateChannelsDisplay(true, channels);
                         
                         // Update audio info displays
                         UpdateAudioInfo();
@@ -462,6 +463,31 @@ namespace SoftAware
 
         private void UpdateAudioInfo()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Android Native Playback - use file path
+            if (currentSong != null && currentSong.HasNativePath)
+            {
+                // Sample Rate (kHz)
+                if (panelMain.SampleRateDisplay != null)
+                {
+                    int sampleRateHz = AndroidAudioInfoBridge.GetSampleRate(currentSong.FilePath);
+                    int sampleRateKHz = sampleRateHz / 1000;
+                    panelMain.SampleRateDisplay.SetNumber(sampleRateKHz);
+                }
+
+                // Bitrate (kbps)
+                if (panelMain.BitrateDisplay != null)
+                {
+                    int bitrateBps = AndroidAudioInfoBridge.GetBitrate(currentSong.FilePath);
+                    int bitrateKbps = bitrateBps / 1000;
+                    panelMain.BitrateDisplay.SetNumber(bitrateKbps);
+                }
+                
+                return;
+            }
+#endif
+
+            // Unity AudioClip Playback
             if (currentClip == null) return;
 
             // Sample Rate (kHz)
@@ -508,6 +534,13 @@ namespace SoftAware
             audioSource.Stop();
             AndroidMediaBridge.StopService();
             UpdateChannelsDisplay(false, 0);
+            
+            // Clear audio info displays
+            if (panelMain.BitrateDisplay != null)
+                panelMain.BitrateDisplay.Clear();
+            if (panelMain.SampleRateDisplay != null)
+                panelMain.SampleRateDisplay.Clear();
+            
             isPaused = false;
         }
 

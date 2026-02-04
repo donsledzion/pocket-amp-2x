@@ -14,41 +14,68 @@ namespace SoftAware
 
         /// <summary>
         /// Sets the displayed text. Characters without sprites will be skipped.
+        /// When hideUnusedCharacters is true, text is right-aligned (fills from right).
         /// </summary>
         public void SetText(string text)
         {
             if (characterImages == null || characterImages.Length == 0) return;
 
             text = text.ToUpper();
-            int textIndex = 0;
 
-            for (int i = 0; i < characterImages.Length; i++)
+            if (hideUnusedCharacters)
             {
-                if (characterImages[i] == null) continue;
-
-                if (textIndex < text.Length)
+                // Right-aligned: fill from right to left
+                int textIndex = text.Length - 1;
+                
+                for (int i = characterImages.Length - 1; i >= 0; i--)
                 {
-                    char c = text[textIndex];
-                    Sprite sprite = TextSpriteProvider.GetSprite(c);
+                    if (characterImages[i] == null) continue;
 
-                    if (sprite != null)
+                    if (textIndex >= 0)
                     {
-                        characterImages[i].sprite = sprite;
-                        characterImages[i].enabled = true;
-                        textIndex++;
+                        char c = text[textIndex];
+                        Sprite sprite = TextSpriteProvider.GetSprite(c);
+
+                        if (sprite != null)
+                        {
+                            characterImages[i].sprite = sprite;
+                            characterImages[i].enabled = true;
+                            textIndex--;
+                        }
+                        else
+                        {
+                            // Character not found, hide
+                            characterImages[i].enabled = false;
+                        }
                     }
                     else
                     {
-                        // Character not found, skip or hide
-                        if (hideUnusedCharacters)
-                            characterImages[i].enabled = false;
+                        // No more characters - hide remaining (left side)
+                        characterImages[i].enabled = false;
                     }
                 }
-                else
+            }
+            else
+            {
+                // Left-aligned: fill from left to right
+                int textIndex = 0;
+
+                for (int i = 0; i < characterImages.Length; i++)
                 {
-                    // No more characters to display
-                    if (hideUnusedCharacters)
-                        characterImages[i].enabled = false;
+                    if (characterImages[i] == null) continue;
+
+                    if (textIndex < text.Length)
+                    {
+                        char c = text[textIndex];
+                        Sprite sprite = TextSpriteProvider.GetSprite(c);
+
+                        if (sprite != null)
+                        {
+                            characterImages[i].sprite = sprite;
+                            characterImages[i].enabled = true;
+                            textIndex++;
+                        }
+                    }
                 }
             }
         }
