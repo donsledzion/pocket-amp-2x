@@ -421,7 +421,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Equalizer_off_presse
+      name: Playlist_off_pressed
       rect:
         serializedVersion: 2
         x: 69
@@ -429,7 +429,7 @@ TextureImporter:
         width: 23
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -443,7 +443,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Equalizer_on_presse
+      name: Playlist_on_pressed
       rect:
         serializedVersion: 2
         x: 69
@@ -451,7 +451,7 @@ TextureImporter:
         width: 23
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -479,13 +479,13 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Equalizer_off_normal: -2011619263
-      Equalizer_off_presse: 1335046128
       Equalizer_off_pressed: -1119785181
       Equalizer_on_normal: 1520315265
-      Equalizer_on_presse: 1672109594
       Equalizer_on_pressed: 54996646
       Playlist_off_normal: 4018936276528418240
+      Playlist_off_pressed: 1335046128
       Playlist_on_normal: 885159576
+      Playlist_on_pressed: 1672109594
       Repeat_off_normal: -1089636634
       Repeat_off_pressed: 901060258
       Repeat_on_normal: 46412569

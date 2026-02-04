@@ -469,6 +469,145 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &257304241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 257304242}
+  - component: {fileID: 257304245}
+  - component: {fileID: 257304244}
+  - component: {fileID: 257304243}
+  - component: {fileID: 257304246}
+  m_Layer: 5
+  m_Name: Equalizer Toggle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &257304242
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257304241}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 996247204}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 40.7, y: -0.19999695}
+  m_SizeDelta: {x: 10, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &257304243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257304241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 2
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: -1119785181, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 257304244}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &257304244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257304241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -2011619263, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &257304245
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257304241}
+  m_CullTransparentMesh: 1
+--- !u!114 &257304246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257304241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 257304243}
+  targetImage: {fileID: 257304244}
+  offNormal: {fileID: -2011619263, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  offPressed: {fileID: -1119785181, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onNormal: {fileID: 1520315265, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onPressed: {fileID: 54996646, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
 --- !u!1 &462050948
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,6 +1576,8 @@ RectTransform:
   - {fileID: 2098605183}
   - {fileID: 1127448534}
   - {fileID: 1347582000}
+  - {fileID: 257304242}
+  - {fileID: 1395137655}
   m_Father: {fileID: 1448670017}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1518,6 +1659,8 @@ MonoBehaviour:
   volumeController: {fileID: 1509705978}
   balanceController: {fileID: 1802301961}
   channelsDisplay: {fileID: 2098605184}
+  shuffleButton: {fileID: 1127448538}
+  repeatButton: {fileID: 1347582004}
 --- !u!1 &1003941468
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,6 +1940,7 @@ GameObject:
   - component: {fileID: 1127448537}
   - component: {fileID: 1127448536}
   - component: {fileID: 1127448535}
+  - component: {fileID: 1127448538}
   m_Layer: 5
   m_Name: Shuffle Toggle
   m_TagString: Untagged
@@ -1905,6 +2049,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127448533}
   m_CullTransparentMesh: 1
+--- !u!114 &1127448538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127448533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 1127448535}
+  targetImage: {fileID: 1127448536}
+  offNormal: {fileID: 1834943409, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  offPressed: {fileID: 677886333, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onNormal: {fileID: -382845482, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onPressed: {fileID: 798675321, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
 --- !u!1 &1138104794
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,6 +2347,7 @@ GameObject:
   - component: {fileID: 1347582003}
   - component: {fileID: 1347582002}
   - component: {fileID: 1347582001}
+  - component: {fileID: 1347582004}
   m_Layer: 5
   m_Name: Repeat Toggle
   m_TagString: Untagged
@@ -2293,6 +2456,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347581999}
   m_CullTransparentMesh: 1
+--- !u!114 &1347582004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347581999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 1347582001}
+  targetImage: {fileID: 1347582002}
+  offNormal: {fileID: -1089636634, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  offPressed: {fileID: 901060258, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onNormal: {fileID: 46412569, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onPressed: {fileID: -374510621, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
 --- !u!1 &1356658611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,6 +2549,145 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1356658611}
   m_CullTransparentMesh: 1
+--- !u!1 &1395137654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1395137655}
+  - component: {fileID: 1395137658}
+  - component: {fileID: 1395137657}
+  - component: {fileID: 1395137656}
+  - component: {fileID: 1395137659}
+  m_Layer: 5
+  m_Name: Playlist Toggle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1395137655
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395137654}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 996247204}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 50.8, y: -0.19999695}
+  m_SizeDelta: {x: 10, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1395137656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395137654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 2
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 1335046128, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1395137657}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1395137657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395137654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 4018936276528418240, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1395137658
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395137654}
+  m_CullTransparentMesh: 1
+--- !u!114 &1395137659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395137654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 1395137656}
+  targetImage: {fileID: 1395137657}
+  offNormal: {fileID: 4018936276528418240, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  offPressed: {fileID: 1335046128, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onNormal: {fileID: 885159576, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  onPressed: {fileID: 1672109594, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
 --- !u!1 &1431627791
 GameObject:
   m_ObjectHideFlags: 0

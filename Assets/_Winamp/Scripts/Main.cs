@@ -37,6 +37,12 @@ namespace SoftAware
         [SerializeField] private ChannelsDisplay channelsDisplay;
         internal ChannelsDisplay ChannelsDisplay => channelsDisplay;
 
+        [Header("Toggles")]
+        [SerializeField] private ToggleButton shuffleButton;
+        [SerializeField] private ToggleButton repeatButton;
+        internal ToggleButton ShuffleButton => shuffleButton;
+        internal ToggleButton RepeatButton => repeatButton;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();

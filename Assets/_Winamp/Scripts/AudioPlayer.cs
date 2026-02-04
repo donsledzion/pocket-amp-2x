@@ -28,6 +28,7 @@ namespace SoftAware
 
         private float currentVolume = 1f;
         private float currentBalance = 0.5f; // 0.0 = Left, 1.0 = Right, 0.5 = Center
+        private bool repeatEnabled = false;
 
         private void Awake()
         {
@@ -108,11 +109,39 @@ namespace SoftAware
             panelMain.NextButton.onClick.AddListener(PlayNext);
             panelMain.EjectButton.onClick.AddListener(PickFolder);
 
-            panelMain.EjectButton.onClick.AddListener(PickFolder);
-
             BindSlider();
             BindVolume();
             BindBalance();
+            BindToggles();
+        }
+
+        private void BindToggles()
+        {
+            if (panelMain.ShuffleButton != null)
+            {
+                panelMain.ShuffleButton.GetComponent<Button>().onClick.AddListener(OnShuffleToggle);
+            }
+            
+            if (panelMain.RepeatButton != null)
+            {
+                panelMain.RepeatButton.GetComponent<Button>().onClick.AddListener(OnRepeatToggle);
+            }
+        }
+
+        private void OnShuffleToggle()
+        {
+            if (panelMain.ShuffleButton != null)
+            {
+                playlist.SetShuffle(panelMain.ShuffleButton.IsOn);
+            }
+        }
+
+        private void OnRepeatToggle()
+        {
+            if (panelMain.RepeatButton != null)
+            {
+                repeatEnabled = panelMain.RepeatButton.IsOn;
+            }
         }
 
         private void BindVolume()

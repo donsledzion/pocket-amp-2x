@@ -30,6 +30,7 @@ namespace SoftAware
         private static Playlist instance;
         
         private int currentIndex;
+        private bool shuffleEnabled = false;
         internal SongInfo CurrentSong => songs.Count > 0 ? songs[currentIndex] : null;
         internal AudioClip CurrentClip => CurrentSong?.Clip;
         internal int Count => songs.Count;
@@ -258,9 +259,34 @@ namespace SoftAware
         internal SongInfo GetNextSong()
         {
             if (songs.Count == 0) return null;
-            SetCurrentClip(currentIndex == songs.Count - 1 ? 0 : ++currentIndex);
+            
+            if (shuffleEnabled)
+            {
+                // Random next song
+                int newIndex = UnityEngine.Random.Range(0, songs.Count);
+                SetCurrentClip(newIndex);
+            }
+            else
+            {
+                // Sequential
+                SetCurrentClip(currentIndex == songs.Count - 1 ? 0 : ++currentIndex);
+            }
+            
             return CurrentSong;
         }
+
+        public void ToggleShuffle()
+        {
+            shuffleEnabled = !shuffleEnabled;
+            LogDebug($"Shuffle: {(shuffleEnabled ? "ON" : "OFF")}");
+        }
+
+        public void SetShuffle(bool enabled)
+        {
+            shuffleEnabled = enabled;
+        }
+
+        public bool IsShuffleEnabled => shuffleEnabled;
 
         internal SongInfo GetPreviousSong()
         {
