@@ -38,7 +38,7 @@ namespace SoftAware
                     if (BuildVersion() >= 26) // Android 8.0+
                         context.Call<AndroidJavaObject>("startForegroundService", serviceIntent);
                     else
-                        context.Call("startService", serviceIntent);
+                        context.Call<AndroidJavaObject>("startService", serviceIntent);
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace SoftAware
             Initialize();
             #if UNITY_ANDROID && !UNITY_EDITOR
             serviceIntent.Call<AndroidJavaObject>("setAction", "STOP_SERVICE");
-            context.Call("startService", serviceIntent);
+            context.Call<AndroidJavaObject>("startService", serviceIntent);
             #endif
         }
 
