@@ -350,6 +350,9 @@ namespace SoftAware
                         // TODO: Native channel detection requires Java implementation
                         // Defaulting to Stereo (2) for now for Native Audio
                         UpdateChannelsDisplay(true, 2);
+                        
+                        // Update audio info displays
+                        UpdateAudioInfo();
                     });
 
                     ANAMusic.play(id, (finishedID) => 
@@ -372,6 +375,7 @@ namespace SoftAware
                     audioSource.clip = currentClip;
                     audioSource.Play();
                     UpdateChannelsDisplay(true, currentClip.channels);
+                    UpdateAudioInfo();
                     autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
                 }
             }
@@ -385,6 +389,7 @@ namespace SoftAware
                 audioSource.clip = currentClip;
                 audioSource.Play();
                 UpdateChannelsDisplay(true, currentClip.channels);
+                UpdateAudioInfo();
                 autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
             }
 #endif
@@ -453,6 +458,44 @@ namespace SoftAware
             {
                 panelMain.ChannelsDisplay.UpdateDisplay(isPlaying, channels);
             }
+        }
+
+        private void UpdateAudioInfo()
+        {
+            if (currentClip == null) return;
+
+            // Sample Rate (kHz)
+            if (panelMain.SampleRateDisplay != null)
+            {
+                int sampleRateKHz = currentClip.frequency / 1000;
+                panelMain.SampleRateDisplay.SetNumber(sampleRateKHz);
+            }
+
+            // Bitrate (kbps) - Estimated
+            if (panelMain.BitrateDisplay != null)
+            {
+                // Unity doesn't provide bitrate directly
+                // Estimate: (samples * channels * bits_per_sample) / duration / 1000
+                // Assuming 16-bit audio
+                int estimatedBitrate = EstimateBitrate(currentClip);
+                panelMain.BitrateDisplay.SetNumber(estimatedBitrate);
+            }
+        }
+
+        private int EstimateBitrate(AudioClip clip)
+        {
+            if (clip == null || clip.length == 0) return 0;
+
+            // Estimate based on uncompressed PCM data
+            // (sample_rate * channels * bits_per_sample) / 1000
+            int uncompressedBitrate = (clip.frequency * clip.channels * 16) / 1000;
+
+            // For compressed formats (MP3, OGG), assume ~10-20% of uncompressed
+            // This is a rough estimate - actual bitrate varies
+            int estimatedBitrate = uncompressedBitrate / 8; // ~12.5% compression ratio
+
+            // Clamp to reasonable values (32-320 kbps for MP3)
+            return Mathf.Clamp(estimatedBitrate, 32, 320);
         }
 
         public void StopPlayback()

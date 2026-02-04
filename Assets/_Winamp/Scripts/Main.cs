@@ -43,6 +43,12 @@ namespace SoftAware
         internal ToggleButton ShuffleButton => shuffleButton;
         internal ToggleButton RepeatButton => repeatButton;
 
+        [Header("Audio Info Displays")]
+        [SerializeField] private SpriteTextDisplay bitrateDisplay;
+        [SerializeField] private SpriteTextDisplay sampleRateDisplay;
+        internal SpriteTextDisplay BitrateDisplay => bitrateDisplay;
+        internal SpriteTextDisplay SampleRateDisplay => sampleRateDisplay;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();
