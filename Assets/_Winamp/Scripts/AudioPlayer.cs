@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using SimpleFileBrowser;
+using System.Collections.Concurrent;
 
 namespace SoftAware
 {
@@ -23,6 +24,7 @@ namespace SoftAware
         private int pendingVisualizerSessionId = -1;
         private bool isDraggingSlider = false;
         private bool isPaused = false;
+        private ConcurrentQueue<Action> mainThreadActions = new ConcurrentQueue<Action>();
 
         private float currentVolume = 1f;
         private float currentBalance = 0.5f; // 0.0 = Left, 1.0 = Right, 0.5 = Center
@@ -51,6 +53,12 @@ namespace SoftAware
             }
 
             UpdateSlider();
+            
+            // Execute Main Thread Actions
+            while (mainThreadActions.TryDequeue(out var action))
+            {
+                action?.Invoke();
+            }
         }
 
         private void UpdateSlider()
@@ -301,20 +309,25 @@ namespace SoftAware
                 // Load file using absolute path (direct access)
                 currentMusicID = ANAMusic.load(currentSong.FilePath, false, false, (id) => 
                 {
-                    // Set flag for main thread update
-                    pendingVisualizerSessionId = id;
-                    
-                    // Apply current volume to new track
-                    ApplyVolumeBalance();
-                    
-                    // TODO: Native channel detection requires Java implementation
-                    // Defaulting to Stereo (2) for now for Native Audio
-                    UpdateChannelsDisplay(true, 2);
+                    // Enqueue UI/Unity API updates to Main Thread
+                    mainThreadActions.Enqueue(() => 
+                    {
+                        // Set flag for main thread update
+                        pendingVisualizerSessionId = id;
+                        
+                        // Apply current volume to new track
+                        ApplyVolumeBalance();
+                        
+                        // TODO: Native channel detection requires Java implementation
+                        // Defaulting to Stereo (2) for now for Native Audio
+                        UpdateChannelsDisplay(true, 2);
+                    });
 
                     ANAMusic.play(id, (finishedID) => 
                     {
                         // Automatic song progression
-                        PlayNext();
+                        // This callback might also be on a bg thread, so safe queueing:
+                        mainThreadActions.Enqueue(() => PlayNext());
                     });
                 }, true, true); // playInBackground = true, isAbsolutePath = true
             }
