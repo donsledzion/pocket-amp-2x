@@ -47,9 +47,11 @@ namespace SoftAware
         [SerializeField] private SpriteTextDisplay bitrateDisplay;
         [SerializeField] private SpriteTextDisplay sampleRateDisplay;
         [SerializeField] private WinampTimeDisplay timeDisplay;
+        [SerializeField] private WinampStatusDisplay statusDisplay;
         internal SpriteTextDisplay BitrateDisplay => bitrateDisplay;
         internal SpriteTextDisplay SampleRateDisplay => sampleRateDisplay;
         internal WinampTimeDisplay TimeDisplay => timeDisplay;
+        internal WinampStatusDisplay StatusDisplay => statusDisplay;
 
         private void OnDestroy()
         {

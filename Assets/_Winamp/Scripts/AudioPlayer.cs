@@ -341,6 +341,9 @@ namespace SoftAware
             
             isPaused = false;
             
+            if (panelMain.StatusDisplay != null)
+                panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Loading);
+
             if(currentSong == null)
             {
                 Debug.LogWarning("Missing currentSong!");
@@ -376,6 +379,9 @@ namespace SoftAware
                         
                         // Update audio info displays
                         UpdateAudioInfo();
+
+                        if (panelMain.StatusDisplay != null)
+                            panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
                     });
 
                     ANAMusic.play(id, (finishedID) => 
@@ -399,6 +405,10 @@ namespace SoftAware
                     audioSource.Play();
                     UpdateChannelsDisplay(true, currentClip.channels);
                     UpdateAudioInfo();
+                    
+                    if (panelMain.StatusDisplay != null)
+                        panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
+
                     autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
                 }
             }
@@ -413,6 +423,10 @@ namespace SoftAware
                 audioSource.Play();
                 UpdateChannelsDisplay(true, currentClip.channels);
                 UpdateAudioInfo();
+                
+                if (panelMain.StatusDisplay != null)
+                    panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
+
                 autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
             }
 #endif
@@ -569,6 +583,9 @@ namespace SoftAware
             if (panelMain.TimeDisplay != null)
                 panelMain.TimeDisplay.SetPaused(false);
             
+            if (panelMain.StatusDisplay != null)
+                panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Stop);
+
             isPaused = false;
         }
 
