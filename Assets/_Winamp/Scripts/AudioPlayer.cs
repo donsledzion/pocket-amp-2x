@@ -68,24 +68,30 @@ namespace SoftAware
 
             bool isPlaying = false;
             float progress = 0f;
+            float currentTime = 0f;
+            float totalTime = 0f;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (currentMusicID != -1)
             {
-                if (ANAMusic.isPlaying(currentMusicID))
-                {
-                    isPlaying = true;
-                    int duration = ANAMusic.getDuration(currentMusicID);
-                    int current = ANAMusic.getCurrentPosition(currentMusicID);
-                    if (duration > 0) progress = (float)current / duration;
-                }
+                isPlaying = ANAMusic.isPlaying(currentMusicID);
+                int duration = ANAMusic.getDuration(currentMusicID);
+                int current = ANAMusic.getCurrentPosition(currentMusicID);
+                if (duration > 0) progress = (float)current / duration;
+
+                currentTime = current / 1000f;
+                totalTime = duration / 1000f;
             }
 #else
-            if (audioSource.clip != null && audioSource.isPlaying)
+            if (audioSource.clip != null)
             {
-                isPlaying = true;
+                isPlaying = audioSource.isPlaying;
                 if (audioSource.clip.length > 0) 
+                {
                     progress = audioSource.time / audioSource.clip.length;
+                    currentTime = audioSource.time;
+                    totalTime = audioSource.clip.length;
+                }
             }
 #endif
 
@@ -97,6 +103,20 @@ namespace SoftAware
             if (isPlaying && !isDraggingSlider)
             {
                 panelMain.ProgressSlider.value = progress;
+            }
+
+            // Update Time Display
+            if (panelMain.TimeDisplay != null)
+            {
+                if (isPlaying || isPaused)
+                {
+                    panelMain.TimeDisplay.SetTime(currentTime, totalTime);
+                    panelMain.TimeDisplay.SetPaused(isPaused);
+                }
+                else
+                {
+                    panelMain.TimeDisplay.Clear();
+                }
             }
         }
 
@@ -319,6 +339,8 @@ namespace SoftAware
             if(autoPlayNextClipCoroutine != null)
                 StopCoroutine(autoPlayNextClipCoroutine);
             
+            isPaused = false;
+            
             if(currentSong == null)
             {
                 Debug.LogWarning("Missing currentSong!");
@@ -445,6 +467,9 @@ namespace SoftAware
 #else 
             currentlyPlaying = audioSource.isPlaying;
 #endif  
+
+            isPaused = !currentlyPlaying;
+
             // Maintain channel info if just pausing
             int channels = 2; // Default
 #if !UNITY_ANDROID || UNITY_EDITOR
@@ -540,6 +565,9 @@ namespace SoftAware
                 panelMain.BitrateDisplay.Clear();
             if (panelMain.SampleRateDisplay != null)
                 panelMain.SampleRateDisplay.Clear();
+            
+            if (panelMain.TimeDisplay != null)
+                panelMain.TimeDisplay.SetPaused(false);
             
             isPaused = false;
         }

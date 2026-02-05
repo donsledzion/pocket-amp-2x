@@ -46,8 +46,10 @@ namespace SoftAware
         [Header("Audio Info Displays")]
         [SerializeField] private SpriteTextDisplay bitrateDisplay;
         [SerializeField] private SpriteTextDisplay sampleRateDisplay;
+        [SerializeField] private WinampTimeDisplay timeDisplay;
         internal SpriteTextDisplay BitrateDisplay => bitrateDisplay;
         internal SpriteTextDisplay SampleRateDisplay => sampleRateDisplay;
+        internal WinampTimeDisplay TimeDisplay => timeDisplay;
 
         private void OnDestroy()
         {
