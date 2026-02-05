@@ -31,6 +31,7 @@ namespace SoftAware
                 {
                     if (characterImages[i] == null) continue;
 
+                    bool spriteSet = false;
                     if (textIndex >= 0)
                     {
                         char c = text[textIndex];
@@ -40,17 +41,13 @@ namespace SoftAware
                         {
                             characterImages[i].sprite = sprite;
                             characterImages[i].enabled = true;
-                            textIndex--;
+                            spriteSet = true;
                         }
-                        else
-                        {
-                            // Character not found, hide
-                            characterImages[i].enabled = false;
-                        }
+                        textIndex--;
                     }
-                    else
+                    
+                    if (!spriteSet)
                     {
-                        // No more characters - hide remaining (left side)
                         characterImages[i].enabled = false;
                     }
                 }
@@ -64,6 +61,7 @@ namespace SoftAware
                 {
                     if (characterImages[i] == null) continue;
 
+                    bool spriteSet = false;
                     if (textIndex < text.Length)
                     {
                         char c = text[textIndex];
@@ -73,8 +71,14 @@ namespace SoftAware
                         {
                             characterImages[i].sprite = sprite;
                             characterImages[i].enabled = true;
-                            textIndex++;
+                            spriteSet = true;
                         }
+                        textIndex++;
+                    }
+
+                    if (!spriteSet)
+                    {
+                        characterImages[i].enabled = false;
                     }
                 }
             }

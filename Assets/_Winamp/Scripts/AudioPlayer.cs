@@ -494,48 +494,48 @@ namespace SoftAware
 
         private void UpdateAudioInfo()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // Android Native Playback - use file path
-            if (currentSong != null && currentSong.HasNativePath)
+            if (currentSong == null)
             {
-                // Sample Rate (kHz)
+                if (panelMain.SongTitleDisplay != null) panelMain.SongTitleDisplay.Clear();
+                return;
+            }
+
+            float duration = 0;
+            string displayTitle = currentSong.Title;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1)
+            {
+                duration = ANAMusic.getDuration(currentMusicID) / 1000f;
+                // Sample Rate
                 if (panelMain.SampleRateDisplay != null)
                 {
                     int sampleRateHz = AndroidAudioInfoBridge.GetSampleRate(currentSong.FilePath);
-                    int sampleRateKHz = sampleRateHz / 1000;
-                    panelMain.SampleRateDisplay.SetNumber(sampleRateKHz);
+                    panelMain.SampleRateDisplay.SetNumber(sampleRateHz / 1000);
                 }
-
-                // Bitrate (kbps)
+                // Bitrate
                 if (panelMain.BitrateDisplay != null)
                 {
                     int bitrateBps = AndroidAudioInfoBridge.GetBitrate(currentSong.FilePath);
-                    int bitrateKbps = bitrateBps / 1000;
-                    panelMain.BitrateDisplay.SetNumber(bitrateKbps);
+                    panelMain.BitrateDisplay.SetNumber(bitrateBps / 1000);
                 }
-                
-                return;
+            }
+#else
+            if (audioSource.clip != null)
+            {
+                duration = audioSource.clip.length;
+                // Sample Rate
+                if (panelMain.SampleRateDisplay != null)
+                    panelMain.SampleRateDisplay.SetNumber(audioSource.clip.frequency / 1000);
+                // Bitrate
+                if (panelMain.BitrateDisplay != null)
+                    panelMain.BitrateDisplay.SetNumber(EstimateBitrate(audioSource.clip));
             }
 #endif
-
-            // Unity AudioClip Playback
-            if (currentClip == null) return;
-
-            // Sample Rate (kHz)
-            if (panelMain.SampleRateDisplay != null)
+            // Update the scrolling title display
+            if (panelMain.SongTitleDisplay != null)
             {
-                int sampleRateKHz = currentClip.frequency / 1000;
-                panelMain.SampleRateDisplay.SetNumber(sampleRateKHz);
-            }
-
-            // Bitrate (kbps) - Estimated
-            if (panelMain.BitrateDisplay != null)
-            {
-                // Unity doesn't provide bitrate directly
-                // Estimate: (samples * channels * bits_per_sample) / duration / 1000
-                // Assuming 16-bit audio
-                int estimatedBitrate = EstimateBitrate(currentClip);
-                panelMain.BitrateDisplay.SetNumber(estimatedBitrate);
+                panelMain.SongTitleDisplay.SetSongInfo(playlist.CurrentIndex1Based, displayTitle, duration);
             }
         }
 

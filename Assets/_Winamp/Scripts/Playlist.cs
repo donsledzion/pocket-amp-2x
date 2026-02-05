@@ -34,6 +34,7 @@ namespace SoftAware
         internal SongInfo CurrentSong => songs.Count > 0 ? songs[currentIndex] : null;
         internal AudioClip CurrentClip => CurrentSong?.Clip;
         internal int Count => songs.Count;
+        public int CurrentIndex1Based => songs.Count > 0 ? currentIndex + 1 : 0;
 
         private void Awake()
         {

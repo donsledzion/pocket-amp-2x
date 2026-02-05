@@ -37,11 +37,30 @@ namespace SoftAware
             {
                 if (sprite == null) continue;
                 
-                // Expected format: "Text_A", "Text_5", etc.
-                if (sprite.name.StartsWith("Text_") && sprite.name.Length == 6)
+                if (sprite.name.StartsWith("Text_"))
                 {
-                    char character = sprite.name[5];
-                    spriteCache[character] = sprite;
+                    string suffix = sprite.name.Substring(5); // Don't ToUpper yet, keep original char if needed
+                    
+                    if (suffix.Length == 1)
+                    {
+                        char c = char.ToUpper(suffix[0]);
+                        spriteCache[c] = sprite;
+                    }
+                    else
+                    {
+                        // Handle special names mapping to chars
+                        string upperSuffix = suffix.ToUpper();
+                        if (upperSuffix == "STAR" || upperSuffix == "SHURIKEN") spriteCache['*'] = sprite;
+                        else if (upperSuffix == "DASH" || upperSuffix == "MINUS") spriteCache['-'] = sprite;
+                        else if (upperSuffix == "DOT" || upperSuffix == "PERIOD") spriteCache['.'] = sprite;
+                        else if (upperSuffix == "SPACE") spriteCache[' '] = sprite;
+                        else if (upperSuffix == "LBRACKET") spriteCache['('] = sprite;
+                        else if (upperSuffix == "RBRACKET") spriteCache[')'] = sprite;
+                        else if (upperSuffix == "QUESTION") spriteCache['?'] = sprite;
+                        else if (upperSuffix == "''") spriteCache['"'] = sprite;
+                        else if (upperSuffix == "=") spriteCache['='] = sprite;
+                        else if (upperSuffix == "COLON") spriteCache[':'] = sprite;
+                    }
                 }
             }
 

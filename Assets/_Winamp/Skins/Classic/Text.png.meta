@@ -55,7 +55,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -77,7 +77,7 @@ TextureImporter:
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
-    crunchedCompression: 0
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
@@ -685,7 +685,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_
+      name: Text_''
       rect:
         serializedVersion: 2
         x: 130
@@ -1015,12 +1015,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_41
+      name: Text_.
       rect:
         serializedVersion: 2
-        x: 50
+        x: 49
         y: 6
-        width: 5
+        width: 3
         height: 6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1040,9 +1040,9 @@ TextureImporter:
       name: Text_42
       rect:
         serializedVersion: 2
-        x: 55
+        x: 54
         y: 6
-        width: 5
+        width: 6
         height: 6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1059,7 +1059,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_43
+      name: Text_Colon
       rect:
         serializedVersion: 2
         x: 60
@@ -1081,7 +1081,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_44
+      name: Text_(
       rect:
         serializedVersion: 2
         x: 65
@@ -1103,7 +1103,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_45
+      name: Text_)
       rect:
         serializedVersion: 2
         x: 70
@@ -1125,7 +1125,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_46
+      name: Text_-
       rect:
         serializedVersion: 2
         x: 75
@@ -1147,7 +1147,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_47
+      name: Text_'
       rect:
         serializedVersion: 2
         x: 80
@@ -1169,7 +1169,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_48
+      name: Text_!
       rect:
         serializedVersion: 2
         x: 85
@@ -1191,7 +1191,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_49
+      name: Text__
       rect:
         serializedVersion: 2
         x: 90
@@ -1213,7 +1213,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_50
+      name: Text_+
       rect:
         serializedVersion: 2
         x: 95
@@ -1279,7 +1279,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_53
+      name: Text_[
       rect:
         serializedVersion: 2
         x: 110
@@ -1301,7 +1301,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_54
+      name: 'Text_]'
       rect:
         serializedVersion: 2
         x: 115
@@ -1323,7 +1323,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_55
+      name: Text_^
       rect:
         serializedVersion: 2
         x: 120
@@ -1345,7 +1345,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_56
+      name: Text_&
       rect:
         serializedVersion: 2
         x: 125
@@ -1367,7 +1367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_57
+      name: Text_%
       rect:
         serializedVersion: 2
         x: 130
@@ -1389,7 +1389,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_58
+      name: Text_,
       rect:
         serializedVersion: 2
         x: 135
@@ -1411,7 +1411,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_59
+      name: Text_=
       rect:
         serializedVersion: 2
         x: 140
@@ -1433,7 +1433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_60
+      name: Text_$
       rect:
         serializedVersion: 2
         x: 145
@@ -1455,7 +1455,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_61
+      name: Text_#
       rect:
         serializedVersion: 2
         x: 150
@@ -1543,7 +1543,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_65
+      name: Text_Question
       rect:
         serializedVersion: 2
         x: 15
@@ -1565,7 +1565,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_66
+      name: Text_Shuriken
       rect:
         serializedVersion: 2
         x: 20
@@ -2174,7 +2174,19 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":5.0,"y":6.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Text_: 1060866371
+      Text_!: 1421665799
+      Text_#: -1187713184
+      Text_$: 1050496543
+      Text_%: 450975663
+      Text_&: 487170413
+      Text_': 1345716448
+      Text_'': 1060866371
+      Text_(: -86936391
+      Text_): 2016727090
+      Text_+: -986472785
+      Text_,: 1749640558
+      Text_-: 22255376
+      Text_.: -565338230
       Text_0: 1511708618
       Text_1: -1166213160
       Text_2: -1810705503
@@ -2183,34 +2195,14 @@ TextureImporter:
       Text_3: -89411136
       Text_30: -1564764486
       Text_4: 269967503
-      Text_41: -565338230
       Text_42: -884595596
-      Text_43: -439205617
-      Text_44: -86936391
-      Text_45: 2016727090
-      Text_46: 22255376
-      Text_47: 1345716448
-      Text_48: 1421665799
-      Text_49: 581336692
       Text_5: 1838055545
-      Text_50: -986472785
       Text_51: -1971399738
       Text_52: -703609360
-      Text_53: 814649844
-      Text_54: -896862472
-      Text_55: 1613988692
-      Text_56: 487170413
-      Text_57: 450975663
-      Text_58: 1749640558
-      Text_59: -82097177
       Text_6: -1700958250
-      Text_60: 1050496543
-      Text_61: -1187713184
       Text_62: 1718452218
       Text_63: 1039069721
       Text_64: -516299385
-      Text_65: 2045386273
-      Text_66: 1458559929
       Text_67: 1961043201
       Text_68: 90848305
       Text_69: -501480937
@@ -2240,10 +2232,12 @@ TextureImporter:
       Text_90: 1654588131
       Text_91: -287094986
       Text_92: -600375768
+      Text_=: -82097177
       Text_@: -609899014
       Text_A: -444216111315796292
       Text_B: 1758289085
       Text_C: -736283811
+      Text_Colon: -439205617
       Text_D: 1714825245
       Text_E: 1409041749
       Text_F: 253922105
@@ -2258,8 +2252,10 @@ TextureImporter:
       Text_O: -1876367668
       Text_P: -1121788387
       Text_Q: -1208687070
+      Text_Question: 2045386273
       Text_R: -907178127
       Text_S: -759596021
+      Text_Shuriken: 1458559929
       Text_T: -7452242
       Text_U: 124819086
       Text_V: 1875212801
@@ -2267,6 +2263,10 @@ TextureImporter:
       Text_X: 1962140793
       Text_Y: -155037080
       Text_Z: 1149604246
+      Text_[: 814649844
+      'Text_]': -896862472
+      Text_^: 1613988692
+      Text__: 581336692
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
