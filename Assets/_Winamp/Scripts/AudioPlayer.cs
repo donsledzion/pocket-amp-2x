@@ -394,22 +394,51 @@ namespace SoftAware
 
         private void PlayNext()
         {
+            bool wasActive = audioSource.isPlaying || isPaused;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1 && ANAMusic.isPlaying(currentMusicID)) wasActive = true;
+#endif
+
             StopNativeIfRunning();
             audioSource.Stop();
             playlist.GetNextSong();
-            Play();
+
+            if (wasActive)
+                Play();
+            else
+                UpdateUIStates(); // Update title/info only
         }
 
         private void PlayPrevious()
         {
+            bool wasActive = audioSource.isPlaying || isPaused;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1 && ANAMusic.isPlaying(currentMusicID)) wasActive = true;
+#endif
+
             StopNativeIfRunning();
             audioSource.Stop();
             playlist.GetPreviousSong();
-            Play();
+
+            if (wasActive)
+                Play();
+            else
+                UpdateUIStates(); // Update title/info only
         }
 
         private void Pause()
         {
+            // If we are stopped (neither playing nor paused), don't do anything
+            bool isActuallyPlaying = false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1) isActuallyPlaying = ANAMusic.isPlaying(currentMusicID);
+#else
+            isActuallyPlaying = audioSource.isPlaying;
+#endif
+
+            if (!isActuallyPlaying && !isPaused)
+                return;
+
             if (isPaused)
             {
                 Resume();
@@ -432,14 +461,26 @@ namespace SoftAware
         {
             UpdateNotification();
             
+            bool isActuallyActive = audioSource.isPlaying || isPaused;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1 && ANAMusic.isPlaying(currentMusicID)) isActuallyActive = true;
+#endif
+
             if (panelMain.StatusDisplay != null)
             {
-                panelMain.StatusDisplay.SetStatus(isPaused ? 
-                    WinampStatusDisplay.WinampStatus.Paused : 
-                    WinampStatusDisplay.WinampStatus.Playing);
+                if (isActuallyActive)
+                {
+                    panelMain.StatusDisplay.SetStatus(isPaused ? 
+                        WinampStatusDisplay.WinampStatus.Paused : 
+                        WinampStatusDisplay.WinampStatus.Playing);
+                }
+                else
+                {
+                    panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Stop);
+                }
             }
 
-            UpdateChannelsDisplay(true, 2); 
+            UpdateChannelsDisplay(isActuallyActive, 2); 
             UpdateAudioInfo();
         }
 
