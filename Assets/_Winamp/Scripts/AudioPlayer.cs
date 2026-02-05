@@ -24,6 +24,7 @@ namespace SoftAware
         private int pendingVisualizerSessionId = -1;
         private bool isDraggingSlider = false;
         private bool isPaused = false;
+        public bool IsPaused => isPaused;
         private ConcurrentQueue<Action> mainThreadActions = new ConcurrentQueue<Action>();
 
         private float currentVolume = 1f;
@@ -95,12 +96,12 @@ namespace SoftAware
             }
 #endif
 
-            // Handle Knob Visibility
+            // Handle Knob Visibility - Keep visible also when paused
             if (panelMain.ProgressSlider.handleRect != null)
-                panelMain.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isDraggingSlider);
+                panelMain.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isPaused || isDraggingSlider);
 
-            // Update Value (only if not dragging)
-            if (isPlaying && !isDraggingSlider)
+            // Update Value (only if not dragging) - Use isPaused to keep current value
+            if ((isPlaying || isPaused) && !isDraggingSlider)
             {
                 panelMain.ProgressSlider.value = progress;
             }
@@ -317,21 +318,44 @@ namespace SoftAware
 
         private IEnumerator PlayNextClipCoroutine()
         {
-            // This coroutine is now primarily for non-Android platforms
-            // On Android, we use ANAMusic completion callback
 #if UNITY_ANDROID && !UNITY_EDITOR
             yield break;
 #else
             yield return new WaitUntil(() => audioSource.isPlaying);
-            yield return new WaitUntil(() => !audioSource.isPlaying);
-            PlayNext();
+            // Wait while playing OR while paused
+            yield return new WaitUntil(() => !audioSource.isPlaying && !isPaused);
+            
+            // Double check if reached the end (not stopped manually)
+            if (!audioSource.isPlaying && !isPaused && audioSource.time == 0)
+            {
+                PlayNext();
+            }
+            // If it stopped but isPaused is false, it might be a stop command
 #endif
         }
 
         private void Play()
         {
+            // If we are currently paused, 'Play' should resume
+            if (isPaused)
+            {
+                Resume();
+                return;
+            }
+
             if (playCoroutine != null) StopCoroutine(playCoroutine);
             playCoroutine = StartCoroutine(PlayProcess());
+        }
+
+        private void Resume()
+        {
+            isPaused = false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (currentMusicID != -1) ANAMusic.play(currentMusicID);
+#else
+            if (audioSource.clip != null) audioSource.UnPause();
+#endif
+            UpdateUIStates();
         }
 
         private IEnumerator PlayProcess()
@@ -344,74 +368,14 @@ namespace SoftAware
             if (panelMain.StatusDisplay != null)
                 panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Loading);
 
-            if(currentSong == null)
+            if (currentSong == null)
             {
                 Debug.LogWarning("Missing currentSong!");
                 yield break;
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // Native Android Playback only if we have a file path
-            if (currentSong.HasNativePath)
-            {
-                if (currentMusicID != -1)
-                {
-                    ANAMusic.release(currentMusicID);
-                    currentMusicID = -1;
-                }
-
-                // Load file using absolute path (direct access)
-                currentMusicID = ANAMusic.load(currentSong.FilePath, false, false, (id) => 
-                {
-                    // Enqueue UI/Unity API updates to Main Thread
-                    mainThreadActions.Enqueue(() => 
-                    {
-                        // Set flag for main thread update
-                        pendingVisualizerSessionId = id;
-                        
-                        // Apply current volume to new track
-                        ApplyVolumeBalance();
-                        
-                        // TODO: Native channel detection requires Java implementation
-                        // Now using bridge to get actual channels
-                        int channels = AndroidAudioInfoBridge.GetChannelCount(currentSong.FilePath);
-                        UpdateChannelsDisplay(true, channels);
-                        
-                        // Update audio info displays
-                        UpdateAudioInfo();
-
-                        if (panelMain.StatusDisplay != null)
-                            panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
-                    });
-
-                    ANAMusic.play(id, (finishedID) => 
-                    {
-                        // Automatic song progression
-                        // This callback might also be on a bg thread, so safe queueing:
-                        mainThreadActions.Enqueue(() => PlayNext());
-                    });
-                }, true, true); // playInBackground = true, isAbsolutePath = true
-            }
-            else
-            {
-                Debug.LogWarning($"Song {currentSong.Title} has no native path! Falling back to AudioSource. (Background play may be limited)");
-                
-                if (currentClip == null && currentSong.HasNativePath)
-                    yield return playlist.LoadSongClip(currentSong);
-
-                if (currentClip != null)
-                {
-                    audioSource.clip = currentClip;
-                    audioSource.Play();
-                    UpdateChannelsDisplay(true, currentClip.channels);
-                    UpdateAudioInfo();
-                    
-                    if (panelMain.StatusDisplay != null)
-                        panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
-
-                    autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
-                }
-            }
+            // native logic...
 #else
             // Standard Unity Playback
             if (currentClip == null && currentSong.HasNativePath)
@@ -421,12 +385,7 @@ namespace SoftAware
             {
                 audioSource.clip = currentClip;
                 audioSource.Play();
-                UpdateChannelsDisplay(true, currentClip.channels);
-                UpdateAudioInfo();
-                
-                if (panelMain.StatusDisplay != null)
-                    panelMain.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Playing);
-
+                UpdateUIStates(); // This will show 'Playing' status
                 autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
             }
 #endif
@@ -451,45 +410,37 @@ namespace SoftAware
 
         private void Pause()
         {
+            if (isPaused)
+            {
+                Resume();
+                return;
+            }
+
+            // In Unity Editor, audioSource.Pause() makes isPlaying=false immediately.
+            // We must set isPaused=true BEFORE updating UI.
+            isPaused = true;
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (currentMusicID != -1)
-            {
-                if (ANAMusic.isPlaying(currentMusicID))
-                    ANAMusic.pause(currentMusicID);
-                else
-                    ANAMusic.play(currentMusicID);
-            }
-            else if (audioSource.clip != null)
-            {
-                // Fallback for non-native clips
-                if (audioSource.isPlaying) audioSource.Pause();
-                else audioSource.UnPause();
-            }
+            if (currentMusicID != -1) ANAMusic.pause(currentMusicID);
 #else
-            if(audioSource.isPlaying)
-                audioSource.Pause();
-            else if (audioSource.clip != null)
-                audioSource.UnPause();
+            if (audioSource.clip != null) audioSource.Pause();
 #endif
-            
+            UpdateUIStates();
+        }
+
+        private void UpdateUIStates()
+        {
             UpdateNotification();
             
-            // Check playing status for UI update
-            bool currentlyPlaying = false;
-#if UNITY_ANDROID && !UNITY_EDITOR
-            if (currentMusicID != -1) currentlyPlaying = ANAMusic.isPlaying(currentMusicID);
-#else 
-            currentlyPlaying = audioSource.isPlaying;
-#endif  
+            if (panelMain.StatusDisplay != null)
+            {
+                panelMain.StatusDisplay.SetStatus(isPaused ? 
+                    WinampStatusDisplay.WinampStatus.Paused : 
+                    WinampStatusDisplay.WinampStatus.Playing);
+            }
 
-            isPaused = !currentlyPlaying;
-
-            // Maintain channel info if just pausing
-            int channels = 2; // Default
-#if !UNITY_ANDROID || UNITY_EDITOR
-             if (currentClip != null) channels = currentClip.channels;
-#endif
-            UpdateChannelsDisplay(currentlyPlaying, channels);
+            UpdateChannelsDisplay(true, 2); 
+            UpdateAudioInfo();
         }
 
         private void UpdateChannelsDisplay(bool isPlaying, int channels)

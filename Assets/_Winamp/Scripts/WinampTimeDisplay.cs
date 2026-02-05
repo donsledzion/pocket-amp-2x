@@ -29,7 +29,7 @@ namespace SoftAware
         private bool isPaused = false;
         private float lastCurrentTime = -1f;
         private float blinkTimer = 0f;
-        private const float BLINK_INTERVAL = 0.5f;
+        private const float BLINK_INTERVAL = 2.0f;
 
         private void Start()
         {

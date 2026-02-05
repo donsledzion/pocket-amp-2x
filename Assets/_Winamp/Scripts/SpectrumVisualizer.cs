@@ -95,15 +95,25 @@ namespace SoftAware
             try
             {
 #if UNITY_ANDROID && !UNITY_EDITOR
-                // On Android, we don't use audioSource.isPlaying because we play natively
+                // On Android, the state is managed in AudioPlayer
+                var player = audioSource.GetComponent<AudioPlayer>();
+                if (player != null && player.IsPaused) return; // Freeze
 #else
-                if (audioSource == null || !audioSource.isPlaying)
+                if (audioSource == null) return;
+                
+                var player = audioSource.GetComponent<AudioPlayer>();
+                bool isPausedNow = player != null && player.IsPaused;
+
+                if (!audioSource.isPlaying && !isPausedNow)
                 {
+                    // Stopped - clear texture
                     UpdatePeaks(null);
                     ClearTexture();
                     visualizerTexture.Apply();
                     return;
                 }
+
+                if (isPausedNow) return; // Frozen - skip draw but don't clear
 #endif
 
                 ClearTexture();
