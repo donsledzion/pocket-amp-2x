@@ -320,7 +320,8 @@ namespace SoftAware
             else
             {
                 // Sequential
-                SetCurrentClip(currentIndex == songs.Count - 1 ? 0 : ++currentIndex);
+                int newIndex = (currentIndex == songs.Count - 1) ? 0 : currentIndex + 1;
+                SetCurrentClip(newIndex);
             }
             
             return CurrentSong;
@@ -342,7 +343,8 @@ namespace SoftAware
         internal SongInfo GetPreviousSong()
         {
             if (songs.Count == 0) return null;
-            SetCurrentClip(currentIndex == 0 ? songs.Count - 1 : --currentIndex);
+            int newIndex = (currentIndex <= 0) ? songs.Count - 1 : currentIndex - 1;
+            SetCurrentClip(newIndex);
             return CurrentSong;
         }
 
