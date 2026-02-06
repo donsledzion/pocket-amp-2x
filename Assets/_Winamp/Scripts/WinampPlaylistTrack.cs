@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Collections;
 using UnityEngine.EventSystems;
 
 namespace SoftAware
@@ -21,6 +22,7 @@ namespace SoftAware
 
         private int index;
         private string originalTitle;
+        private float currentDuration;
         private Action<int> onClick;
         private Action<int> onDoubleClick;
         private float lastClickTime;
@@ -49,6 +51,7 @@ namespace SoftAware
         {
             index = trackIndex;
             originalTitle = title;
+            currentDuration = duration;
             onClick = clickCallback;
             onDoubleClick = doubleClickCallback;
 
@@ -61,32 +64,55 @@ namespace SoftAware
         public void RefreshDuration(string title, float duration)
         {
             originalTitle = title;
+            currentDuration = duration;
             RefreshDisplay(duration);
+        }
+
+        protected void OnRectTransformDimensionsChange()
+        {
+            // Optional: Also retry if dimensions changed significantly
+            if (gameObject.activeInHierarchy)
+            {
+                RefreshDisplay(currentDuration);
+            }
         }
 
         private void RefreshDisplay(float duration)
         {
-            if (indexText != null) indexText.text = $"{index + 1}.";
-            
-            if (titleText != null) 
-            {
-                // Clean title (strip extensions)
-                string cleanTitle = originalTitle;
-                if (cleanTitle.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
-                    cleanTitle.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || 
-                    cleanTitle.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
-                {
-                    cleanTitle = System.IO.Path.GetFileNameWithoutExtension(cleanTitle);
-                }
-                
-                // Use manual truncation helper
-                TruncateWithEllipsis(titleText, cleanTitle);
-            }
+            // Start a coroutine to handle display, because we might need to wait for layout/size
+            StartCoroutine(RefreshDisplayCoroutine(duration));
+        }
 
+        private IEnumerator RefreshDisplayCoroutine(float duration)
+        {
+            if (indexText != null) indexText.text = $"{index + 1}.";
             if (durationText != null)
             {
                 durationText.text = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : "?:??";
             }
+
+            if (titleText == null) yield break;
+
+            // Wait until the end of the frame and for width to be valid
+            // Items are often instantiated with 0 width until layout runs
+            int failsafe = 0;
+            while (titleText.rectTransform.rect.width <= 0 && failsafe < 5)
+            {
+                yield return null;
+                failsafe++;
+            }
+
+            // Clean title (strip extensions)
+            string cleanTitle = originalTitle;
+            if (cleanTitle.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
+                cleanTitle.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || 
+                cleanTitle.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
+            {
+                cleanTitle = System.IO.Path.GetFileNameWithoutExtension(cleanTitle);
+            }
+            
+            // Use manual truncation helper
+            TruncateWithEllipsis(titleText, cleanTitle);
         }
 
         private void TruncateWithEllipsis(TextMeshProUGUI tmp, string text)

@@ -13,8 +13,13 @@ namespace SoftAware
         [SerializeField] private GameObject trackPrefab;
         [SerializeField] private Transform contentContainer;
 
+        [Header("Scrolling")]
+        [SerializeField] private ScrollRect scrollRect;
+        [SerializeField] private Scrollbar scrollbar;
+
         private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
         private int selectedIndex = -1;
+        private bool isUpdatingScroll = false;
 
         public void Initialize()
         {
@@ -32,6 +37,13 @@ namespace SoftAware
             {
                 Debug.LogError("[WinampPlaylistUI] Playlist reference is missing!", this);
             }
+
+            // Custom Scroll Synchronization
+            if (scrollRect != null && scrollbar != null)
+            {
+                scrollRect.onValueChanged.AddListener(HandleScrollRectChanged);
+                scrollbar.onValueChanged.AddListener(HandleScrollbarChanged);
+            }
             
             RefreshList();
         }
@@ -44,6 +56,25 @@ namespace SoftAware
                 playlist.OnCurrentIndexChanged -= HandleCurrentIndexChanged;
                 playlist.OnSongMetadataUpdated -= HandleSongMetadataUpdated;
             }
+
+            if (scrollRect != null) scrollRect.onValueChanged.RemoveListener(HandleScrollRectChanged);
+            if (scrollbar != null) scrollbar.onValueChanged.RemoveListener(HandleScrollbarChanged);
+        }
+
+        private void HandleScrollRectChanged(Vector2 value)
+        {
+            if (isUpdatingScroll || scrollbar == null) return;
+            isUpdatingScroll = true;
+            scrollbar.value = scrollRect.verticalNormalizedPosition;
+            isUpdatingScroll = false;
+        }
+
+        private void HandleScrollbarChanged(float value)
+        {
+            if (isUpdatingScroll || scrollRect == null) return;
+            isUpdatingScroll = true;
+            scrollRect.verticalNormalizedPosition = value;
+            isUpdatingScroll = false;
         }
 
         public void RefreshList()
@@ -85,6 +116,10 @@ namespace SoftAware
             }
 
             UpdateHighlights();
+
+            // Reset scroll on refresh
+            if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
+            if (scrollbar != null) scrollbar.value = 1f;
         }
 
         private void HandleTrackClick(int index)
