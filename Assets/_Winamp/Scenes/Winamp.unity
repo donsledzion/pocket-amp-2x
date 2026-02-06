@@ -2785,6 +2785,7 @@ RectTransform:
   - {fileID: 1872502776}
   - {fileID: 515185575}
   - {fileID: 1048920503}
+  - {fileID: 1713720563}
   m_Father: {fileID: 115043192}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2876,6 +2877,7 @@ MonoBehaviour:
   - {fileID: 448875592}
   - {fileID: 1679481958}
   - {fileID: 708628153}
+  graph: {fileID: 1713720564}
   defaultGain: 0
 --- !u!1001 &708628151
 PrefabInstance:
@@ -6682,6 +6684,7 @@ MonoBehaviour:
   playlist: {fileID: 204421520}
   panelMain: {fileID: 996247208}
   uiController: {fileID: 364309604}
+  eqController: {fileID: 0}
 --- !u!82 &1138104798
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10066,6 +10069,75 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712270221}
+  m_CullTransparentMesh: 1
+--- !u!1 &1713720562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1713720563}
+  - component: {fileID: 1713720565}
+  - component: {fileID: 1713720564}
+  m_Layer: 0
+  m_Name: Equalizer Graph
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1713720563
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713720562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 693281831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 2.0477, y: 13.662248}
+  m_SizeDelta: {x: 48.57988, y: 7.64748}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1713720564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713720562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d847124b23257774aa5f8c6fea08c525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampEqualizerGraph
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  colorsSprite: {fileID: -1784284843, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  preampColor: {r: 1, g: 0, b: 0, a: 0.8}
+  preampLineThickness: 1
+  fillBelow: 0
+--- !u!222 &1713720565
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713720562}
   m_CullTransparentMesh: 1
 --- !u!1 &1729717279
 GameObject:

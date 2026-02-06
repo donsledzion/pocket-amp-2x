@@ -117,7 +117,8 @@ namespace SoftAware
                         short minLevel = range[0];
                         short maxLevel = range[1];
                         
-                        short level = (short)Mathf.Lerp(minLevel, maxLevel, (gain + 12f) / 24f);
+                        // Map -20..+20 to native range (usually -1500..+1500 mB)
+                        short level = (short)Mathf.Lerp(minLevel, maxLevel, (gain + 20f) / 40f);
                         nativeEq.Call("setBandLevel", i, level);
                     }
                 }

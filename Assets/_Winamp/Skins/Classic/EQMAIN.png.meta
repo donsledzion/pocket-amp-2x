@@ -1058,6 +1058,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: EQMAIN_GraphColors
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 2
+        width: 1
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d42627f93331d74e8fed53fb5d81b68
+      internalID: -1784284843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1077,6 +1099,7 @@ TextureImporter:
       EQMAIN_Auto_Disabled_Pressed: -999135415
       EQMAIN_Auto_Enabled_Normal: 1253289910
       EQMAIN_Auto_Enabled_Pressed: 459801500
+      EQMAIN_GraphColors: -1784284843
       EQMAIN_Knob_normal: 1364743285
       EQMAIN_Knob_pressed: 1813798836
       EQMAIN_On_Disabled_Normal: -1359746747

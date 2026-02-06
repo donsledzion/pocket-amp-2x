@@ -15,6 +15,9 @@ namespace SoftAware
         [SerializeField] private Slider preampSlider;
         [SerializeField] private List<Slider> frequencyBands = new List<Slider>();
 
+        [Header("Visuals")]
+        [SerializeField] private WinampEqualizerGraph graph;
+
         [Header("Settings")]
         [Range(-12f, 12f)] 
         [SerializeField] private float defaultGain = 0f;
@@ -41,21 +44,29 @@ namespace SoftAware
 
             if (preampSlider != null)
             {
+                preampSlider.minValue = -20f;
+                preampSlider.maxValue = 20f;
                 preampSlider.onValueChanged.AddListener(OnPreampChanged);
             }
 
             for (int i = 0; i < frequencyBands.Count; i++)
             {
                 int index = i; // Bootstrap for closure
-                if (frequencyBands[i] != null)
+                Slider slider = frequencyBands[i];
+                if (slider != null)
                 {
-                    frequencyBands[i].onValueChanged.AddListener((val) => OnBandChanged(index, val));
+                    slider.minValue = -20f;
+                    slider.maxValue = 20f;
+                    slider.onValueChanged.AddListener((val) => OnBandChanged(index, val));
                 }
             }
+
+            UpdateGraph();
         }
 
         public void OnPreampChanged(float value)
         {
+            UpdateGraph();
             OnValuesChanged?.Invoke();
             Debug.Log($"Preamp changed: {value}");
         }
@@ -64,8 +75,17 @@ namespace SoftAware
         {
             if (bandIndex < 0 || bandIndex >= Frequencies.Length) return;
             
+            UpdateGraph();
             OnValuesChanged?.Invoke();
             Debug.Log($"Band {Frequencies[bandIndex]}Hz changed: {value}");
+        }
+
+        private void UpdateGraph()
+        {
+            if (graph != null)
+            {
+                graph.SetGains(PreampValue, GetBandGains());
+            }
         }
 
         public float PreampValue => preampSlider != null ? preampSlider.value : 0f;
@@ -87,6 +107,7 @@ namespace SoftAware
             {
                 if (slider != null) slider.value = defaultGain;
             }
+            UpdateGraph();
         }
 
         public void SetPreset(float[] gains)
@@ -100,6 +121,7 @@ namespace SoftAware
                     frequencyBands[i].value = gains[i];
                 }
             }
+            UpdateGraph();
         }
     }
 }
