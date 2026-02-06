@@ -40,8 +40,39 @@ namespace SoftAware
         [Header("Toggles")]
         [SerializeField] private ToggleButton shuffleButton;
         [SerializeField] private ToggleButton repeatButton;
+        [SerializeField] private ToggleButton eqButton;
+        [SerializeField] private ToggleButton playlistButton;
         internal ToggleButton ShuffleButton => shuffleButton;
         internal ToggleButton RepeatButton => repeatButton;
+        internal ToggleButton EqButton => eqButton;
+        internal ToggleButton PlaylistButton => playlistButton;
+
+        [Header("Windows")]
+        [SerializeField] private GameObject eqWindow;
+        [SerializeField] private GameObject playlistWindow;
+        internal GameObject EqWindow => eqWindow;
+        internal GameObject PlaylistWindow => playlistWindow;
+
+        private void Start()
+        {
+            if (eqButton != null)
+            {
+                eqButton.OnValueChanged.AddListener((isOn) => {
+                    if (eqWindow != null) eqWindow.SetActive(isOn);
+                });
+                // Sync initial state
+                if (eqWindow != null) eqWindow.SetActive(eqButton.IsOn);
+            }
+
+            if (playlistButton != null)
+            {
+                playlistButton.OnValueChanged.AddListener((isOn) => {
+                    if (playlistWindow != null) playlistWindow.SetActive(isOn);
+                });
+                // Sync initial state
+                if (playlistWindow != null) playlistWindow.SetActive(playlistButton.IsOn);
+            }
+        }
 
         [Header("Audio Info Displays")]
         [SerializeField] private SpriteTextDisplay bitrateDisplay;

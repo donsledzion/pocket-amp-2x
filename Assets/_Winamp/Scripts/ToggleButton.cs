@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace SoftAware
 {
@@ -14,6 +15,8 @@ namespace SoftAware
         [SerializeField] private Sprite offPressed;
         [SerializeField] private Sprite onNormal;
         [SerializeField] private Sprite onPressed;
+
+        public UnityEvent<bool> OnValueChanged;
 
         private bool isOn = false;
 
@@ -32,12 +35,14 @@ namespace SoftAware
         {
             isOn = !isOn;
             UpdateVisuals();
+            OnValueChanged?.Invoke(isOn);
         }
 
         public void SetState(bool state)
         {
             isOn = state;
             UpdateVisuals();
+            OnValueChanged?.Invoke(isOn);
         }
 
         private void UpdateVisuals()

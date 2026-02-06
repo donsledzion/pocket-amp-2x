@@ -5502,6 +5502,10 @@ MonoBehaviour:
   channelsDisplay: {fileID: 2098605184}
   shuffleButton: {fileID: 1127448538}
   repeatButton: {fileID: 1347582004}
+  eqButton: {fileID: 257304246}
+  playlistButton: {fileID: 1395137659}
+  eqWindow: {fileID: 693281830}
+  playlistWindow: {fileID: 132724954}
   bitrateDisplay: {fileID: 1585088416}
   sampleRateDisplay: {fileID: 581175525}
   timeDisplay: {fileID: 1023889095}
