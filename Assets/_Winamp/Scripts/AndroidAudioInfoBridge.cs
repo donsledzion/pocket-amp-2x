@@ -179,7 +179,49 @@ namespace SoftAware
             return 0;
         }
 
-        private static void SetDataSource(AndroidJavaObject extractor, string path)
+        /// <summary>
+        /// Gets the duration (in seconds) for the given audio file.
+        /// </summary>
+        public static float GetDuration(string filePath)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (string.IsNullOrEmpty(filePath)) return 0;
+
+            try
+            {
+                using (var extractor = new AndroidJavaObject("android.media.MediaExtractor"))
+                {
+                    SetDataSource(extractor, filePath);
+                    
+                    int trackCount = extractor.Call<int>("getTrackCount");
+                    for (int i = 0; i < trackCount; i++)
+                    {
+                        var format = extractor.Call<AndroidJavaObject>("getTrackFormat", i);
+                        string mime = format.Call<string>("getString", "mime");
+                        
+                        if (mime.StartsWith("audio/"))
+                        {
+                            long durationUs = 0;
+                            if (format.Call<bool>("containsKey", "durationUs"))
+                                durationUs = format.Call<long>("getLong", "durationUs");
+                            
+                            format.Dispose();
+                            extractor.Call("release");
+                            return durationUs / 1000000f;
+                        }
+                        
+                        format.Dispose();
+                    }
+                    
+                    extractor.Call("release");
+                }
+            }
+            catch { }
+#endif
+            return 0;
+        }
+
+        public static void SetDataSource(AndroidJavaObject extractor, string path)
         {
             if (path.StartsWith("content://"))
             {

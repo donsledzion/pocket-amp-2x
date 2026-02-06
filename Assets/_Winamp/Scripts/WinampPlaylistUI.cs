@@ -52,7 +52,7 @@ namespace SoftAware
                 WinampPlaylistTrack trackUI = go.GetComponent<WinampPlaylistTrack>();
                 if (trackUI != null)
                 {
-                    trackUI.Setup(i, songs[i].Title, HandleTrackClick, HandleTrackDoubleClick);
+                    trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
                     trackUIItems.Add(trackUI);
                 }
             }
@@ -88,6 +88,14 @@ namespace SoftAware
                 if (trackUIItems[i] == null) continue;
                 trackUIItems[i].SetSelected(i == selectedIndex);
                 trackUIItems[i].SetPlaying(i == playingIndex);
+            }
+        }
+
+        public void UpdateTrackDuration(int index, string title, float duration)
+        {
+            if (index >= 0 && index < trackUIItems.Count)
+            {
+                trackUIItems[index].RefreshDuration(title, duration);
             }
         }
     }

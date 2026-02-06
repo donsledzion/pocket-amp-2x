@@ -21,6 +21,7 @@ namespace SoftAware
             public string Title;
             public AudioClip Clip;
             public string FilePath;
+            public float Duration;
             
             public bool HasNativePath => !string.IsNullOrEmpty(FilePath);
         }
@@ -187,11 +188,17 @@ namespace SoftAware
                     
                     // Unified Fast Path for ALL platforms
                     // We don't load the clip immediately anymore on Windows/Editor
+                    float duration = 0;
+#if UNITY_ANDROID && !UNITY_EDITOR
+                    duration = AndroidAudioInfoBridge.GetDuration(entry.Path);
+#endif
+
                     songs.Add(new SongInfo 
                     { 
                         Title = entry.Name, 
                         Clip = null, 
-                        FilePath = entry.Path 
+                        FilePath = entry.Path,
+                        Duration = duration
                     });
                     
                     LogDebug($"Total Songs: {songs.Count}");

@@ -96,6 +96,12 @@ namespace SoftAware
             {
                 mainPanel.SongTitleDisplay.SetSongInfo(index, title, duration);
             }
+
+            if (mainPanel.PlaylistUI != null)
+            {
+                // index here is 1-based from AudioPlayer, PlaylistUI expects 0-based
+                mainPanel.PlaylistUI.UpdateTrackDuration(index - 1, title, duration);
+            }
         }
 
         public void ClearSongInfo()

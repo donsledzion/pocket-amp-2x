@@ -1025,6 +1025,7 @@ MonoBehaviour:
   - Title: Demo
     Clip: {fileID: 8300000, guid: a69fa19e6baa0064789ce38abcd67b20, type: 3}
     FilePath: 
+    Duration: 0
   debugText: {fileID: 740344165}
 --- !u!4 &204421521
 Transform:
@@ -8855,7 +8856,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000015258789}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -9, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1854049881
 MonoBehaviour:
@@ -8872,8 +8873,8 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 3
-    m_Bottom: 0
+    m_Top: 1
+    m_Bottom: 1
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1

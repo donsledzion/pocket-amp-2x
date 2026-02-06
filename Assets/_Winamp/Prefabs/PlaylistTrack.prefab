@@ -191,6 +191,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampPlaylistTrack
   trackText: {fileID: 1429978458425196416}
   background: {fileID: 1709364351988490651}
+  maxChars: 34
+  mspaceValue: 3
   normalTextColor: {r: 0.003921569, g: 0.96470594, b: 0.0627451, a: 1}
   playingTextColor: {r: 1, g: 1, b: 1, a: 1}
   selectedBgColor: {r: 0, g: 0, b: 0.77647066, a: 1}

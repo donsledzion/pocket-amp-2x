@@ -202,6 +202,7 @@ namespace SoftAware
 
             if (currentSong.Clip != null)
             {
+                if (currentSong.Duration <= 0) currentSong.Duration = currentSong.Clip.length;
                 engine.Play(currentSong);
                 OnPlaybackStarted();
             }
