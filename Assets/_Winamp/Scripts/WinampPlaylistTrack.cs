@@ -9,12 +9,12 @@ namespace SoftAware
     public class WinampPlaylistTrack : MonoBehaviour, IPointerClickHandler
     {
         [Header("References")]
-        [SerializeField] private TextMeshProUGUI trackText;
+        [SerializeField] private TextMeshProUGUI indexText;
+        [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private TextMeshProUGUI durationText;
         [SerializeField] private Image background;
 
         [Header("Settings")]
-        [SerializeField] private int maxChars = 48; // Typical Winamp PLEDIT width approx
-        [SerializeField] private float mspaceValue = 11f; // Adjust this to match your font size for perfect spacing
         [SerializeField] private Color normalTextColor = Color.white;
         [SerializeField] private Color playingTextColor = new Color(0.95f, 0.95f, 0.4f); // Winamp yellow
         [SerializeField] private Color selectedBgColor = new Color(0f, 0f, 0.5f); // Winamp blue
@@ -31,9 +31,19 @@ namespace SoftAware
             normalTextColor = normal;
             playingTextColor = playing;
             selectedBgColor = selectedBg;
-            // Note: normalBg can be applied to the overall container if needed, 
-            // but usually individual tracks just toggle the selectedBg image.
+            
+            // Re-apply current playing color to all local labels
+            SetPlaying(isTrackPlaying);
+            
+            // If currently selected, refresh background color
+            if (background != null && background.enabled)
+            {
+                background.color = selectedBgColor;
+            }
         }
+        
+        // Internal state trackers to help SetColors
+        private bool isTrackPlaying = false;
 
         public void Setup(int trackIndex, string title, float duration, Action<int> clickCallback, Action<int> doubleClickCallback)
         {
@@ -56,57 +66,64 @@ namespace SoftAware
 
         private void RefreshDisplay(float duration)
         {
-            if (trackText == null) return;
+            if (indexText != null) indexText.text = $"{index + 1}.";
             
-            string durationStr = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : "?:??";
-            
-            // 1. Clean title (strip extensions)
-            string cleanTitle = originalTitle;
-            if (cleanTitle.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
-                cleanTitle.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || 
-                cleanTitle.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
+            if (titleText != null) 
             {
-                cleanTitle = System.IO.Path.GetFileNameWithoutExtension(cleanTitle);
+                // Clean title (strip extensions)
+                string cleanTitle = originalTitle;
+                if (cleanTitle.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
+                    cleanTitle.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || 
+                    cleanTitle.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
+                {
+                    cleanTitle = System.IO.Path.GetFileNameWithoutExtension(cleanTitle);
+                }
+                
+                // Use manual truncation helper
+                TruncateWithEllipsis(titleText, cleanTitle.ToUpper());
             }
 
-            // 2. Format parts
-            string prefix = $"{index + 1}. ";
-            string suffix = durationStr; // We want space before duration in the alignment logic
-
-            // 3. Alignment Logic (Fixed Width)
-            // Layout: [Prefix][Title].......[Suffix]
-            // We need: Length([Prefix]) + Length([Title]) + 1 (space) + Length([Suffix]) <= maxChars
-            
-            int reservedSpace = prefix.Length + suffix.Length + 1; // 1 for a mandatory space before duration
-            int titleBudget = maxChars - reservedSpace;
-
-            string displayTitle = cleanTitle;
-            if (displayTitle.Length > titleBudget)
+            if (durationText != null)
             {
-                displayTitle = displayTitle.Substring(0, Mathf.Max(0, titleBudget - 3)) + "...";
+                durationText.text = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : "?:??";
+            }
+        }
+
+        private void TruncateWithEllipsis(TextMeshProUGUI tmp, string text)
+        {
+            tmp.text = text;
+            // Get the available width from the RectTransform
+            float maxWidth = tmp.rectTransform.rect.width;
+
+            // If the RectTransform hasn't been sized yet (e.g. 0), 
+            // we can't truncate accurately, so we just set the text and hope for the best.
+            if (maxWidth <= 0) 
+            {
+                tmp.text = text;
+                return;
             }
 
-            // Calculate total line
-            int currentLen = prefix.Length + displayTitle.Length + suffix.Length;
-            string padding = "";
-            if (currentLen < maxChars)
+            if (tmp.preferredWidth > maxWidth)
             {
-                padding = new string('.', maxChars - currentLen); // Winamp often uses dots or spaces
-                // Actually, let's use spaces for that clean Winamp look, or dots if the user prefers.
-                // Classic Winamp uses a space-filled gap but with fixed positions.
-                padding = new string(' ', maxChars - currentLen);
+                string t = text;
+                while (t.Length > 0)
+                {
+                    t = t.Substring(0, t.Length - 1);
+                    tmp.text = t + "...";
+                    // TMP's preferredWidth is calculated based on the current text
+                    if (tmp.preferredWidth <= maxWidth)
+                        break;
+                }
             }
-
-            // Wrap in <mspace> to force monospacing even with proportional fonts
-            string combined = $"{prefix}{displayTitle}{padding} {suffix}";
-            
-            // TextMeshPro specific monospacing
-            trackText.text = $"<mspace={mspaceValue}>{combined.ToUpper()}</mspace>";
         }
 
         public void SetPlaying(bool isPlaying)
         {
-            trackText.color = isPlaying ? playingTextColor : normalTextColor;
+            isTrackPlaying = isPlaying;
+            Color c = isPlaying ? playingTextColor : normalTextColor;
+            if (indexText != null) indexText.color = c;
+            if (titleText != null) titleText.color = c;
+            if (durationText != null) durationText.color = c;
         }
 
         public void SetSelected(bool isSelected)

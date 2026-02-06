@@ -4329,7 +4329,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7c34dddb1caad468428ca85e5ad353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampSkinLoader
-  skinFolderPath: Assets/_Winamp/Skins/Classic
+  normalColor: {r: 0.51, g: 0.91, b: 0.21, a: 1}
+  currentColor: {r: 1, g: 1, b: 1, a: 1}
+  normalBGColor: {r: 0, g: 0, b: 0, a: 1}
+  selectedBGColor: {r: 0, g: 0, b: 0.78, a: 1}
 --- !u!1 &1000558899
 GameObject:
   m_ObjectHideFlags: 0
