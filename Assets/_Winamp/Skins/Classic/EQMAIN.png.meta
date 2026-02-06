@@ -363,7 +363,7 @@ TextureImporter:
         width: 44
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -385,7 +385,7 @@ TextureImporter:
         width: 44
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -394,6 +394,72 @@ TextureImporter:
       bones: []
       spriteID: d0108a35c8a5551448e8b9d9ead48d36
       internalID: 847167759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Knob_normal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 140
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7be44503d68843e46892dfb4dbede88f
+      internalID: 1364743285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Knob_pressed
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf550c98d6e138742a5fa423c5326fa7
+      internalID: 1813798836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_0
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04e73ce8ff992db469afc1dffb684576
+      internalID: 1450598238
       vertices: []
       indices: 
       edges: []
@@ -417,12 +483,15 @@ TextureImporter:
       EQMAIN_Auto_Disabled_Pressed: -999135415
       EQMAIN_Auto_Enabled_Normal: 1253289910
       EQMAIN_Auto_Enabled_Pressed: 459801500
+      EQMAIN_Knob_normal: 1364743285
+      EQMAIN_Knob_pressed: 1813798836
       EQMAIN_On_Disabled_Normal: -1359746747
       EQMAIN_On_Disabled_Pressed: -1017602504
       EQMAIN_On_Enabled_Normal: -876578035
       EQMAIN_On_Enabled_Pressed: -316848284
       EQMAIN_Presets_Normal: -475741553
       EQMAIN_Presets_Pressed: 847167759
+      EQMAIN_Slider_0: 1450598238
       EQMAIN_TitleBar_focused: 1335975794
       EQMAIN_TitleBar_unfocused: 1213227452
   mipmapLimitGroupName: 
