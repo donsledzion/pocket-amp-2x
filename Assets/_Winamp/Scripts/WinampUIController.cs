@@ -19,10 +19,9 @@ namespace SoftAware
         {
             player = audioPlayer;
             
-            if (mainPanel.ProgressSlider != null)
+            if (mainPanel.PlaylistUI != null)
             {
-                // Hook into slider drag events if needed, 
-                // but AudioPlayer still manages the slider binding for now.
+                mainPanel.PlaylistUI.Initialize();
             }
         }
 

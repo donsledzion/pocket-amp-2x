@@ -332,6 +332,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SliderHandle_normal
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 115
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68a7fb34e4ffb2e41b343c2cfe3798bd
+      internalID: -716399342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SliderHandle_pressed
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 115
+        width: 8
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8ccf1cd00149ef4babb0ba670c9ecb1
+      internalID: -640380593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -351,6 +395,8 @@ TextureImporter:
       BottomStretch: -479001972
       LeftEdge: -1012282941
       PLEDIT_BackgroundBlack: 870045614
+      PLEDIT_SliderHandle_normal: -716399342
+      PLEDIT_SliderHandle_pressed: -640380593
       PLEDIT_TopLeft_focused: 7927761498078318408
       PLEDIT_TopRight_focused: 582108070
       PLEDIT_TopStretch_focused: 94210570

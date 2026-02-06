@@ -55,6 +55,9 @@ namespace SoftAware
         internal WinampStatusDisplay StatusDisplay => statusDisplay;
         internal WinampSongTitleDisplay SongTitleDisplay => songTitleDisplay;
 
+        [SerializeField] private WinampPlaylistUI playlistUI;
+        internal WinampPlaylistUI PlaylistUI => playlistUI;
+
         private void OnDestroy()
         {
             PrevButton.onClick.RemoveAllListeners();

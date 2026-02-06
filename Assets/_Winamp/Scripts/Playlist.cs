@@ -25,16 +25,21 @@ namespace SoftAware
             public bool HasNativePath => !string.IsNullOrEmpty(FilePath);
         }
 
+        public event Action OnPlaylistChanged;
+        public event Action<int> OnCurrentIndexChanged;
+
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
         private static Playlist instance;
         
-        private int currentIndex;
+        private int currentIndex = -1;
         private bool shuffleEnabled = false;
-        internal SongInfo CurrentSong => songs.Count > 0 ? songs[currentIndex] : null;
+        internal SongInfo CurrentSong => (songs.Count > 0 && currentIndex >= 0) ? songs[currentIndex] : null;
         internal AudioClip CurrentClip => CurrentSong?.Clip;
         internal int Count => songs.Count;
         public int CurrentIndex1Based => songs.Count > 0 ? currentIndex + 1 : 0;
+        public int CurrentIndex => currentIndex;
+        public List<SongInfo> AllSongs => songs;
 
         private void Awake()
         {
@@ -194,6 +199,7 @@ namespace SoftAware
             }
 
             LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
+            OnPlaylistChanged?.Invoke();
             yield break;
         }
 
@@ -250,11 +256,13 @@ namespace SoftAware
             }
         }
 
-        private void SetCurrentClip(int index)
+        public void SetCurrentClip(int index)
         {
             if (songs.Count == 0) return;
             if (index < 0 || index >= songs.Count) return;
+            bool changed = (currentIndex != index);
             currentIndex = index;
+            if (changed) OnCurrentIndexChanged?.Invoke(currentIndex);
         }
 
         internal SongInfo GetNextSong()
