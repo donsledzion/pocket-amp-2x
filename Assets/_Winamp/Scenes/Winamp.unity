@@ -816,6 +816,7 @@ GameObject:
   - component: {fileID: 132724955}
   - component: {fileID: 132724956}
   - component: {fileID: 132724957}
+  - component: {fileID: 132724958}
   m_Layer: 0
   m_Name: Playlist
   m_TagString: Untagged
@@ -891,6 +892,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
+--- !u!225 &132724958
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132724954}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &137108939
 GameObject:
   m_ObjectHideFlags: 0
@@ -1514,6 +1527,9 @@ MonoBehaviour:
   offPressed: {fileID: -1119785181, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onNormal: {fileID: 1520315265, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onPressed: {fileID: 54996646, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &289675043
 GameObject:
   m_ObjectHideFlags: 0
@@ -3762,6 +3778,9 @@ MonoBehaviour:
   offPressed: {fileID: -1017602504, guid: e8b84605ed1db354ca22308840c54358, type: 3}
   onNormal: {fileID: -876578035, guid: e8b84605ed1db354ca22308840c54358, type: 3}
   onPressed: {fileID: -316848284, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &808885136
 GameObject:
   m_ObjectHideFlags: 0
@@ -4291,6 +4310,9 @@ MonoBehaviour:
   offPressed: {fileID: -999135415, guid: e8b84605ed1db354ca22308840c54358, type: 3}
   onNormal: {fileID: 1253289910, guid: e8b84605ed1db354ca22308840c54358, type: 3}
   onPressed: {fileID: 459801500, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &892622455
 GameObject:
   m_ObjectHideFlags: 0
@@ -6534,6 +6556,9 @@ MonoBehaviour:
   offPressed: {fileID: 677886333, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onNormal: {fileID: -382845482, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onPressed: {fileID: 798675321, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1135804107
 GameObject:
   m_ObjectHideFlags: 0
@@ -7842,6 +7867,9 @@ MonoBehaviour:
   offPressed: {fileID: 901060258, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onNormal: {fileID: 46412569, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onPressed: {fileID: -374510621, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1356658611
 GameObject:
   m_ObjectHideFlags: 0
@@ -8356,6 +8384,9 @@ MonoBehaviour:
   offPressed: {fileID: 1335046128, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onNormal: {fileID: 885159576, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
   onPressed: {fileID: 1672109594, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1398348552
 GameObject:
   m_ObjectHideFlags: 0

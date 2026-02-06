@@ -58,20 +58,41 @@ namespace SoftAware
             if (eqButton != null)
             {
                 eqButton.OnValueChanged.AddListener((isOn) => {
-                    if (eqWindow != null) eqWindow.SetActive(isOn);
+                    SetWindowVisibility(eqWindow, isOn);
                 });
                 // Sync initial state
-                if (eqWindow != null) eqWindow.SetActive(eqButton.IsOn);
+                SetWindowVisibility(eqWindow, eqButton.IsOn);
             }
 
             if (playlistButton != null)
             {
                 playlistButton.OnValueChanged.AddListener((isOn) => {
-                    if (playlistWindow != null) playlistWindow.SetActive(isOn);
+                    SetWindowVisibility(playlistWindow, isOn);
                 });
                 // Sync initial state
-                if (playlistWindow != null) playlistWindow.SetActive(playlistButton.IsOn);
+                SetWindowVisibility(playlistWindow, playlistButton.IsOn);
             }
+        }
+
+        private void SetWindowVisibility(GameObject window, bool visible)
+        {
+            if (window == null) return;
+
+            // 1. Handle Visuals (alpha) and Interaction
+            CanvasGroup group = window.GetComponent<CanvasGroup>();
+            if (group == null) group = window.AddComponent<CanvasGroup>();
+
+            group.alpha = visible ? 1f : 0f;
+            group.interactable = visible;
+            group.blocksRaycasts = visible;
+
+            // 2. Handle Layout (remove from LayoutGroup if hidden)
+            LayoutElement layout = window.GetComponent<LayoutElement>();
+            if (layout == null) layout = window.AddComponent<LayoutElement>();
+            layout.ignoreLayout = !visible;
+
+            // 3. Ensure the object itself is active so coroutines can run
+            if (!window.activeSelf) window.SetActive(true);
         }
 
         [Header("Audio Info Displays")]
