@@ -407,7 +407,7 @@ TextureImporter:
         width: 11
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -429,7 +429,7 @@ TextureImporter:
         width: 11
         height: 11
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -443,7 +443,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EQMAIN_Slider_0
+      name: EQMAIN_Slider_00
       rect:
         serializedVersion: 2
         x: 13
@@ -451,7 +451,7 @@ TextureImporter:
         width: 14
         height: 63
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -460,6 +460,600 @@ TextureImporter:
       bones: []
       spriteID: 04e73ce8ff992db469afc1dffb684576
       internalID: 1450598238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_01
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b56969c368a32438cd041653ef7500
+      internalID: 47094170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_02
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06f9b5f9cc6d86d4ba33a68ce21bdb06
+      internalID: 1647428869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_03
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00cb3f6bf758e0a4fa2e97759c74b7ef
+      internalID: 1005054565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_04
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07c245821e3ff574480eb35f9cf883b9
+      internalID: -253131252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_05
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e5f88bb5868b3f4c9b028e02cdce69e
+      internalID: -607355298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_06
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db49589acbf454a4bb898027762b1a74
+      internalID: -946073867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_07
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c076a1b33336374ca86bc85755d995b
+      internalID: 1401100316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_08
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3826d33308f1a8144b2e5bbfa6b93ae1
+      internalID: 1713071081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_09
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 88
+        width: 13
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c0b0fa6c8b572140a41c77453285743
+      internalID: 1075882298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_10
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06f2eb8b9515e640a2027a67b1e8dd0
+      internalID: -1468332593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_11
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bca06b712f3de4f4ea28d7a93bfb2f61
+      internalID: -355253256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_12
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8401a09c375e3dd49ac7c357a8c2bc4b
+      internalID: 805909556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_13
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 88
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b3aa934ba493ac4a8c60a8ceb83230a
+      internalID: 1337176796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_14
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2b355027115bd14c932a15bc5f3761d
+      internalID: 1385742532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_15
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ace5ef6eca8c6f740b0e542d2d1289de
+      internalID: -589525828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_16
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32268edaf138ac044be805dd5afc9e13
+      internalID: -1857825031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_17
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d92b6f631a85df44bdc7a24e251d3db
+      internalID: -72713551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_18
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2f29105a0a60e94c8a658e5388611f3
+      internalID: -907637012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_19
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 745fbaedd9ca19f41810f50e22160c7e
+      internalID: 1617368225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_20
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd446d06b17f77449a994254c7528a90
+      internalID: -268239610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_21
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cba5a078793ce64e8f130f8e1897a3e
+      internalID: 311220248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_22
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1277b773d39d12149a7d589540724c59
+      internalID: -153433951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_23
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79071242feb7123499a4ff08ab7e1872
+      internalID: 1068032179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_24
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20b9de252ff6bce46b4624ff1fac0762
+      internalID: 717548951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_25
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d28241f7a9b71d4d807cbcee958969f
+      internalID: -1320090807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_26
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80284f244acf6284ea1126e680f73f10
+      internalID: 376649026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Slider_27
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 23
+        width: 14
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e7bb0cc4e77ca344ae19ccc96c4a806
+      internalID: 1088197090
       vertices: []
       indices: 
       edges: []
@@ -491,7 +1085,34 @@ TextureImporter:
       EQMAIN_On_Enabled_Pressed: -316848284
       EQMAIN_Presets_Normal: -475741553
       EQMAIN_Presets_Pressed: 847167759
-      EQMAIN_Slider_0: 1450598238
+      EQMAIN_Slider_00: 1450598238
+      EQMAIN_Slider_01: 47094170
+      EQMAIN_Slider_02: 1647428869
+      EQMAIN_Slider_03: 1005054565
+      EQMAIN_Slider_04: -253131252
+      EQMAIN_Slider_05: -607355298
+      EQMAIN_Slider_06: -946073867
+      EQMAIN_Slider_07: 1401100316
+      EQMAIN_Slider_08: 1713071081
+      EQMAIN_Slider_09: 1075882298
+      EQMAIN_Slider_10: -1468332593
+      EQMAIN_Slider_11: -355253256
+      EQMAIN_Slider_12: 805909556
+      EQMAIN_Slider_13: 1337176796
+      EQMAIN_Slider_14: 1385742532
+      EQMAIN_Slider_15: -589525828
+      EQMAIN_Slider_16: -1857825031
+      EQMAIN_Slider_17: -72713551
+      EQMAIN_Slider_18: -907637012
+      EQMAIN_Slider_19: 1617368225
+      EQMAIN_Slider_20: -268239610
+      EQMAIN_Slider_21: 311220248
+      EQMAIN_Slider_22: -153433951
+      EQMAIN_Slider_23: 1068032179
+      EQMAIN_Slider_24: 717548951
+      EQMAIN_Slider_25: -1320090807
+      EQMAIN_Slider_26: 376649026
+      EQMAIN_Slider_27: 1088197090
       EQMAIN_TitleBar_focused: 1335975794
       EQMAIN_TitleBar_unfocused: 1213227452
   mipmapLimitGroupName: 

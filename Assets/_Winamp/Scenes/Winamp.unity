@@ -625,7 +625,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -25.5915}
+  m_AnchoredPosition: {x: 0, y: -25.591553}
   m_SizeDelta: {x: 0, y: -51.183}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &115043193
@@ -1946,6 +1946,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2044,6 +2052,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 448875590}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &448875592 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 448875590}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &462050948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2727,6 +2746,7 @@ GameObject:
   - component: {fileID: 693281834}
   - component: {fileID: 693281833}
   - component: {fileID: 693281832}
+  - component: {fileID: 693281835}
   m_Layer: 0
   m_Name: Equalizer
   m_TagString: Untagged
@@ -2814,6 +2834,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693281830}
   m_CullTransparentMesh: 1
+--- !u!114 &693281835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693281830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13103e7e20ba1a9408c65103f57b5b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.EqualizerController
+  onButton: {fileID: 801895162}
+  autoButton: {fileID: 866168021}
+  preampSlider: {fileID: 796417078}
+  frequencyBands:
+  - {fileID: 1363914081}
+  - {fileID: 833868930}
+  - {fileID: 993042043}
+  - {fileID: 1419198498}
+  - {fileID: 1143244704}
+  - {fileID: 1995414749}
+  - {fileID: 988460105}
+  - {fileID: 448875592}
+  - {fileID: 1679481958}
+  - {fileID: 708628153}
+  defaultGain: 0
 --- !u!1001 &708628151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2824,6 +2871,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
@@ -2924,6 +2979,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 708628151}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &708628153 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 708628151}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &740344163
 GameObject:
   m_ObjectHideFlags: 0
@@ -3546,6 +3612,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 7606247029329566401}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &796417078 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 7606247029329566401}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &801895157
 GameObject:
   m_ObjectHideFlags: 0
@@ -3558,6 +3635,7 @@ GameObject:
   - component: {fileID: 801895161}
   - component: {fileID: 801895160}
   - component: {fileID: 801895159}
+  - component: {fileID: 801895162}
   m_Layer: 0
   m_Name: Toggle_On
   m_TagString: Untagged
@@ -3666,6 +3744,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801895157}
   m_CullTransparentMesh: 1
+--- !u!114 &801895162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801895157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 801895159}
+  targetImage: {fileID: 801895160}
+  offNormal: {fileID: -1359746747, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  offPressed: {fileID: -1017602504, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  onNormal: {fileID: -876578035, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  onPressed: {fileID: -316848284, guid: e8b84605ed1db354ca22308840c54358, type: 3}
 --- !u!1 &808885136
 GameObject:
   m_ObjectHideFlags: 0
@@ -3864,6 +3960,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3962,6 +4066,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 833868928}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &833868930 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 833868928}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &835130661
 GameObject:
   m_ObjectHideFlags: 0
@@ -4049,6 +4164,7 @@ GameObject:
   - component: {fileID: 866168020}
   - component: {fileID: 866168019}
   - component: {fileID: 866168018}
+  - component: {fileID: 866168021}
   m_Layer: 0
   m_Name: Toggle_Auto
   m_TagString: Untagged
@@ -4157,6 +4273,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866168016}
   m_CullTransparentMesh: 1
+--- !u!114 &866168021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866168016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbafb862f2349a43bca24c255d7abd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
+  button: {fileID: 866168018}
+  targetImage: {fileID: 866168019}
+  offNormal: {fileID: -1510777471, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  offPressed: {fileID: -999135415, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  onNormal: {fileID: 1253289910, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  onPressed: {fileID: 459801500, guid: e8b84605ed1db354ca22308840c54358, type: 3}
 --- !u!1 &892622455
 GameObject:
   m_ObjectHideFlags: 0
@@ -4990,6 +5124,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5088,6 +5230,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 988460103}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &988460105 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 988460103}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &993042041
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5098,6 +5251,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
@@ -5198,6 +5359,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 993042041}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &993042043 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 993042041}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &996247203
 GameObject:
   m_ObjectHideFlags: 0
@@ -6665,6 +6837,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6763,6 +6943,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 1143244702}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1143244704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 1143244702}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1147423832
 GameObject:
   m_ObjectHideFlags: 0
@@ -7936,6 +8127,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 1363914079}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1363914081 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 1363914079}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1371537523
 GameObject:
   m_ObjectHideFlags: 0
@@ -8216,6 +8418,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8314,6 +8524,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 1419198496}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1419198498 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 1419198496}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1431627791
 GameObject:
   m_ObjectHideFlags: 0
@@ -9424,6 +9645,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9522,6 +9751,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 1679481956}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1679481958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 1679481956}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1690019175
 GameObject:
   m_ObjectHideFlags: 0
@@ -11155,6 +11395,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11253,6 +11501,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
   m_PrefabInstance: {fileID: 1995414747}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1995414749 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4709231238392754232, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+  m_PrefabInstance: {fileID: 1995414747}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &2046445909
 GameObject:
   m_ObjectHideFlags: 0
@@ -11670,6 +11929,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
       propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 67316203840720401, guid: 83315817784e3b948b363af19b52bd96, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}

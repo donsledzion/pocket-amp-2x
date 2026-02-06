@@ -196,6 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3075544491112684013}
   - component: {fileID: 4709231238392754232}
+  - component: {fileID: -5449378968527210479}
   m_Layer: 0
   m_Name: EQ_Slider
   m_TagString: Untagged
@@ -275,3 +276,48 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-5449378968527210479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8135847118233775291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc71bd7dd36e6d47b8b810d4452e538, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampSliderVisuals
+  slider: {fileID: 4709231238392754232}
+  targetImage: {fileID: 5198990027355088258}
+  sprites:
+  - {fileID: 1450598238, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 47094170, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1647428869, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1005054565, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -253131252, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -607355298, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -946073867, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1401100316, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1713071081, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1075882298, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -1468332593, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -355253256, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 805909556, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1337176796, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1385742532, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -589525828, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -1857825031, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -72713551, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -907637012, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1617368225, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -268239610, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 311220248, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -153433951, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1068032179, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 717548951, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: -1320090807, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 376649026, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  - {fileID: 1088197090, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  spriteSheet: {fileID: 2800000, guid: e8b84605ed1db354ca22308840c54358, type: 3}
+  spriteNamePrefix: EQMAIN_Slider_
