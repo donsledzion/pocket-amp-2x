@@ -80,7 +80,7 @@ namespace SoftAware
                 }
                 
                 // Use manual truncation helper
-                TruncateWithEllipsis(titleText, cleanTitle.ToUpper());
+                TruncateWithEllipsis(titleText, cleanTitle);
             }
 
             if (durationText != null)
@@ -91,29 +91,42 @@ namespace SoftAware
 
         private void TruncateWithEllipsis(TextMeshProUGUI tmp, string text)
         {
-            tmp.text = text;
             // Get the available width from the RectTransform
             float maxWidth = tmp.rectTransform.rect.width;
 
-            // If the RectTransform hasn't been sized yet (e.g. 0), 
-            // we can't truncate accurately, so we just set the text and hope for the best.
-            if (maxWidth <= 0) 
+            // Jeśli layout jeszcze nie jest gotowy, ustawiamy tekst i wychodzimy
+            if (maxWidth < 5f) 
             {
                 tmp.text = text;
                 return;
             }
 
-            if (tmp.preferredWidth > maxWidth)
+            // Sprawdzamy, ile miejsca potrzebuje pełny tekst (matematycznie)
+            Vector2 preferredSize = tmp.GetPreferredValues(text);
+
+            if (preferredSize.x <= maxWidth)
+            {
+                tmp.text = text;
+            }
+            else
             {
                 string t = text;
+                // Ucinamy znak po znaku, sprawdzając szerokość z wielokropkiem
                 while (t.Length > 0)
                 {
                     t = t.Substring(0, t.Length - 1);
-                    tmp.text = t + "...";
-                    // TMP's preferredWidth is calculated based on the current text
-                    if (tmp.preferredWidth <= maxWidth)
-                        break;
+                    string candidate = t + "...";
+                    
+                    // GetPreferredValues jest błyskawiczne i nie wymaga ForceMeshUpdate
+                    if (tmp.GetPreferredValues(candidate).x <= maxWidth)
+                    {
+                        tmp.text = candidate;
+                        return;
+                    }
                 }
+                
+                // Jeśli nawet same kropki się nie mieszczą, wyświetl je mimo wszystko
+                tmp.text = "...";
             }
         }
 
