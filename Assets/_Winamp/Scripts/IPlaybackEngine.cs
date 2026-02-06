@@ -23,5 +23,9 @@ namespace SoftAware
         float CurrentTime { get; }
         float Duration { get; }
         int AudioSessionId { get; }
+
+        // Equalizer support
+        void SetEqualizerEnabled(bool enabled);
+        void SetEqualizerGains(float preamp, float[] bands);
     }
 }

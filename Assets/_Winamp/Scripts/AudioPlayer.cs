@@ -20,6 +20,7 @@ namespace SoftAware
         [SerializeField] private Playlist playlist;
         [SerializeField] private Main panelMain;
         [SerializeField] private WinampUIController uiController;
+        [SerializeField] private EqualizerController eqController;
 
         private AudioSource audioSource;
         private IPlaybackEngine engine;
@@ -93,6 +94,25 @@ namespace SoftAware
             BindVolume();
             BindBalance();
             BindToggles();
+            BindEqualizer();
+        }
+
+        private void BindEqualizer()
+        {
+            if (eqController != null)
+            {
+                eqController.OnValuesChanged += ApplyEqualizer;
+                // Initial apply
+                ApplyEqualizer();
+            }
+        }
+
+        private void ApplyEqualizer()
+        {
+            if (engine == null || eqController == null) return;
+            
+            engine.SetEqualizerEnabled(eqController.IsOn);
+            engine.SetEqualizerGains(eqController.PreampValue, eqController.GetBandGains());
         }
 
         private void BindToggles()

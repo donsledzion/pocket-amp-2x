@@ -25,6 +25,8 @@ namespace SoftAware
         public bool IsOn => onButton != null && onButton.IsOn;
         public bool IsAuto => autoButton != null && autoButton.IsOn;
 
+        public System.Action OnValuesChanged;
+
         private void Start()
         {
             InitializeSliders();
@@ -32,6 +34,11 @@ namespace SoftAware
 
         private void InitializeSliders()
         {
+            if (onButton != null)
+            {
+                onButton.OnValueChanged.AddListener((_) => OnValuesChanged?.Invoke());
+            }
+
             if (preampSlider != null)
             {
                 preampSlider.onValueChanged.AddListener(OnPreampChanged);
@@ -49,7 +56,7 @@ namespace SoftAware
 
         public void OnPreampChanged(float value)
         {
-            // Update audio engine preamp
+            OnValuesChanged?.Invoke();
             Debug.Log($"Preamp changed: {value}");
         }
 
@@ -57,8 +64,20 @@ namespace SoftAware
         {
             if (bandIndex < 0 || bandIndex >= Frequencies.Length) return;
             
-            // Update audio engine band
+            OnValuesChanged?.Invoke();
             Debug.Log($"Band {Frequencies[bandIndex]}Hz changed: {value}");
+        }
+
+        public float PreampValue => preampSlider != null ? preampSlider.value : 0f;
+        
+        public float[] GetBandGains()
+        {
+            float[] gains = new float[frequencyBands.Count];
+            for (int i = 0; i < frequencyBands.Count; i++)
+            {
+                gains[i] = frequencyBands[i] != null ? frequencyBands[i].value : 0f;
+            }
+            return gains;
         }
 
         public void ResetToDefault()

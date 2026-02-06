@@ -59,5 +59,16 @@ namespace SoftAware
                 audioSource.panStereo = Mathf.Clamp(pan, -1f, 1f);
             }
         }
+
+        public void SetEqualizerEnabled(bool enabled)
+        {
+            // Unity standard AudioSource doesn't have a built-in EQ.
+            // Could be implemented via Audio Mixer, but for now it's a stub.
+        }
+
+        public void SetEqualizerGains(float preamp, float[] bands)
+        {
+            // Stub implementation for Unity editor/desktop.
+        }
     }
 }
