@@ -244,6 +244,54 @@ namespace SoftAware
             }
         }
 
+        /// <summary>
+        /// Retrieves metadata (Title, Artist) for the given audio file using MediaMetadataRetriever.
+        /// Returns a string array [Title, Artist]
+        /// </summary>
+        public static string[] GetMetadata(string filePath)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (string.IsNullOrEmpty(filePath)) return new string[] { "", "" };
+
+            try
+            {
+                using (var retriever = new AndroidJavaObject("android.media.MediaMetadataRetriever"))
+                {
+                    SetRetrieverDataSource(retriever, filePath);
+                    
+                    // Metadata keys: TITLE = 7, ARTIST = 2
+                    string title = retriever.Call<string>("extractMetadata", 7);
+                    string artist = retriever.Call<string>("extractMetadata", 2);
+                    
+                    retriever.Call("release");
+                    return new string[] { title ?? "", artist ?? "" };
+                }
+            }
+            catch { }
+#endif
+            return new string[] { "", "" };
+        }
+
+        private static void SetRetrieverDataSource(AndroidJavaObject retriever, string path)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (path.StartsWith("content://"))
+            {
+                using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (var uriClass = new AndroidJavaClass("android.net.Uri"))
+                using (var uri = uriClass.CallStatic<AndroidJavaObject>("parse", path))
+                {
+                    retriever.Call("setDataSource", currentActivity, uri);
+                }
+            }
+            else
+            {
+                retriever.Call("setDataSource", path);
+            }
+#endif
+        }
+
         private static int EstimateBitrateFromFile(string filePath, long durationUs)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR

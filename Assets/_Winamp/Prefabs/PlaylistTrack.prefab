@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Some track name etc, etc
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 151c55837dad2324c8f14301b7fa3b1a, type: 2}
+  m_sharedMaterial: {fileID: -8626716291095291854, guid: 151c55837dad2324c8f14301b7fa3b1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -193,9 +193,9 @@ MonoBehaviour:
   background: {fileID: 1709364351988490651}
   maxChars: 34
   mspaceValue: 3
-  normalTextColor: {r: 0.003921569, g: 0.96470594, b: 0.0627451, a: 1}
-  playingTextColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedBgColor: {r: 0, g: 0, b: 0.77647066, a: 1}
+  normalTextColor: {r: 0, g: 0, b: 0, a: 1}
+  playingTextColor: {r: 0, g: 0, b: 0, a: 1}
+  selectedBgColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!222 &927166076985907496
 CanvasRenderer:
   m_ObjectHideFlags: 0

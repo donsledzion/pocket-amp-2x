@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 namespace SoftAware
 {
@@ -17,10 +18,19 @@ namespace SoftAware
 
         public void Initialize()
         {
+            if (playlist == null) playlist = GetComponent<Playlist>();
+            if (playlist == null) playlist = FindObjectOfType<Playlist>();
+            if (audioPlayer == null) audioPlayer = FindObjectOfType<AudioPlayer>();
+
             if (playlist != null)
             {
                 playlist.OnPlaylistChanged += RefreshList;
                 playlist.OnCurrentIndexChanged += HandleCurrentIndexChanged;
+                playlist.OnSongMetadataUpdated += HandleSongMetadataUpdated;
+            }
+            else
+            {
+                Debug.LogError("[WinampPlaylistUI] Playlist reference is missing!", this);
             }
             
             RefreshList();
@@ -32,11 +42,19 @@ namespace SoftAware
             {
                 playlist.OnPlaylistChanged -= RefreshList;
                 playlist.OnCurrentIndexChanged -= HandleCurrentIndexChanged;
+                playlist.OnSongMetadataUpdated -= HandleSongMetadataUpdated;
             }
         }
 
         public void RefreshList()
         {
+            if (playlist == null) return;
+            if (trackPrefab == null)
+            {
+                Debug.LogError("[WinampPlaylistUI] Track Prefab is not assigned!", this);
+                return;
+            }
+
             // Clear existing
             foreach (var item in trackUIItems)
             {
@@ -52,6 +70,15 @@ namespace SoftAware
                 WinampPlaylistTrack trackUI = go.GetComponent<WinampPlaylistTrack>();
                 if (trackUI != null)
                 {
+                    if (WinampSkinLoader.Instance != null)
+                    {
+                        trackUI.SetColors(
+                            WinampSkinLoader.Instance.PlaylistNormalColor,
+                            WinampSkinLoader.Instance.PlaylistCurrentColor,
+                            WinampSkinLoader.Instance.PlaylistNormalBGColor,
+                            WinampSkinLoader.Instance.PlaylistSelectedBGColor
+                        );
+                    }
                     trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
                     trackUIItems.Add(trackUI);
                 }
@@ -79,6 +106,11 @@ namespace SoftAware
             UpdateHighlights();
         }
 
+        private void HandleSongMetadataUpdated(int index, Playlist.SongInfo song)
+        {
+            UpdateTrackDuration(index, song.Title, song.Duration);
+        }
+
         private void UpdateHighlights()
         {
             int playingIndex = playlist.CurrentIndex;
@@ -96,6 +128,25 @@ namespace SoftAware
             if (index >= 0 && index < trackUIItems.Count)
             {
                 trackUIItems[index].RefreshDuration(title, duration);
+            }
+        }
+
+        public void RefreshColors()
+        {
+            if (WinampSkinLoader.Instance == null) return;
+
+            foreach (var track in trackUIItems)
+            {
+                if (track != null)
+                {
+                    track.SetColors(
+                        WinampSkinLoader.Instance.PlaylistNormalColor,
+                        WinampSkinLoader.Instance.PlaylistCurrentColor,
+                        WinampSkinLoader.Instance.PlaylistNormalBGColor,
+                        WinampSkinLoader.Instance.PlaylistSelectedBGColor
+                    );
+                    track.SetPlaying(playlist.CurrentIndex == trackUIItems.IndexOf(track));
+                }
             }
         }
     }

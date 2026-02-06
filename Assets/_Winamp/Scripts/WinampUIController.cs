@@ -22,6 +22,7 @@ namespace SoftAware
             if (mainPanel.PlaylistUI != null)
             {
                 mainPanel.PlaylistUI.Initialize();
+                mainPanel.PlaylistUI.RefreshColors();
             }
         }
 

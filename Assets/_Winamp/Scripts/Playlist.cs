@@ -19,15 +19,18 @@ namespace SoftAware
         public class SongInfo
         {
             public string Title;
+            public string Artist;
             public AudioClip Clip;
             public string FilePath;
             public float Duration;
+            public bool MetadataLoaded = false;
             
             public bool HasNativePath => !string.IsNullOrEmpty(FilePath);
         }
 
         public event Action OnPlaylistChanged;
         public event Action<int> OnCurrentIndexChanged;
+        public event Action<int, SongInfo> OnSongMetadataUpdated;
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
@@ -35,6 +38,7 @@ namespace SoftAware
         
         private int currentIndex = -1;
         private bool shuffleEnabled = false;
+        private Coroutine metadataScannerCoroutine;
         internal SongInfo CurrentSong => (songs.Count > 0 && currentIndex >= 0) ? songs[currentIndex] : null;
         internal AudioClip CurrentClip => CurrentSong?.Clip;
         internal int Count => songs.Count;
@@ -188,17 +192,13 @@ namespace SoftAware
                     
                     // Unified Fast Path for ALL platforms
                     // We don't load the clip immediately anymore on Windows/Editor
-                    float duration = 0;
-#if UNITY_ANDROID && !UNITY_EDITOR
-                    duration = AndroidAudioInfoBridge.GetDuration(entry.Path);
-#endif
-
                     songs.Add(new SongInfo 
                     { 
                         Title = entry.Name, 
                         Clip = null, 
                         FilePath = entry.Path,
-                        Duration = duration
+                        Duration = 0,
+                        MetadataLoaded = false
                     });
                     
                     LogDebug($"Total Songs: {songs.Count}");
@@ -206,8 +206,43 @@ namespace SoftAware
             }
 
             LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
+            
+            if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
+            metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+            
             OnPlaylistChanged?.Invoke();
             yield break;
+        }
+
+        private IEnumerator MetadataScannerCoroutine()
+        {
+            // Scan through all songs that haven't loaded metadata yet
+            for (int i = 0; i < songs.Count; i++)
+            {
+                var song = songs[i];
+                if (song.MetadataLoaded) continue;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+                string path = song.FilePath;
+                // Retrieve duration and metadata from native bridge
+                float duration = AndroidAudioInfoBridge.GetDuration(path);
+                string[] meta = AndroidAudioInfoBridge.GetMetadata(path);
+                
+                song.Duration = duration;
+                if (!string.IsNullOrEmpty(meta[0])) // Title
+                {
+                    song.Title = meta[0];
+                    if (!string.IsNullOrEmpty(meta[1])) // Artist
+                    {
+                        song.Title = $"{meta[1]} - {meta[0]}";
+                    }
+                }
+#endif
+                song.MetadataLoaded = true;
+                OnSongMetadataUpdated?.Invoke(i, song);
+                yield return null; // Wait for next frame to avoid hitching
+            }
+            metadataScannerCoroutine = null;
         }
 
         public IEnumerator LoadSongClip(SongInfo song)

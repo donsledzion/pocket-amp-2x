@@ -26,6 +26,15 @@ namespace SoftAware
         private float lastClickTime;
         private const float DOUBLE_CLICK_TIME = 0.3f;
 
+        public void SetColors(Color normal, Color playing, Color normalBg, Color selectedBg)
+        {
+            normalTextColor = normal;
+            playingTextColor = playing;
+            selectedBgColor = selectedBg;
+            // Note: normalBg can be applied to the overall container if needed, 
+            // but usually individual tracks just toggle the selectedBg image.
+        }
+
         public void Setup(int trackIndex, string title, float duration, Action<int> clickCallback, Action<int> doubleClickCallback)
         {
             index = trackIndex;
@@ -47,6 +56,8 @@ namespace SoftAware
 
         private void RefreshDisplay(float duration)
         {
+            if (trackText == null) return;
+            
             string durationStr = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : "?:??";
             
             // 1. Clean title (strip extensions)
