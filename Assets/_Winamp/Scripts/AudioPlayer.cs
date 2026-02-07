@@ -30,7 +30,6 @@ namespace SoftAware
         public bool IsPaused => isPaused;
 
         // Coroutines for track management
-        private Coroutine autoPlayNextClipCoroutine;
         private Coroutine playCoroutine;
         
         // State tracking
@@ -59,6 +58,7 @@ namespace SoftAware
 #else
             engine = new UnityPlaybackEngine(audioSource);
 #endif
+            engine.OnPlaybackFinished += () => mainThreadActions.Enqueue(() => PlayNext(true));
             
             // Link UI Controller
             if (uiController != null) uiController.Initialize(this);
@@ -87,7 +87,7 @@ namespace SoftAware
             panelMain.PlayButton.onClick.AddListener(Play);
             panelMain.PauseButton.onClick.AddListener(Pause);
             panelMain.StopButton.onClick.AddListener(StopPlayback);
-            panelMain.NextButton.onClick.AddListener(PlayNext);
+            panelMain.NextButton.onClick.AddListener(() => PlayNext());
             panelMain.EjectButton.onClick.AddListener(PickFolder);
 
             BindSlider();
@@ -181,7 +181,6 @@ namespace SoftAware
 
         private IEnumerator PlayProcess()
         {
-            if (autoPlayNextClipCoroutine != null) StopCoroutine(autoPlayNextClipCoroutine);
             isPaused = false;
             uiController?.ShowLoading();
 
@@ -239,27 +238,15 @@ namespace SoftAware
         private void OnPlaybackStarted()
         {
             UpdateAudioInfo();
-            if (autoPlayNextClipCoroutine != null) StopCoroutine(autoPlayNextClipCoroutine);
-            autoPlayNextClipCoroutine = StartCoroutine(PlayNextClipCoroutine());
         }
 
-        private IEnumerator PlayNextClipCoroutine()
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            yield break; 
-#else
-            yield return new WaitUntil(() => engine.IsPlaying);
-            yield return new WaitUntil(() => !engine.IsPlaying && !isPaused);
-            if (!engine.IsPlaying && !isPaused && engine.CurrentTime == 0) PlayNext();
-#endif
-        }
 
-        public void PlayNext() { SwitchSong(playlist.GetNextSong()); }
+        public void PlayNext(bool forcePlay = false) { SwitchSong(playlist.GetNextSong(), forcePlay); }
         public void PlayPrevious() { SwitchSong(playlist.GetPreviousSong()); }
 
-        private void SwitchSong(Playlist.SongInfo next)
+        private void SwitchSong(Playlist.SongInfo next, bool forcePlay = false)
         {
-            bool wasActive = engine.IsPlaying || isPaused;
+            bool wasActive = engine.IsPlaying || isPaused || forcePlay;
             StopPlaybackInternal();
             if (wasActive) Play();
             else UpdateAudioInfo();
@@ -279,7 +266,6 @@ namespace SoftAware
         private void StopPlaybackInternal()
         {
             if (playCoroutine != null) StopCoroutine(playCoroutine);
-            if (autoPlayNextClipCoroutine != null) StopCoroutine(autoPlayNextClipCoroutine);
             
             engine.Stop();
             isPaused = false;
@@ -319,7 +305,7 @@ namespace SoftAware
         // Native Callbacks
         public void OnNativePlay() => mainThreadActions.Enqueue(Play);
         public void OnNativePause() => mainThreadActions.Enqueue(Pause);
-        public void OnNativeNext() => mainThreadActions.Enqueue(PlayNext);
+        public void OnNativeNext() => mainThreadActions.Enqueue(() => PlayNext());
         public void OnNativePrev() => mainThreadActions.Enqueue(PlayPrevious);
 
         private void OnApplicationQuit() => AndroidMediaBridge.StopService();

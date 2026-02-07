@@ -12,6 +12,7 @@ namespace SoftAware
 
     public interface IPlaybackEngine
     {
+        event System.Action OnPlaybackFinished;
         void Play(Playlist.SongInfo song);
         void Pause();
         void Resume();

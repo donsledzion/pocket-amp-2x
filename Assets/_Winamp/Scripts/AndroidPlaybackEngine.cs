@@ -4,6 +4,7 @@ namespace SoftAware
 {
     public class AndroidPlaybackEngine : IPlaybackEngine
     {
+        public event System.Action OnPlaybackFinished;
         private int currentMusicID = -1;
 
         public bool IsPlaying => currentMusicID != -1 && ANAMusic.isPlaying(currentMusicID);
@@ -38,7 +39,12 @@ namespace SoftAware
 
         public void Resume()
         {
-            if (currentMusicID != -1) ANAMusic.play(currentMusicID);
+            if (currentMusicID != -1)
+            {
+                ANAMusic.play(currentMusicID, (id) => {
+                    OnPlaybackFinished?.Invoke();
+                });
+            }
         }
 
         public void Stop()

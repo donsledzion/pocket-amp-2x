@@ -4,15 +4,33 @@ namespace SoftAware
 {
     public class UnityPlaybackEngine : IPlaybackEngine
     {
+        public event System.Action OnPlaybackFinished;
+        
         private readonly AudioSource audioSource;
         private Playlist.SongInfo currentSong;
+        private bool wasPlayingLastFrame = false;
+        private bool isInternalStop = false;
 
         public UnityPlaybackEngine(AudioSource source)
         {
             audioSource = source;
         }
 
-        public bool IsPlaying => audioSource != null && audioSource.isPlaying;
+        public bool IsPlaying {
+            get {
+                bool playing = audioSource != null && audioSource.isPlaying;
+                
+                // Detect completion: was playing, now stopped, and not stopped by user (internal stop)
+                if (wasPlayingLastFrame && !playing && !isInternalStop)
+                {
+                    OnPlaybackFinished?.Invoke();
+                }
+                
+                wasPlayingLastFrame = playing;
+                return playing;
+            }
+        }
+
         public float CurrentTime => audioSource != null ? audioSource.time : 0f;
         public float Duration => (audioSource != null && audioSource.clip != null) ? audioSource.clip.length : 0f;
         public int AudioSessionId => -1; // Not used in Unity standard playback
@@ -21,22 +39,27 @@ namespace SoftAware
         {
             if (song == null || song.Clip == null) return;
             currentSong = song;
+            isInternalStop = false;
             audioSource.clip = song.Clip;
             audioSource.Play();
+            wasPlayingLastFrame = true;
         }
 
         public void Pause()
         {
+            isInternalStop = true;
             if (audioSource != null) audioSource.Pause();
         }
 
         public void Resume()
         {
+            isInternalStop = false;
             if (audioSource != null) audioSource.UnPause();
         }
 
         public void Stop()
         {
+            isInternalStop = true;
             if (audioSource != null) audioSource.Stop();
         }
 
