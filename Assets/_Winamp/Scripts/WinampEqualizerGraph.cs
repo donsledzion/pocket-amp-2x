@@ -124,7 +124,13 @@ namespace SoftAware
 
         private void DrawPreampLine(VertexHelper vh, Rect rect)
         {
-            float y = rect.yMin + ((preamp + 12f) / 24f) * rect.height;
+            // Range updated to -20..+20. 
+            // Inverted: +20dB moves line DOWN, -20dB moves line UP.
+            float t = (preamp + 20f) / 40f;
+            float invertedT = 1f - t;
+            
+            float y = rect.yMin + Mathf.Clamp01(invertedT) * rect.height;
+
             DrawQuad(vh, 
                 new Vector2(rect.xMin, y - preampLineThickness / 2f), 
                 new Vector2(rect.width, preampLineThickness), 

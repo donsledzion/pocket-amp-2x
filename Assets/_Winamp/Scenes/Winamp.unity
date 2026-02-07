@@ -10128,7 +10128,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   colorsSprite: {fileID: -1784284843, guid: e8b84605ed1db354ca22308840c54358, type: 3}
-  preampColor: {r: 1, g: 0, b: 0, a: 0.8}
+  preampColor: {r: 0.4431373, g: 0.4431373, b: 0.53333336, a: 0.8}
   preampLineThickness: 1
   fillBelow: 0
 --- !u!222 &1713720565
