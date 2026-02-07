@@ -9,11 +9,7 @@ namespace SoftAware
     {
         [Header("Assets")]
         [SerializeField] private Sprite colorsSprite;
-
-        [Header("Settings")]
-        [SerializeField] private Color preampColor = new Color(1f, 0f, 0f, 0.8f);
-        [SerializeField] private float preampLineThickness = 1f;
-        [SerializeField] private bool fillBelow = false;
+        [SerializeField] private Sprite preampSprite;
 
         private float preamp = 0f;
         private float[] bands = new float[10];
@@ -43,14 +39,12 @@ namespace SoftAware
             if (colorsSprite == null) return;
 
             Rect rect = GetPixelAdjustedRect();
-            float width = rect.width;
-            float height = rect.height;
 
             // 1. Interpolate gains for all 113 columns
             float[] interpolatedGains = InterpolateBands();
 
             // 2. Draw 113 vertical segments (1px wide each)
-            float colWidth = width / GraphWidth;
+            float colWidth = rect.width / GraphWidth;
             
             for (int x = 0; x < GraphWidth; x++)
             {
@@ -58,7 +52,7 @@ namespace SoftAware
                 DrawGraphColumn(vh, x, level, rect, colWidth);
             }
 
-            // 3. Draw Preamp Line (procedural color since it's usually not in the 19-color palette)
+            // 3. Draw Preamp Line
             DrawPreampLine(vh, rect);
         }
 
@@ -94,48 +88,46 @@ namespace SoftAware
         {
             // level 0 is bottom (-12dB), level 18 is top (+12dB)
             float xPos = rect.xMin + x * colWidth;
-            float yPos = rect.yMin + (level / (float)(GraphHeight - 1)) * rect.height;
             
-            // 1px height segment (classic Winamp style - the graph is a line made of blocks)
-            // If the user wants a filled area, we would draw from bottom to 'level'
-            int startLevel = fillBelow ? 0 : level;
+            float segmentY = rect.yMin + (level / (float)(GraphHeight - 1)) * rect.height;
+            float segmentHeight = rect.height / GraphHeight;
 
-            for (int l = startLevel; l <= level; l++)
-            {
-                float segmentY = rect.yMin + (l / (float)(GraphHeight - 1)) * rect.height;
-                float segmentHeight = rect.height / GraphHeight;
+            Rect uvRect = colorsSprite.rect;
+            Texture tex = colorsSprite.texture;
+            
+            // Sample color from the 1x19 texture
+            float uvX = (uvRect.x + 0.5f) / tex.width;
+            float uvY = (uvRect.y + level + 0.5f) / tex.height;
 
-                Rect uvRect = colorsSprite.rect;
-                Texture tex = colorsSprite.texture;
-                
-                // Sample color from the 1x19 texture
-                // The texture is 1px wide, 19px high. 
-                // We want the l-th pixel.
-                float uvX = (uvRect.x + 0.5f) / tex.width;
-                float uvY = (uvRect.y + l + 0.5f) / tex.height;
-
-                DrawQuad(vh, 
-                    new Vector2(xPos, segmentY), 
-                    new Vector2(colWidth, segmentHeight), 
-                    new Vector2(uvX, uvY), 
-                    Color.white);
-            }
+            DrawQuad(vh, 
+                new Vector2(xPos, segmentY), 
+                new Vector2(colWidth, segmentHeight), 
+                new Vector2(uvX, uvY), 
+                Color.white);
         }
 
         private void DrawPreampLine(VertexHelper vh, Rect rect)
         {
-            // Range updated to -20..+20. 
+            if (preampSprite == null) return;
+
             // Inverted: +20dB moves line DOWN, -20dB moves line UP.
-            float t = (preamp + 20f) / 40f;
-            float invertedT = 1f - t;
+            float t = 1f - (preamp + 20f) / 40f;
+            float y = rect.yMin + Mathf.Clamp01(t) * rect.height;
+
+            Rect uvRect = preampSprite.rect;
+            Texture tex = preampSprite.texture;
             
-            float y = rect.yMin + Mathf.Clamp01(invertedT) * rect.height;
+            // Map texture height (pixels) to UI space 1:1 based on graph scaling
+            float spriteHeightInUI = uvRect.height * (rect.height / GraphHeight);
+
+            Vector2 uv = new Vector2((uvRect.x + uvRect.width * 0.5f) / tex.width, 
+                                     (uvRect.y + uvRect.height * 0.5f) / tex.height);
 
             DrawQuad(vh, 
-                new Vector2(rect.xMin, y - preampLineThickness / 2f), 
-                new Vector2(rect.width, preampLineThickness), 
-                Vector2.zero, 
-                preampColor);
+                new Vector2(rect.xMin, y - spriteHeightInUI * 0.5f), 
+                new Vector2(rect.width, spriteHeightInUI), 
+                uv, 
+                Color.white);
         }
 
         private void DrawQuad(VertexHelper vh, Vector2 pos, Vector2 size, Vector2 uv, Color color)

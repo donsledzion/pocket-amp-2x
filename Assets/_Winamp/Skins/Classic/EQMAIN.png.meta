@@ -117,7 +117,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 199
+        y: 197
         width: 275
         height: 116
       alignment: 0
@@ -1067,7 +1067,7 @@ TextureImporter:
         width: 1
         height: 19
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1076,6 +1076,50 @@ TextureImporter:
       bones: []
       spriteID: 5d42627f93331d74e8fed53fb5d81b68
       internalID: -1784284843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_GraphBG
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2
+        width: 113
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66a20dafee9680d4d8ec074f90391cb4
+      internalID: 696333408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_Preamp_Bar
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 288
+        width: 113
+        height: 1
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06c2a6804024d7448ef438238d4a749
+      internalID: 1714026692
       vertices: []
       indices: 
       edges: []
@@ -1099,6 +1143,7 @@ TextureImporter:
       EQMAIN_Auto_Disabled_Pressed: -999135415
       EQMAIN_Auto_Enabled_Normal: 1253289910
       EQMAIN_Auto_Enabled_Pressed: 459801500
+      EQMAIN_GraphBG: 696333408
       EQMAIN_GraphColors: -1784284843
       EQMAIN_Knob_normal: 1364743285
       EQMAIN_Knob_pressed: 1813798836
@@ -1106,6 +1151,7 @@ TextureImporter:
       EQMAIN_On_Disabled_Pressed: -1017602504
       EQMAIN_On_Enabled_Normal: -876578035
       EQMAIN_On_Enabled_Pressed: -316848284
+      EQMAIN_Preamp_Bar: 1714026692
       EQMAIN_Presets_Normal: -475741553
       EQMAIN_Presets_Pressed: 847167759
       EQMAIN_Slider_00: 1450598238
