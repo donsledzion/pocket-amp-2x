@@ -5,6 +5,27 @@ namespace SoftAware
 {
     public class AndroidMediaBridge
     {
+        public delegate void RemoteControlAction();
+        
+        private class AndroidMediaCallbackProxy : AndroidJavaProxy
+        {
+            private readonly RemoteControlAction _onPlay, _onPause, _onNext, _onPrev;
+
+            public AndroidMediaCallbackProxy(RemoteControlAction play, RemoteControlAction pause, RemoteControlAction next, RemoteControlAction prev) 
+                : base("com.softaware.winamp.WinampAudioService$RemoteControlListener")
+            {
+                _onPlay = play;
+                _onPause = pause;
+                _onNext = next;
+                _onPrev = prev;
+            }
+
+            void onPlay() => _onPlay?.Invoke();
+            void onPause() => _onPause?.Invoke();
+            void onNext() => _onNext?.Invoke();
+            void onPrev() => _onPrev?.Invoke();
+        }
+
         private static AndroidJavaObject serviceIntent;
         private static AndroidJavaObject context;
 
@@ -56,6 +77,17 @@ namespace SoftAware
             #if UNITY_ANDROID && !UNITY_EDITOR
             serviceIntent.Call<AndroidJavaObject>("setAction", "STOP_SERVICE");
             context.Call<AndroidJavaObject>("startService", serviceIntent);
+            #endif
+        }
+
+        public static void RegisterRemoteControlListener(RemoteControlAction onPlay, RemoteControlAction onPause, RemoteControlAction onNext, RemoteControlAction onPrev)
+        {
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            var proxy = new AndroidMediaCallbackProxy(onPlay, onPause, onNext, onPrev);
+            using (var serviceClass = new AndroidJavaClass("com.softaware.winamp.WinampAudioService"))
+            {
+                serviceClass.CallStatic("setListener", proxy);
+            }
             #endif
         }
 

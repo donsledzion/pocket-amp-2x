@@ -26,6 +26,19 @@ public class WinampAudioService extends Service {
     private NotificationManager notificationManager;
     private PowerManager.WakeLock wakeLock;
 
+    public interface RemoteControlListener {
+        void onPlay();
+        void onPause();
+        void onNext();
+        void onPrev();
+    }
+
+    private static RemoteControlListener listener;
+
+    public static void setListener(RemoteControlListener listener) {
+        WinampAudioService.listener = listener;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -65,25 +78,41 @@ public class WinampAudioService extends Service {
             @Override
             public void onPlay() {
                 Log.d(TAG, "MediaSession: onPlay");
-                UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+                if (listener != null) {
+                    listener.onPlay();
+                } else {
+                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+                }
             }
 
             @Override
             public void onPause() {
                 Log.d(TAG, "MediaSession: onPause");
-                UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
+                if (listener != null) {
+                    listener.onPause();
+                } else {
+                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
+                }
             }
 
             @Override
             public void onSkipToNext() {
                 Log.d(TAG, "MediaSession: onSkipToNext");
-                UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeNext", "");
+                if (listener != null) {
+                    listener.onNext();
+                } else {
+                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeNext", "");
+                }
             }
 
             @Override
             public void onSkipToPrevious() {
                 Log.d(TAG, "MediaSession: onSkipToPrevious");
-                UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePrev", "");
+                if (listener != null) {
+                    listener.onPrev();
+                } else {
+                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePrev", "");
+                }
             }
         });
         
@@ -115,13 +144,17 @@ public class WinampAudioService extends Service {
             stopForeground(true);
             stopSelf();
         } else if (ACTION_PLAY.equals(action)) {
-            UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+            if (listener != null) listener.onPlay();
+            else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
         } else if (ACTION_PAUSE.equals(action)) {
-            UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
+            if (listener != null) listener.onPause();
+            else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
         } else if (ACTION_PREV.equals(action)) {
-            UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePrev", "");
+            if (listener != null) listener.onPrev();
+            else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePrev", "");
         } else if (ACTION_NEXT.equals(action)) {
-            UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeNext", "");
+            if (listener != null) listener.onNext();
+            else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeNext", "");
         }
 
         return START_NOT_STICKY;

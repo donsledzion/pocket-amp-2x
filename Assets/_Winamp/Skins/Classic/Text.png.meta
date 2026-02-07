@@ -1587,7 +1587,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_67
+      name: Text_Space
       rect:
         serializedVersion: 2
         x: 25
@@ -2203,7 +2203,6 @@ TextureImporter:
       Text_62: 1718452218
       Text_63: 1039069721
       Text_64: -516299385
-      Text_67: 1961043201
       Text_68: 90848305
       Text_69: -501480937
       Text_7: -1414390035
@@ -2256,6 +2255,7 @@ TextureImporter:
       Text_R: -907178127
       Text_S: -759596021
       Text_Shuriken: 1458559929
+      Text_Space: 1961043201
       Text_T: -7452242
       Text_U: 124819086
       Text_V: 1875212801

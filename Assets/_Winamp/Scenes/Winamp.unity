@@ -3623,8 +3623,8 @@ MonoBehaviour:
   audioPlayer: {fileID: 1138104797}
   trackPrefab: {fileID: 4760062922114016676, guid: b92ce15815ec4bf46b7e8b99a42bb9ac, type: 3}
   contentContainer: {fileID: 1854049880}
-  scrollRect: {fileID: 0}
-  scrollbar: {fileID: 0}
+  scrollRect: {fileID: 792801600}
+  scrollbar: {fileID: 1754141645}
 --- !u!224 &796417077 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}

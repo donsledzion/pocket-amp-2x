@@ -40,6 +40,7 @@ namespace SoftAware
         private float currentVolume = 1f;
         private float currentBalance = 0.5f; 
         private bool repeatEnabled = false;
+        private bool isAppPaused = false;
 
         private void Awake()
         {
@@ -63,7 +64,23 @@ namespace SoftAware
             // Link UI Controller
             if (uiController != null) uiController.Initialize(this);
             
+            RegisterBackgroundCallbacks();
             BindButtons();
+        }
+
+        private void RegisterBackgroundCallbacks()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidMediaBridge.RegisterRemoteControlListener(
+                OnNativePlay, OnNativePause, OnNativeNext, OnNativePrev
+            );
+#endif
+        }
+
+        private void OnApplicationPause(bool pause)
+        {
+            isAppPaused = pause;
+            if (!pause) UpdateNotification(); // Refresh on resume
         }
 
         private void Update()
@@ -194,25 +211,7 @@ namespace SoftAware
             // Android Native Load and Play
             if (currentSong.HasNativePath)
             {
-                string path = currentSong.FilePath;
-                engine.Stop();
-
-                int musicID = ANAMusic.load(path, false, false, (id) => {
-                    mainThreadActions.Enqueue(() => {
-                        if (engine is AndroidPlaybackEngine androidEngine)
-                        {
-                            androidEngine.SetNativeMusicID(id);
-                            androidEngine.SetVolume(currentVolume, currentVolume); 
-                            Application.runInBackground = true; 
-                            androidEngine.Resume(); 
-                            OnPlaybackStarted();
-
-                            // Delayed Visualizer Init
-                            int sessionId = androidEngine.AudioSessionId;
-                            if (sessionId != -1) StartCoroutine(InitVisualizerDelayed(sessionId));
-                        }
-                    });
-                }, true, true);
+                PerformNativePlay(currentSong.FilePath, isAppPaused);
             }
 #else
             // Standard Unity Playback
@@ -227,6 +226,35 @@ namespace SoftAware
             }
 #endif
             UpdateNotification();
+        }
+
+        private void PerformNativePlay(string path, bool immediate)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            engine.Stop();
+            ANAMusic.load(path, false, false, (id) => {
+                Action setupAction = () => {
+                    if (engine is AndroidPlaybackEngine androidEngine)
+                    {
+                        androidEngine.SetNativeMusicID(id);
+                        androidEngine.SetVolume(currentVolume, currentVolume); 
+                        Application.runInBackground = true; 
+                        androidEngine.Resume(); 
+                        OnPlaybackStarted();
+
+                        // Delayed Visualizer Init (only on main thread)
+                        if (!immediate) 
+                            StartCoroutine(InitVisualizerDelayed(id));
+                        else
+                            mainThreadActions.Enqueue(() => StartCoroutine(InitVisualizerDelayed(id)));
+                    }
+                };
+
+                if (immediate) setupAction();
+                else mainThreadActions.Enqueue(setupAction);
+
+            }, true, true);
+#endif
         }
 
         private IEnumerator InitVisualizerDelayed(int sessionId)
@@ -302,11 +330,11 @@ namespace SoftAware
                 AndroidMediaBridge.UpdateMetadata(currentSong.Title, "Winamp Android", engine.IsPlaying);
         }
 
-        // Native Callbacks
-        public void OnNativePlay() => mainThreadActions.Enqueue(Play);
-        public void OnNativePause() => mainThreadActions.Enqueue(Pause);
-        public void OnNativeNext() => mainThreadActions.Enqueue(() => PlayNext());
-        public void OnNativePrev() => mainThreadActions.Enqueue(PlayPrevious);
+        // Native Callbacks - called from AndroidMediaBridge (proxy) or direct UnitySendMessage
+        public void OnNativePlay() { if (isAppPaused) Resume(); else mainThreadActions.Enqueue(Play); }
+        public void OnNativePause() { if (isAppPaused) Pause(); else mainThreadActions.Enqueue(Pause); }
+        public void OnNativeNext() { if (isAppPaused) PlayNext(true); else mainThreadActions.Enqueue(() => PlayNext()); }
+        public void OnNativePrev() { if (isAppPaused) PlayPrevious(); else mainThreadActions.Enqueue(PlayPrevious); }
 
         private void OnApplicationQuit() => AndroidMediaBridge.StopService();
     }
