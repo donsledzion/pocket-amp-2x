@@ -213,7 +213,7 @@ namespace SoftAware
                             if (sessionId != -1) StartCoroutine(InitVisualizerDelayed(sessionId));
                         }
                     });
-                }, false, true);
+                }, true, true);
             }
 #else
             // Standard Unity Playback

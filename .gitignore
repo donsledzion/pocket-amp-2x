@@ -74,3 +74,6 @@ $RECYCLE.BIN/
 
 # --- PlasticSCM ---
 /plastic/
+
+
+*.keystore

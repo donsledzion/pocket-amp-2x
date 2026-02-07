@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.media.session.MediaSession;
 import android.media.MediaMetadata;
 import android.media.session.PlaybackState;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
@@ -23,6 +24,7 @@ public class WinampAudioService extends Service {
     
     private MediaSession mediaSession;
     private NotificationManager notificationManager;
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     public void onCreate() {
@@ -30,6 +32,16 @@ public class WinampAudioService extends Service {
         Log.d(TAG, "Service onCreate");
         createNotificationChannel();
         setupMediaSession();
+        setupWakeLock();
+    }
+
+    private void setupWakeLock() {
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Winamp:PlaybackWakeLock");
+            wakeLock.acquire();
+            Log.d(TAG, "WakeLock acquired");
+        }
     }
 
     private void createNotificationChannel() {
@@ -192,6 +204,10 @@ public class WinampAudioService extends Service {
         if (mediaSession != null) {
             mediaSession.setActive(false);
             mediaSession.release();
+        }
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+            Log.d(TAG, "WakeLock released");
         }
         super.onDestroy();
     }
