@@ -292,7 +292,18 @@ namespace SoftAware
         }
 
 
-        public void PlayNext(bool forcePlay = false) { SwitchSong(playlist.GetNextSong(), forcePlay); }
+        public void PlayNext(bool forcePlay = false) 
+        { 
+            // If this is an automatic transition (track finished)
+            // and repeat is off, and we are at the last track, stop.
+            if (forcePlay && !repeatEnabled && !playlist.IsShuffleEnabled && playlist.CurrentIndex == playlist.Count - 1)
+            {
+                StopPlayback();
+                return;
+            }
+
+            SwitchSong(playlist.GetNextSong(), forcePlay); 
+        }
         public void PlayPrevious() { SwitchSong(playlist.GetPreviousSong()); }
 
         private void SwitchSong(Playlist.SongInfo next, bool forcePlay = false)

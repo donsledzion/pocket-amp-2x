@@ -230,52 +230,60 @@ namespace SoftAware
             StartCoroutine(LoadDirectoryCoroutine(directoryPath));
         }
 
-        private IEnumerator LoadDirectoryCoroutine(string path)
+        private IEnumerator LoadDirectoryCoroutine(string rootPath)
         {
-            LogDebug("Scanning folder...", false);
-            FileSystemEntry[] entries = null;
-            try 
-            {
-                entries = FileBrowserHelpers.GetEntriesInDirectory(path, false);
-            }
-            catch (System.Exception e)
-            {
-                LogDebug($"EXCEPTION: {e.Message}");
-                yield break;
-            }
-            
-            if (entries == null)
-            {
-                LogDebug("ERROR: result is NULL");
-                yield break;
-            }
-
-            LogDebug($"FOUND: {entries.Length} entries.");
-
+            LogDebug("Scanning folders recursively...", false);
             int validAudioFound = 0;
-            foreach (FileSystemEntry entry in entries)
-            {
-                if (entry.IsDirectory) continue;
+            
+            Stack<string> directoriesToScan = new Stack<string>();
+            directoriesToScan.Push(rootPath);
 
-                string entryName = entry.Name.ToLower();
-                if (entryName.EndsWith(".mp3") || entryName.EndsWith(".wav") || entryName.EndsWith(".ogg"))
+            while (directoriesToScan.Count > 0)
+            {
+                string currentPath = directoriesToScan.Pop();
+                LogDebug($"Scanning: {Path.GetFileName(currentPath)}");
+
+                FileSystemEntry[] entries = null;
+                try 
                 {
-                    validAudioFound++;
-                    LogDebug($"[#{validAudioFound}] Adding: {entry.Name}");
-                    
-                    // Unified Fast Path for ALL platforms
-                    // We don't load the clip immediately anymore on Windows/Editor
-                    songs.Add(new SongInfo 
-                    { 
-                        Title = entry.Name, 
-                        Clip = null, 
-                        FilePath = entry.Path,
-                        Duration = 0,
-                        MetadataLoaded = false
-                    });
-                    
-                    LogDebug($"Total Songs: {songs.Count}");
+                    entries = FileBrowserHelpers.GetEntriesInDirectory(currentPath, false);
                 }
+                catch (System.Exception e)
+                {
+                    LogDebug($"EXCEPTION in {currentPath}: {e.Message}");
+                    continue;
+                }
+                
+                if (entries == null) continue;
+
+                foreach (FileSystemEntry entry in entries)
+                {
+                    if (entry.IsDirectory)
+                    {
+                        directoriesToScan.Push(entry.Path);
+                    }
+                    else
+                    {
+                        string entryName = entry.Name.ToLower();
+                        if (entryName.EndsWith(".mp3") || entryName.EndsWith(".wav") || entryName.EndsWith(".ogg"))
+                        {
+                            validAudioFound++;
+                            
+                            // Unified Fast Path for ALL platforms
+                            songs.Add(new SongInfo 
+                            { 
+                                Title = entry.Name, 
+                                Clip = null, 
+                                FilePath = entry.Path,
+                                Duration = 0,
+                                MetadataLoaded = false
+                            });
+                        }
+                    }
+                }
+                
+                // Yield occasionally to prevent long hitches with many folders
+                yield return null;
             }
 
             LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
