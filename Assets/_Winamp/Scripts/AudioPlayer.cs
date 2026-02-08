@@ -107,7 +107,7 @@ namespace SoftAware
             }
 
             // Centralized UI Update
-            if (uiController != null && engine != null)
+            if (uiController && engine != null)
             {
                 uiController.UpdateUI(engine.CurrentTime, engine.Duration, engine.IsPlaying, isPaused);
             }

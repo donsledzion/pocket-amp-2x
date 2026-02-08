@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class PlaylistMainButton : MonoBehaviour
+    public class ContextMenuButton : MonoBehaviour
     {
         [SerializeField] private Transform optionsContainer;
 
@@ -12,7 +12,7 @@ namespace SoftAware.Winamp
         private void Awake()
         {
             if (!TryGetComponent(out button)) throw new("Missing Button component!");
-            optionsContainer.gameObject.SetActive(false);
+            CloseMenu();
         }
 
         private void Start()
@@ -25,9 +25,10 @@ namespace SoftAware.Winamp
             button.onClick.RemoveListener(HandleButtonClicked);
         }
 
-        private void HandleButtonClicked()
-        {
-            optionsContainer.gameObject.SetActive(true);
-        }
+        private void OpenMenu() => optionsContainer.gameObject.SetActive(true);
+        
+        internal void CloseMenu() => optionsContainer.gameObject.SetActive(false);
+
+        private void HandleButtonClicked() => OpenMenu();
     }
 }
