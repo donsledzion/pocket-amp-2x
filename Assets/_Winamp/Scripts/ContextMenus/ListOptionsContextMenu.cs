@@ -8,6 +8,10 @@ namespace SoftAware.Winamp
         internal Button SaveListButton => MenuButtons[1];
         internal Button LoadListButton => MenuButtons[2];
 
+        public System.Action OnNewListRequested;
+        public System.Action OnSaveListRequested;
+        public System.Action OnLoadListRequested;
+
         internal override void SetupBindings()
         {
             NewListButton.onClick.AddListener(NewList);
@@ -22,10 +26,10 @@ namespace SoftAware.Winamp
             LoadListButton.onClick.RemoveListener(LoadList);
         }
 
-        private void NewList() => throw new System.NotImplementedException();
+        private void NewList() => OnNewListRequested?.Invoke();
 
-        private void SaveList() => throw new System.NotImplementedException();
+        private void SaveList() => OnSaveListRequested?.Invoke();
 
-        private void LoadList() => throw new System.NotImplementedException();
+        private void LoadList() => OnLoadListRequested?.Invoke();
     }
 }

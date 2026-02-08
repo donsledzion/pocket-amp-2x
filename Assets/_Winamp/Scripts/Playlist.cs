@@ -318,8 +318,44 @@ namespace SoftAware
             yield break;
         }
 
-        private void SavePlaylist()
+        public void NewList()
         {
+            songs.Clear();
+            selectedIndices.Clear();
+            currentIndex = -1;
+            OnPlaylistChanged?.Invoke();
+            OnCurrentIndexChanged?.Invoke(currentIndex);
+            SavePlaylist(); // Savve default one
+        }
+
+        public void PickSaveList()
+        {
+            string folderPath = GetPlaylistsFolder();
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            FileBrowser.ShowSaveDialog((paths) => {
+                if (paths != null && paths.Length > 0) SavePlaylist(paths[0]);
+            }, null, FileBrowser.PickMode.Files, false, folderPath, "playlist.json", "Save Playlist", "Save");
+        }
+
+        public void PickLoadList()
+        {
+            string folderPath = GetPlaylistsFolder();
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            FileBrowser.ShowLoadDialog((paths) => {
+                if (paths != null && paths.Length > 0) LoadPlaylist(paths[0]);
+            }, null, FileBrowser.PickMode.Files, false, folderPath, null, "Load Playlist", "Load");
+        }
+
+        public void SavePlaylist(string path = null)
+        {
+            if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
+            
+            // Ensure directory exists for custom paths too
+            string dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
             PlaylistData data = new PlaylistData();
             foreach (var song in songs)
             {
@@ -330,7 +366,8 @@ namespace SoftAware
             try
             {
                 string json = JsonUtility.ToJson(data);
-                File.WriteAllText(GetPlaylistSavePath(), json);
+                File.WriteAllText(path, json);
+                LogDebug($"Playlist SAVED to: {path}");
             }
             catch (Exception e)
             {
@@ -338,9 +375,9 @@ namespace SoftAware
             }
         }
 
-        private void LoadPlaylist()
+        public void LoadPlaylist(string path = null)
         {
-            string path = GetPlaylistSavePath();
+            if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
             if (!File.Exists(path)) return;
 
             try
@@ -350,11 +387,12 @@ namespace SoftAware
                 
                 if (data != null && data.paths != null)
                 {
+                    songs.Clear(); // Clear current for explicit load
+                    selectedIndices.Clear();
+                    currentIndex = -1;
+
                     foreach (string filePath in data.paths)
                     {
-                        // Avoid duplicates if already in list from inspector
-                        if (songs.Exists(s => s.FilePath == filePath)) continue;
-
                         songs.Add(new SongInfo
                         {
                             Title = Path.GetFileName(filePath),
@@ -365,7 +403,20 @@ namespace SoftAware
                     
                     if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
                     metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+                    
                     OnPlaylistChanged?.Invoke();
+                    OnCurrentIndexChanged?.Invoke(currentIndex);
+                    LogDebug($"Playlist LOADED from: {path}");
+
+                    if (path == GetPlaylistSavePath()) 
+                    {
+                        // If we loaded default, try to restore settings index
+                        if (SettingsManager.Instance != null)
+                        {
+                             int lastIndex = SettingsManager.Instance.LastPlaylistIndex;
+                             if (lastIndex >= 0 && lastIndex < songs.Count) SetCurrentClip(lastIndex);
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -374,9 +425,14 @@ namespace SoftAware
             }
         }
 
+        private string GetPlaylistsFolder()
+        {
+            return Path.Combine(Application.persistentDataPath, "playlists");
+        }
+
         private string GetPlaylistSavePath()
         {
-            return Path.Combine(Application.persistentDataPath, "winamp_playlist.json");
+            return Path.Combine(GetPlaylistsFolder(), "winamp_playlist.json");
         }
 
         private IEnumerator MetadataScannerCoroutine()

@@ -17,6 +17,7 @@ namespace SoftAware
         [SerializeField] private Scrollbar scrollbar;
         [SerializeField] private Winamp.SelectContextMenu selectContextMenu;
         [SerializeField] private Winamp.RemoveContextMenu removeContextMenu;
+        [SerializeField] private Winamp.ListOptionsContextMenu listOptionsContextMenu;
 
         private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
         private bool isUpdatingScroll = false;
@@ -59,6 +60,13 @@ namespace SoftAware
                 removeContextMenu.OnRemoveSelectedRequested += playlist.RemoveSelected;
                 removeContextMenu.OnCropRequested += playlist.Crop;
             }
+
+            if (listOptionsContextMenu != null)
+            {
+                listOptionsContextMenu.OnNewListRequested += playlist.NewList;
+                listOptionsContextMenu.OnSaveListRequested += playlist.PickSaveList;
+                listOptionsContextMenu.OnLoadListRequested += playlist.PickLoadList;
+            }
             
             RefreshList();
         }
@@ -85,6 +93,13 @@ namespace SoftAware
                 removeContextMenu.OnRemoveAllRequested -= playlist.RemoveAll;
                 removeContextMenu.OnRemoveSelectedRequested -= playlist.RemoveSelected;
                 removeContextMenu.OnCropRequested -= playlist.Crop;
+            }
+
+            if (listOptionsContextMenu != null)
+            {
+                listOptionsContextMenu.OnNewListRequested -= playlist.NewList;
+                listOptionsContextMenu.OnSaveListRequested -= playlist.PickSaveList;
+                listOptionsContextMenu.OnLoadListRequested -= playlist.PickLoadList;
             }
 
             if (scrollRect != null) scrollRect.onValueChanged.RemoveListener(HandleScrollRectChanged);
