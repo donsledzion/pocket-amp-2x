@@ -10,12 +10,16 @@ namespace SoftAware
         private const string KEY_SHOW_PLAYLIST = "Winamp_ShowPlaylist";
         private const string KEY_SHUFFLE = "Winamp_Shuffle";
         private const string KEY_REPEAT = "Winamp_Repeat";
+        private const string KEY_VOLUME = "Winamp_Volume";
+        private const string KEY_BALANCE = "Winamp_Balance";
 
         [Header("Default Values")]
         [SerializeField] private bool defaultShowEQ = true;
         [SerializeField] private bool defaultShowPlaylist = true;
         [SerializeField] private bool defaultShuffle = false;
         [SerializeField] private bool defaultRepeat = false;
+        [SerializeField, Range(0, 1)] private float defaultVolume = 0.5f;
+        [SerializeField, Range(0, 1)] private float defaultBalance = 0.5f;
 
         public bool ShowEQ
         {
@@ -39,6 +43,18 @@ namespace SoftAware
         {
             get => PlayerPrefs.GetInt(KEY_REPEAT, defaultRepeat ? 1 : 0) == 1;
             set => PlayerPrefs.SetInt(KEY_REPEAT, value ? 1 : 0);
+        }
+
+        public float Volume
+        {
+            get => PlayerPrefs.GetFloat(KEY_VOLUME, defaultVolume);
+            set => PlayerPrefs.SetFloat(KEY_VOLUME, value);
+        }
+
+        public float Balance
+        {
+            get => PlayerPrefs.GetFloat(KEY_BALANCE, defaultBalance);
+            set => PlayerPrefs.SetFloat(KEY_BALANCE, value);
         }
 
         private void Awake()

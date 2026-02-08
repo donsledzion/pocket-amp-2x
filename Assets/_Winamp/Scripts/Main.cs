@@ -62,6 +62,12 @@ namespace SoftAware
                 if (playlistButton != null) playlistButton.SetState(SettingsManager.Instance.ShowPlaylist);
                 if (shuffleButton != null) shuffleButton.SetState(SettingsManager.Instance.Shuffle);
                 if (repeatButton != null) repeatButton.SetState(SettingsManager.Instance.Repeat);
+                
+                if (volumeController != null && volumeController.Slider != null)
+                    volumeController.Slider.value = SettingsManager.Instance.Volume;
+                
+                if (balanceController != null && balanceController.Slider != null)
+                    balanceController.Slider.value = SettingsManager.Instance.Balance;
             }
 
             if (eqButton != null)
@@ -93,6 +99,20 @@ namespace SoftAware
             {
                 repeatButton.OnValueChanged.AddListener((isOn) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.Repeat = isOn;
+                });
+            }
+
+            if (volumeController != null && volumeController.Slider != null)
+            {
+                volumeController.Slider.onValueChanged.AddListener((val) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.Volume = val;
+                });
+            }
+
+            if (balanceController != null && balanceController.Slider != null)
+            {
+                balanceController.Slider.onValueChanged.AddListener((val) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.Balance = val;
                 });
             }
         }
