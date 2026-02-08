@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class ContextMenuButton : MonoBehaviour
+    public abstract class ContextMenuButton : MonoBehaviour
     {
         [SerializeField] private Transform optionsContainer;
         internal Button[] MenuButtons { get; private set; }
@@ -21,12 +21,17 @@ namespace SoftAware.Winamp
         private void Start()
         {
             button.onClick.AddListener(HandleButtonClicked);
+            SetupBindings();
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(HandleButtonClicked);
+            ClearBindings();
         }
+
+        internal abstract void SetupBindings();
+        internal abstract void ClearBindings();
 
         private void OpenMenu() => optionsContainer.gameObject.SetActive(true);
         
