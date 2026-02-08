@@ -19,6 +19,7 @@ namespace SoftAware
         private const string KEY_EQ_PREAMP = "Winamp_EQ_Preamp";
         private const string KEY_EQ_BAND_PREFIX = "Winamp_EQ_Band_";
         private const string KEY_LAST_INDEX = "Winamp_LastIndex";
+        private const string KEY_IS_FIRST_RUN = "Winamp_IsFirstRun";
 
         [Header("Default Values")]
         [SerializeField] private bool defaultShowEQ = true;
@@ -112,6 +113,12 @@ namespace SoftAware
         {
             get => PlayerPrefs.GetInt(KEY_LAST_INDEX, -1);
             set { if (value != LastPlaylistIndex) { PlayerPrefs.SetInt(KEY_LAST_INDEX, value); PlayerPrefs.Save(); } }
+        }
+
+        public bool IsFirstRun
+        {
+            get => PlayerPrefs.GetInt(KEY_IS_FIRST_RUN, 1) == 1;
+            set { if (value != IsFirstRun) { PlayerPrefs.SetInt(KEY_IS_FIRST_RUN, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         private void Awake()

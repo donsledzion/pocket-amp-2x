@@ -1065,13 +1065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202dc5b2c6cf35c4abb209b2cba8dcc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Playlist
-  songs:
-  - Title: Demo
-    Artist: 
-    Clip: {fileID: 8300000, guid: a69fa19e6baa0064789ce38abcd67b20, type: 3}
-    FilePath: 
-    Duration: 0
-    MetadataLoaded: 0
+  songs: []
   debugText: {fileID: 740344165}
 --- !u!4 &204421521
 Transform:

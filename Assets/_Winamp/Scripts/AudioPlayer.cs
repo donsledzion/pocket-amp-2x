@@ -66,6 +66,21 @@ namespace SoftAware
             
             RegisterBackgroundCallbacks();
             BindButtons();
+
+            if (playlist != null)
+            {
+                playlist.OnPlaylistReady += HandlePlaylistReady;
+            }
+        }
+
+        private void HandlePlaylistReady()
+        {
+            if (SettingsManager.Instance != null && SettingsManager.Instance.IsFirstRun)
+            {
+                Debug.Log("AudioPlayer: First run detected. Auto-playing demo track.");
+                SettingsManager.Instance.IsFirstRun = false; // Clear the flag
+                Play();
+            }
         }
 
         private void RegisterBackgroundCallbacks()

@@ -37,6 +37,7 @@ namespace SoftAware
         public event Action OnPlaylistChanged;
         public event Action<int> OnCurrentIndexChanged;
         public event Action<int, SongInfo> OnSongMetadataUpdated;
+        public event Action OnPlaylistReady;
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
@@ -67,12 +68,72 @@ namespace SoftAware
 
             LoadPlaylist();
 
+            StartCoroutine(InitializeDemoTrackCoroutine());
+        }
+
+        private IEnumerator InitializeDemoTrackCoroutine()
+        {
+            string demoFileName = "demo.mp3";
+            string targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
+
+            // Copy from StreamingAssets if it doesn't exist in persistentDataPath
+            if (!File.Exists(targetPath))
+            {
+                LogDebug("Demo track not found in persistent path. Copying from StreamingAssets...");
+                string sourcePath = Path.Combine(Application.streamingAssetsPath, demoFileName);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+                using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
+                {
+                    yield return www.SendWebRequest();
+                    if (www.result == UnityWebRequest.Result.Success)
+                    {
+                        File.WriteAllBytes(targetPath, www.downloadHandler.data);
+                        LogDebug("Successfully copied demo track to persistent path.");
+                    }
+                    else
+                    {
+                        LogDebug($"ERROR copying demo track: {www.error}");
+                    }
+                }
+#else
+                if (File.Exists(sourcePath))
+                {
+                    File.Copy(sourcePath, targetPath, true);
+                    LogDebug("Successfully copied demo track to persistent path.");
+                }
+#endif
+            }
+
+            // Ensure demo track is in playlist if it's the first run or playlist is empty
+            if (File.Exists(targetPath))
+            {
+                if (!songs.Exists(s => s.FilePath == targetPath))
+                {
+                    songs.Insert(0, new SongInfo
+                    {
+                        Title = "demo.mp3",
+                        FilePath = targetPath,
+                        MetadataLoaded = false
+                    });
+                    OnPlaylistChanged?.Invoke();
+                    SavePlaylist();
+                }
+            }
+
             if (songs.Count > 0)
             {
                 int lastIndex = SettingsManager.Instance != null ? SettingsManager.Instance.LastPlaylistIndex : 0;
                 lastIndex = Mathf.Clamp(lastIndex, 0, songs.Count - 1);
+                
+                // If it was -1 (default for First Run), we set it to 0 (demo track)
+                if (lastIndex < 0) lastIndex = 0;
+                
                 SetCurrentClip(lastIndex);
             }
+
+            OnPlaylistReady?.Invoke();
+            yield break;
         }
 
         private void InitializeInspectorSongs()
