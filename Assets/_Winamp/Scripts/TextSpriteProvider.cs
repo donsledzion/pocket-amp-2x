@@ -65,7 +65,6 @@ namespace SoftAware
             }
 
             isInitialized = true;
-            Debug.Log($"[TextSpriteProvider] Loaded {spriteCache.Count} character sprites");
         }
 
         /// <summary>

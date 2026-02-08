@@ -123,7 +123,7 @@ namespace SoftAware
 
             if (songs.Count > 0)
             {
-                int lastIndex = SettingsManager.Instance != null ? SettingsManager.Instance.LastPlaylistIndex : 0;
+                int lastIndex = SettingsManager.Instance ? SettingsManager.Instance.LastPlaylistIndex : 0;
                 lastIndex = Mathf.Clamp(lastIndex, 0, songs.Count - 1);
                 
                 // If it was -1 (default for First Run), we set it to 0 (demo track)
@@ -202,13 +202,13 @@ namespace SoftAware
 
         public static void Log(string message)
         {
-            if (instance != null) instance.LogDebug(message);
+            if (instance) instance.LogDebug(message);
             else Debug.Log("[PlaylistStatic] " + message);
         }
 
         private void LogDebug(string message, bool append = true)
         {
-            if (debugText == null) return;
+            if (!debugText) return;
             // Clean older logs if it gets too long
             if (debugText.text.Length > 2000) debugText.text = "... (too many logs)\n";
             

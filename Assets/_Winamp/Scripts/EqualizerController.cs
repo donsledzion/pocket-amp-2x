@@ -112,7 +112,6 @@ namespace SoftAware
             
             UpdateGraph();
             OnValuesChanged?.Invoke();
-            Debug.Log($"Band {Frequencies[bandIndex]}Hz changed: {value}");
         }
 
         private void UpdateGraph()

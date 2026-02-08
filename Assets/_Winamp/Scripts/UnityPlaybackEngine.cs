@@ -11,6 +11,11 @@ namespace SoftAware
         private bool wasPlayingLastFrame = false;
         private bool isInternalStop = false;
 
+        // Manual time tracking
+        private float startTime;
+        private float pauseTime;
+        private float currentDuration;
+
         public UnityPlaybackEngine(AudioSource source)
         {
             audioSource = source;
@@ -31,43 +36,101 @@ namespace SoftAware
             }
         }
 
-        public float CurrentTime => audioSource != null ? audioSource.time : 0f;
-        public float Duration => (audioSource != null && audioSource.clip != null) ? audioSource.clip.length : 0f;
+        public float CurrentTime 
+        {
+            get 
+            {
+                if (audioSource == null) return 0f;
+
+                // CRITICAL: Only access audioSource.time if playing and has a clip to avoid console spam.
+                // Unity 2022.2+ throws warnings if clip is null or resource is not a clip.
+                if (audioSource.isPlaying && audioSource.clip != null)
+                {
+                    return audioSource.time;
+                }
+
+                // Fallback to manual time tracking if playing but audioSource.time is unavailable/unreliable
+                if (IsPlaying)
+                {
+                    return Mathf.Clamp(Time.time - startTime, 0f, Duration);
+                }
+
+                // If paused, return the time at which we paused
+                if (isInternalStop && wasPlayingLastFrame)
+                {
+                    return pauseTime;
+                }
+
+                return 0f;
+            }
+        }
+
+        public float Duration => (audioSource != null && audioSource.clip != null) ? audioSource.clip.length : currentDuration;
         public int AudioSessionId => -1; // Not used in Unity standard playback
 
         public void Play(Playlist.SongInfo song)
         {
-            if (song == null || song.Clip == null) return;
+            if (song == null || (song.Clip == null && !song.HasNativePath)) return;
+            
             currentSong = song;
+            currentDuration = song.Duration;
             isInternalStop = false;
-            audioSource.clip = song.Clip;
+            
+            if (song.Clip != null)
+            {
+                audioSource.clip = song.Clip;
+            }
+            
             audioSource.Play();
+            startTime = Time.time;
+            pauseTime = 0f;
             wasPlayingLastFrame = true;
         }
 
         public void Pause()
         {
+            if (audioSource == null || !audioSource.isPlaying) return;
+            
             isInternalStop = true;
-            if (audioSource != null) audioSource.Pause();
+            pauseTime = Time.time - startTime;
+            audioSource.Pause();
         }
 
         public void Resume()
         {
+            if (audioSource == null) return;
+            
             isInternalStop = false;
-            if (audioSource != null) audioSource.UnPause();
+            startTime = Time.time - pauseTime;
+            audioSource.UnPause();
         }
 
         public void Stop()
         {
             isInternalStop = true;
             if (audioSource != null) audioSource.Stop();
+            
+            startTime = 0f;
+            pauseTime = 0f;
+            currentDuration = 0f;
         }
 
         public void Seek(float normalizedTime)
         {
-            if (audioSource != null && audioSource.clip != null)
+            if (audioSource == null) return;
+
+            float targetTime = Duration * Mathf.Clamp01(normalizedTime);
+            
+            if (audioSource.clip != null)
             {
-                audioSource.time = audioSource.clip.length * Mathf.Clamp01(normalizedTime);
+                audioSource.time = targetTime;
+            }
+            
+            // Update manual timer
+            startTime = Time.time - targetTime;
+            if (isInternalStop)
+            {
+                pauseTime = targetTime;
             }
         }
 

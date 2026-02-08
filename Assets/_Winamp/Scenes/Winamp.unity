@@ -168,7 +168,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5062308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebb72824d9eb5a4cac75b7a419af19b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9772fef14340dc4499e2ed8d6a437298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 403948906}
@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: 275
-  m_PreferredHeight: 116
+  m_PreferredHeight: 250
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
@@ -1965,7 +1965,7 @@ GameObject:
   - component: {fileID: 327339445}
   - component: {fileID: 327339446}
   m_Layer: 0
-  m_Name: ListOptionsContainer
+  m_Name: SelectContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2151,7 +2151,7 @@ GameObject:
   - component: {fileID: 403948906}
   - component: {fileID: 403948907}
   m_Layer: 0
-  m_Name: ListOptionsContainer
+  m_Name: MiscContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4643,7 +4643,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 820814886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebb72824d9eb5a4cac75b7a419af19b, type: 3}
+  m_Script: {fileID: 11500000, guid: 37d2ba7034b822246abeb1ace53ef782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 327339445}
@@ -10810,7 +10810,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1483184871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebb72824d9eb5a4cac75b7a419af19b, type: 3}
+  m_Script: {fileID: 11500000, guid: b597ffbb920c8be42b0a145b1a5ab361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 1633104987}
@@ -11282,7 +11282,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1533829906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebb72824d9eb5a4cac75b7a419af19b, type: 3}
+  m_Script: {fileID: 11500000, guid: f2e0deae5aeade444a4b9f2f0a33f090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 503328502}
@@ -13479,7 +13479,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7, y: -3.103}
+  m_AnchoredPosition: {x: -7, y: -3.1029968}
   m_SizeDelta: {x: 8, y: -7.2418}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1754141645
@@ -13842,7 +13842,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1779691828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebb72824d9eb5a4cac75b7a419af19b, type: 3}
+  m_Script: {fileID: 11500000, guid: c481797023c98534ebf5204e6434f6e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 1657955937}

@@ -6,12 +6,15 @@ namespace SoftAware.Winamp
     public class ContextMenuButton : MonoBehaviour
     {
         [SerializeField] private Transform optionsContainer;
+        internal Button[] MenuButtons { get; private set; }
 
         private Button button;
 
         private void Awake()
         {
             if (!TryGetComponent(out button)) throw new("Missing Button component!");
+            MenuButtons = GetComponentsInChildren<Button>();
+            if (MenuButtons.Length < 1) throw new("Missing Buttons in children!");
             CloseMenu();
         }
 
