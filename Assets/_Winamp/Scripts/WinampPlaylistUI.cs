@@ -13,10 +13,10 @@ namespace SoftAware
         [SerializeField] private GameObject trackPrefab;
         [SerializeField] private Transform contentContainer;
 
-        [Header("Scrolling")]
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private Scrollbar scrollbar;
         [SerializeField] private Winamp.SelectContextMenu selectContextMenu;
+        [SerializeField] private Winamp.RemoveContextMenu removeContextMenu;
 
         private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
         private bool isUpdatingScroll = false;
@@ -52,6 +52,13 @@ namespace SoftAware
                 selectContextMenu.OnSelectNoneRequested += playlist.ClearSelection;
                 selectContextMenu.OnInvertSelectionRequested += playlist.InvertSelection;
             }
+
+            if (removeContextMenu != null)
+            {
+                removeContextMenu.OnRemoveAllRequested += playlist.RemoveAll;
+                removeContextMenu.OnRemoveSelectedRequested += playlist.RemoveSelected;
+                removeContextMenu.OnCropRequested += playlist.Crop;
+            }
             
             RefreshList();
         }
@@ -71,6 +78,13 @@ namespace SoftAware
                 selectContextMenu.OnSelectAllRequested -= playlist.SelectAll;
                 selectContextMenu.OnSelectNoneRequested -= playlist.ClearSelection;
                 selectContextMenu.OnInvertSelectionRequested -= playlist.InvertSelection;
+            }
+
+            if (removeContextMenu != null)
+            {
+                removeContextMenu.OnRemoveAllRequested -= playlist.RemoveAll;
+                removeContextMenu.OnRemoveSelectedRequested -= playlist.RemoveSelected;
+                removeContextMenu.OnCropRequested -= playlist.Crop;
             }
 
             if (scrollRect != null) scrollRect.onValueChanged.RemoveListener(HandleScrollRectChanged);

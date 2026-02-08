@@ -21,12 +21,16 @@ namespace SoftAware.Winamp
         private void Start()
         {
             button.onClick.AddListener(HandleButtonClicked);
+            foreach (var menuButton in MenuButtons)
+                menuButton.onClick.AddListener(CloseMenu);
             SetupBindings();
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(HandleButtonClicked);
+            foreach (var menuButton in MenuButtons)
+                menuButton.onClick.RemoveListener(CloseMenu);
             ClearBindings();
         }
 

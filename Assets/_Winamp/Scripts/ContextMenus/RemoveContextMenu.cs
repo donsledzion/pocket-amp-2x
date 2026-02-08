@@ -8,6 +8,11 @@ namespace SoftAware.Winamp
         internal Button RemoveAllButton => MenuButtons[1];
         internal Button CropButton => MenuButtons[2];
         internal Button RemoveSelectedButton => MenuButtons[3];
+        public System.Action OnMiscRequested;
+        public System.Action OnRemoveAllRequested;
+        public System.Action OnCropRequested;
+        public System.Action OnRemoveSelectedRequested;
+
         internal override void SetupBindings()
         {
             RemoveMiscButton.onClick.AddListener(RemoveMisc);
@@ -24,12 +29,12 @@ namespace SoftAware.Winamp
             RemoveSelectedButton.onClick.RemoveListener(RemoveSelected);
         }
 
-        private void RemoveMisc() => throw new System.NotImplementedException();
+        private void RemoveMisc() => OnMiscRequested?.Invoke();
 
-        private void RemoveAll() => throw new System.NotImplementedException();
+        private void RemoveAll() => OnRemoveAllRequested?.Invoke();
 
-        private void Crop() => throw new System.NotImplementedException();
+        private void Crop() => OnCropRequested?.Invoke();
 
-        private void RemoveSelected() => throw new System.NotImplementedException();
+        private void RemoveSelected() => OnRemoveSelectedRequested?.Invoke();
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleFileBrowser;
@@ -581,6 +582,75 @@ namespace SoftAware
             else selectedIndices.Remove(index);
             
             OnSelectionChanged?.Invoke();
+        }
+
+        public void RemoveAll()
+        {
+            songs.Clear();
+            selectedIndices.Clear();
+            currentIndex = -1;
+            OnPlaylistChanged?.Invoke();
+            OnCurrentIndexChanged?.Invoke(currentIndex);
+            SavePlaylist();
+        }
+
+        public void RemoveSelected()
+        {
+            if (selectedIndices.Count == 0) return;
+
+            // Sort indices descending to remove from end to avoid index shifting problems
+            List<int> toRemove = new List<int>(selectedIndices);
+            toRemove.Sort((a, b) => b.CompareTo(a));
+
+            bool playingRemoved = false;
+            foreach (int idx in toRemove)
+            {
+                if (idx == currentIndex) playingRemoved = true;
+                songs.RemoveAt(idx);
+            }
+
+            if (playingRemoved) currentIndex = -1;
+            else if (currentIndex >= 0)
+            {
+                // Adjust currentIndex if necessary
+                int removedBefore = 0;
+                foreach (int idx in toRemove) if (idx < currentIndex) removedBefore++;
+                currentIndex -= removedBefore;
+            }
+
+            selectedIndices.Clear();
+            OnPlaylistChanged?.Invoke();
+            if (playingRemoved || toRemove.Any(idx => idx <= currentIndex)) OnCurrentIndexChanged?.Invoke(currentIndex);
+            SavePlaylist();
+        }
+
+        public void Crop()
+        {
+            if (selectedIndices.Count == 0)
+            {
+                RemoveAll();
+                return;
+            }
+
+            List<SongInfo> nextSongs = new List<SongInfo>();
+            int nextCurrentIndex = -1;
+            
+            for (int i = 0; i < songs.Count; i++)
+            {
+                if (selectedIndices.Contains(i))
+                {
+                    if (i == currentIndex) nextCurrentIndex = nextSongs.Count;
+                    nextSongs.Add(songs[i]);
+                }
+            }
+
+            songs = nextSongs;
+            currentIndex = nextCurrentIndex;
+            selectedIndices.Clear();
+            
+            OnPlaylistChanged?.Invoke();
+            OnCurrentIndexChanged?.Invoke(currentIndex);
+            SavePlaylist();
         }
 
         private void OnApplicationQuit()
