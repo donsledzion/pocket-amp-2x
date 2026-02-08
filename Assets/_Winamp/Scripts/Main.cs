@@ -55,22 +55,45 @@ namespace SoftAware
 
         private void Start()
         {
+            // Load and Apply Settings
+            if (SettingsManager.Instance != null)
+            {
+                if (eqButton != null) eqButton.SetState(SettingsManager.Instance.ShowEQ);
+                if (playlistButton != null) playlistButton.SetState(SettingsManager.Instance.ShowPlaylist);
+                if (shuffleButton != null) shuffleButton.SetState(SettingsManager.Instance.Shuffle);
+                if (repeatButton != null) repeatButton.SetState(SettingsManager.Instance.Repeat);
+            }
+
             if (eqButton != null)
             {
                 eqButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.ShowEQ = isOn;
                     SetWindowVisibility(eqWindow, isOn);
                 });
-                // Sync initial state
                 SetWindowVisibility(eqWindow, eqButton.IsOn);
             }
 
             if (playlistButton != null)
             {
                 playlistButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.ShowPlaylist = isOn;
                     SetWindowVisibility(playlistWindow, isOn);
                 });
-                // Sync initial state
                 SetWindowVisibility(playlistWindow, playlistButton.IsOn);
+            }
+
+            if (shuffleButton != null)
+            {
+                shuffleButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.Shuffle = isOn;
+                });
+            }
+
+            if (repeatButton != null)
+            {
+                repeatButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.Repeat = isOn;
+                });
             }
         }
 
