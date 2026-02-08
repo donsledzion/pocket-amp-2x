@@ -38,6 +38,7 @@ namespace SoftAware
         public event Action<int> OnCurrentIndexChanged;
         public event Action<int, SongInfo> OnSongMetadataUpdated;
         public event Action OnPlaylistReady;
+        public event Action OnSelectionChanged;
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
@@ -45,6 +46,7 @@ namespace SoftAware
         private static Playlist instance;
         
         private int currentIndex = -1;
+        private HashSet<int> selectedIndices = new HashSet<int>();
         private bool shuffleEnabled = false;
         private Coroutine metadataScannerCoroutine;
         internal SongInfo CurrentSong => (songs.Count > 0 && currentIndex >= 0) ? songs[currentIndex] : null;
@@ -53,6 +55,9 @@ namespace SoftAware
         public int CurrentIndex1Based => songs.Count > 0 ? currentIndex + 1 : 0;
         public int CurrentIndex => currentIndex;
         public List<SongInfo> AllSongs => songs;
+        public int SelectedCount => selectedIndices.Count;
+
+        public bool IsSelected(int index) => selectedIndices.Contains(index);
 
         private void Awake()
         {
@@ -542,6 +547,40 @@ namespace SoftAware
             
             OnPlaylistChanged?.Invoke();
             SavePlaylist();
+        }
+
+        public void SelectAll()
+        {
+            selectedIndices.Clear();
+            for (int i = 0; i < songs.Count; i++) selectedIndices.Add(i);
+            OnSelectionChanged?.Invoke();
+        }
+
+        public void ClearSelection()
+        {
+            selectedIndices.Clear();
+            OnSelectionChanged?.Invoke();
+        }
+
+        public void InvertSelection()
+        {
+            HashSet<int> next = new HashSet<int>();
+            for (int i = 0; i < songs.Count; i++)
+            {
+                if (!selectedIndices.Contains(i)) next.Add(i);
+            }
+            selectedIndices = next;
+            OnSelectionChanged?.Invoke();
+        }
+
+        public void SetSelected(int index, bool isSelected, bool clearOthers)
+        {
+            if (clearOthers) selectedIndices.Clear();
+            
+            if (isSelected) selectedIndices.Add(index);
+            else selectedIndices.Remove(index);
+            
+            OnSelectionChanged?.Invoke();
         }
 
         private void OnApplicationQuit()

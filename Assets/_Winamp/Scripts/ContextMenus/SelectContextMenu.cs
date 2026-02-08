@@ -7,6 +7,10 @@ namespace SoftAware.Winamp
         internal Button InvertSelectionButton => MenuButtons[0];
         internal Button SelectZeroButton => MenuButtons[1];
         internal Button SelectAllButton => MenuButtons[2];
+        public System.Action OnInvertSelectionRequested;
+        public System.Action OnSelectNoneRequested;
+        public System.Action OnSelectAllRequested;
+
         internal override void SetupBindings()
         {
             InvertSelectionButton.onClick.AddListener(InvertSelection);
@@ -21,10 +25,10 @@ namespace SoftAware.Winamp
             SelectAllButton.onClick.RemoveListener(SelectAll);
         }
 
-        private void InvertSelection() => throw new System.NotImplementedException();
+        private void InvertSelection() => OnInvertSelectionRequested?.Invoke();
 
-        private void SelectZero() => throw new System.NotImplementedException();
+        private void SelectZero() => OnSelectNoneRequested?.Invoke();
 
-        private void SelectAll() => throw new System.NotImplementedException();
+        private void SelectAll() => OnSelectAllRequested?.Invoke();
     }
 }

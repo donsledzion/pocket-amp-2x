@@ -16,9 +16,9 @@ namespace SoftAware
         [Header("Scrolling")]
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private Scrollbar scrollbar;
+        [SerializeField] private Winamp.SelectContextMenu selectContextMenu;
 
         private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
-        private int selectedIndex = -1;
         private bool isUpdatingScroll = false;
 
         public void Initialize()
@@ -32,6 +32,7 @@ namespace SoftAware
                 playlist.OnPlaylistChanged += RefreshList;
                 playlist.OnCurrentIndexChanged += HandleCurrentIndexChanged;
                 playlist.OnSongMetadataUpdated += HandleSongMetadataUpdated;
+                playlist.OnSelectionChanged += UpdateHighlights;
             }
             else
             {
@@ -44,6 +45,13 @@ namespace SoftAware
                 scrollRect.onValueChanged.AddListener(HandleScrollRectChanged);
                 scrollbar.onValueChanged.AddListener(HandleScrollbarChanged);
             }
+
+            if (selectContextMenu != null)
+            {
+                selectContextMenu.OnSelectAllRequested += playlist.SelectAll;
+                selectContextMenu.OnSelectNoneRequested += playlist.ClearSelection;
+                selectContextMenu.OnInvertSelectionRequested += playlist.InvertSelection;
+            }
             
             RefreshList();
         }
@@ -55,6 +63,14 @@ namespace SoftAware
                 playlist.OnPlaylistChanged -= RefreshList;
                 playlist.OnCurrentIndexChanged -= HandleCurrentIndexChanged;
                 playlist.OnSongMetadataUpdated -= HandleSongMetadataUpdated;
+                playlist.OnSelectionChanged -= UpdateHighlights;
+            }
+
+            if (selectContextMenu != null)
+            {
+                selectContextMenu.OnSelectAllRequested -= playlist.SelectAll;
+                selectContextMenu.OnSelectNoneRequested -= playlist.ClearSelection;
+                selectContextMenu.OnInvertSelectionRequested -= playlist.InvertSelection;
             }
 
             if (scrollRect != null) scrollRect.onValueChanged.RemoveListener(HandleScrollRectChanged);
@@ -124,16 +140,14 @@ namespace SoftAware
 
         private void HandleTrackClick(int index)
         {
-            selectedIndex = index;
-            UpdateHighlights();
+            playlist.SetSelected(index, true, true);
         }
 
         private void HandleTrackDoubleClick(int index)
         {
-            selectedIndex = index;
             playlist.SetCurrentClip(index);
             audioPlayer.Play();
-            UpdateHighlights();
+            playlist.SetSelected(index, true, true);
         }
 
         private void HandleCurrentIndexChanged(int index)
@@ -153,7 +167,7 @@ namespace SoftAware
             for (int i = 0; i < trackUIItems.Count; i++)
             {
                 if (trackUIItems[i] == null) continue;
-                trackUIItems[i].SetSelected(i == selectedIndex);
+                trackUIItems[i].SetSelected(playlist.IsSelected(i));
                 trackUIItems[i].SetPlaying(i == playingIndex);
             }
         }

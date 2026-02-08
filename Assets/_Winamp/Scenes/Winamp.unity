@@ -4362,6 +4362,7 @@ MonoBehaviour:
   contentContainer: {fileID: 1854049880}
   scrollRect: {fileID: 792801600}
   scrollbar: {fileID: 1754141645}
+  selectContextMenu: {fileID: 820814888}
 --- !u!224 &796417077 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3075544491112684013, guid: 83315817784e3b948b363af19b52bd96, type: 3}
