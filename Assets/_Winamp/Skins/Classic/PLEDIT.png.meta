@@ -509,7 +509,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PLEDIT_NewSaveLoadClipper
+      name: PLEDIT_ListOptions_Clipper
       rect:
         serializedVersion: 2
         x: 250
@@ -517,7 +517,7 @@ TextureImporter:
         width: 3
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -526,6 +526,666 @@ TextureImporter:
       bones: []
       spriteID: 454d753420e2075459adaf16087030d6
       internalID: -1857111969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddUrl_Normal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 687e0b0fb8aad1b4ea36656b7e273b07
+      internalID: -975723132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddUrl_Hovered
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61030e80143dff940b65c5c2933e3362
+      internalID: 1619328318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddDir_Normal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14a866bcbef57ea4da8eb983c6dbc264
+      internalID: -1971302517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddDir_Hovered
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d22a0bc0bad13f40abafeb98214fe10
+      internalID: -794008297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddFile_Normal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94651b6da0801b440b99f76ca73a8192
+      internalID: -1915222307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_AddFile_Hovered
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78d528d5b8c08034ab2034104de0a283
+      internalID: -1612274186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Add_Clipper
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 21
+        width: 3
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b27a4b33afcef74bae0689cda1a39bb
+      internalID: -1453348707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Remove_Clipper
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 3
+        width: 3
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 794a9a0ffc9f777438850775fea46bbd
+      internalID: -303284924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Select_Clipper
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 21
+        width: 3
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a94e5921cd650f45833c97730bbe906
+      internalID: -866234233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Misc_Clipper
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 21
+        width: 3
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65da31c6b33720547b29818c80fafaff
+      internalID: 2062627350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SortList_Hovered
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95944e8dbeb7c884983585dcb4ce76b7
+      internalID: 794646744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_FileInf_Hovered
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bfad5dcf0c35a9429593fb13c1a0e58
+      internalID: 2119473595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_MiscOpts_Hovered
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 580948841c9078e429791bebf332c124
+      internalID: -1097143595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_MiscOpts_Normal
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4bdac55b9d3535a42830c81f456a20bd
+      internalID: 1218157003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_FileInf_Normal
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a04694809a2db7408a7686bd3b6805b
+      internalID: -779648814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SortList_Normal
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47c52098a40a82a4bbea5757a120c87d
+      internalID: -1949303533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_InvSel_Hovered
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c33afbab356e9ac42bcdcbc4c5a0340b
+      internalID: 1640682417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SelZero_Hovered
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44d72dc816e48b64cb7591e3815d9900
+      internalID: -50961967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SelAll_Hovered
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92e3421dcef2ca540a4131e0fe9bd80c
+      internalID: -1577622226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SelAll_Normal
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2583b605c745ff448bb76c9ea5c38d5
+      internalID: -2131661312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_SelZero_Normal
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 879204fdc7ee3084cb4046b6dd1fc954
+      internalID: 904597845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_InvSel_Normal
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 830583414a4a34f48bc34bec5ffca3e1
+      internalID: 1212426129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemAll_Normal
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14d3703154f57c7429e1ea587504b105
+      internalID: -68950171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemAll_Hovered
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 57
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ef3e126479c25e4c949778b652325d2
+      internalID: -302235181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Crop_Normal
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3eee1a4ed9b09a449a9faebc0491a17d
+      internalID: 1331232255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_Crop_Hovered
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 38
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f47b37be983b97843a6549141acc3812
+      internalID: -1614733684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemSel_Normal
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f553bc15e305a148b2150cb8cf59f10
+      internalID: 2064968435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemSel_Hovered
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 19
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: adcf1ec266a4e0e4eac88e7656e35a4b
+      internalID: 779161511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemMisc_Normal
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 0
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d835b458e4615da4ca539639b39eb22e
+      internalID: -1358518512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_RemMisc_Hovered
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 0
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca162057e75089443beed285831ba8cd
+      internalID: -1298240531
       vertices: []
       indices: 
       edges: []
@@ -548,16 +1208,46 @@ TextureImporter:
       BottomRight: 350062725
       BottomStretch: -479001972
       LeftEdge: -1012282941
+      PLEDIT_AddDir_Hovered: -794008297
+      PLEDIT_AddDir_Normal: -1971302517
+      PLEDIT_AddFile_Hovered: -1612274186
+      PLEDIT_AddFile_Normal: -1915222307
+      PLEDIT_AddUrl_Hovered: 1619328318
+      PLEDIT_AddUrl_Normal: -975723132
+      PLEDIT_Add_Clipper: -1453348707
       PLEDIT_BackgroundBlack: 870045614
+      PLEDIT_Crop_Hovered: -1614733684
+      PLEDIT_Crop_Normal: 1331232255
+      PLEDIT_FileInf_Hovered: 2119473595
+      PLEDIT_FileInf_Normal: -779648814
+      PLEDIT_InvSel_Hovered: 1640682417
+      PLEDIT_InvSel_Normal: 1212426129
+      PLEDIT_ListOptions_Clipper: -1857111969
       PLEDIT_LoadList_Hovered: 935292891
       PLEDIT_LoadList_Normal: 1655689173
+      PLEDIT_MiscOpts_Hovered: -1097143595
+      PLEDIT_MiscOpts_Normal: 1218157003
+      PLEDIT_Misc_Clipper: 2062627350
       PLEDIT_NewList_Hovered: -2118389922
       PLEDIT_NewList_Normal: 209176452
-      PLEDIT_NewSaveLoadClipper: -1857111969
+      PLEDIT_RemAll_Hovered: -302235181
+      PLEDIT_RemAll_Normal: -68950171
+      PLEDIT_RemMisc_Hovered: -1298240531
+      PLEDIT_RemMisc_Normal: -1358518512
+      PLEDIT_RemSel_Hovered: 779161511
+      PLEDIT_RemSel_Normal: 2064968435
+      PLEDIT_Remove_Clipper: -303284924
       PLEDIT_SaveList_Hovered: -1573623573
       PLEDIT_SaveList_Normal: 987422480
+      PLEDIT_SelAll_Hovered: -1577622226
+      PLEDIT_SelAll_Normal: -2131661312
+      PLEDIT_SelZero_Hovered: -50961967
+      PLEDIT_SelZero_Normal: 904597845
+      PLEDIT_Select_Clipper: -866234233
       PLEDIT_SliderHandle_normal: -716399342
       PLEDIT_SliderHandle_pressed: -640380593
+      PLEDIT_SortList_Hovered: 794646744
+      PLEDIT_SortList_Normal: -1949303533
       PLEDIT_TopLeft_focused: 7927761498078318408
       PLEDIT_TopRight_focused: 582108070
       PLEDIT_TopStretch_focused: 94210570
