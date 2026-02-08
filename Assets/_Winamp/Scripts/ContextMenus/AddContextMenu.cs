@@ -7,6 +7,10 @@ namespace SoftAware.Winamp
         internal Button AddUrlButton => MenuButtons[0];
         internal Button AddDirButton => MenuButtons[1];
         internal Button AddFileButton => MenuButtons[2];
+
+        public System.Action OnAddDirRequested;
+        public System.Action OnAddFileRequested;
+
         internal override void SetupBindings()
         {
             AddUrlButton.onClick.AddListener(AddUrl);
@@ -21,8 +25,16 @@ namespace SoftAware.Winamp
             AddFileButton.onClick.RemoveListener(AddFile);
         }
 
-        private void AddUrl() => throw new System.NotImplementedException();
-        private void AddDir() => throw new System.NotImplementedException();
-        private void AddFile() => throw new System.NotImplementedException();
+        private void AddUrl() => UnityEngine.Debug.Log("[AddContextMenu] AddUrl clicked");
+        private void AddDir() 
+        { 
+            UnityEngine.Debug.Log($"[AddContextMenu] AddDir clicked. Event listeners: {(OnAddDirRequested != null ? OnAddDirRequested.GetInvocationList().Length : 0)}");
+            OnAddDirRequested?.Invoke(); 
+        }
+        private void AddFile() 
+        { 
+            UnityEngine.Debug.Log($"[AddContextMenu] AddFile clicked. Event listeners: {(OnAddFileRequested != null ? OnAddFileRequested.GetInvocationList().Length : 0)}");
+            OnAddFileRequested?.Invoke(); 
+        }
     }
 }

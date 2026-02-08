@@ -41,6 +41,7 @@ namespace SoftAware
 
         [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
         [SerializeField] private TextMeshProUGUI debugText;
+        [SerializeField] private Winamp.AddContextMenu addContextMenu;
         private static Playlist instance;
         
         private int currentIndex = -1;
@@ -68,7 +69,22 @@ namespace SoftAware
 
             LoadPlaylist();
 
+            if (addContextMenu != null)
+            {
+                addContextMenu.OnAddDirRequested += PickFolder;
+                addContextMenu.OnAddFileRequested += PickFile;
+            }
+
             StartCoroutine(InitializeDemoTrackCoroutine());
+        }
+
+        private void OnDestroy()
+        {
+            if (addContextMenu != null)
+            {
+                addContextMenu.OnAddDirRequested -= PickFolder;
+                addContextMenu.OnAddFileRequested -= PickFile;
+            }
         }
 
         private IEnumerator InitializeDemoTrackCoroutine()
@@ -494,6 +510,38 @@ namespace SoftAware
             int newIndex = (currentIndex <= 0) ? songs.Count - 1 : currentIndex - 1;
             SetCurrentClip(newIndex);
             return CurrentSong;
+        }
+
+        public void PickFolder()
+        {
+            FileBrowser.ShowLoadDialog((paths) => {
+                if (paths != null && paths.Length > 0) AddDirectory(paths[0]);
+            }, null, FileBrowser.PickMode.Folders, false, null, null, "Select Audio Folder", "Select");
+        }
+
+        public void PickFile()
+        {
+            FileBrowser.ShowLoadDialog((paths) => {
+                if (paths != null && paths.Length > 0) AddFile(paths[0]);
+            }, null, FileBrowser.PickMode.Files, false, null, null, "Select Audio File", "Select");
+        }
+
+        public void AddFile(string filePath)
+        {
+            if (!FileBrowserHelpers.FileExists(filePath)) return;
+            
+            songs.Add(new SongInfo 
+            { 
+                Title = Path.GetFileName(filePath), 
+                FilePath = filePath,
+                MetadataLoaded = false
+            });
+            
+            if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
+            metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+            
+            OnPlaylistChanged?.Invoke();
+            SavePlaylist();
         }
 
         private void OnApplicationQuit()

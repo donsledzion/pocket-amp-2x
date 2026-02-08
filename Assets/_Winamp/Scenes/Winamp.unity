@@ -157,7 +157,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 44.71999, y: 12}
-  m_SizeDelta: {x: 22, y: 54}
+  m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &5062310
 MonoBehaviour:
@@ -1322,6 +1322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Playlist
   songs: []
   debugText: {fileID: 740344165}
+  addContextMenu: {fileID: 1483184873}
 --- !u!4 &204421521
 Transform:
   m_ObjectHideFlags: 0
@@ -4632,7 +4633,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 18.170033, y: 12}
-  m_SizeDelta: {x: 22, y: 54}
+  m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &820814888
 MonoBehaviour:
@@ -8351,7 +8352,7 @@ MonoBehaviour:
   playlist: {fileID: 204421520}
   panelMain: {fileID: 996247208}
   uiController: {fileID: 364309604}
-  eqController: {fileID: 0}
+  eqController: {fileID: 693281835}
 --- !u!82 &1138104798
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10799,7 +10800,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -34.999996, y: 12}
-  m_SizeDelta: {x: 22, y: 54}
+  m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1483184873
 MonoBehaviour:
@@ -11189,7 +11190,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -31.000008, y: 12}
-  m_SizeDelta: {x: 22, y: 54}
+  m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1533829908
 MonoBehaviour:
@@ -13831,7 +13832,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -8.449993, y: 12}
-  m_SizeDelta: {x: 22, y: 72}
+  m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1779691830
 MonoBehaviour:

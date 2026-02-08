@@ -13,7 +13,7 @@ namespace SoftAware.Winamp
         private void Awake()
         {
             if (!TryGetComponent(out button)) throw new("Missing Button component!");
-            MenuButtons = GetComponentsInChildren<Button>();
+            MenuButtons = optionsContainer.GetComponentsInChildren<Button>();
             if (MenuButtons.Length < 1) throw new("Missing Buttons in children!");
             CloseMenu();
         }

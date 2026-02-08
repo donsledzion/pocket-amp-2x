@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Concurrent;
-using SimpleFileBrowser;
 
 namespace SoftAware
 {
@@ -120,7 +119,7 @@ namespace SoftAware
             panelMain.PauseButton.onClick.AddListener(Pause);
             panelMain.StopButton.onClick.AddListener(StopPlayback);
             panelMain.NextButton.onClick.AddListener(() => PlayNext());
-            panelMain.EjectButton.onClick.AddListener(PickFolder);
+            panelMain.EjectButton.onClick.AddListener(playlist.PickFolder);
 
             BindSlider();
             BindVolume();
@@ -203,12 +202,6 @@ namespace SoftAware
             trigger.triggers.Add(entryUp);
         }
 
-        private void PickFolder()
-        {
-            FileBrowser.ShowLoadDialog((paths) => {
-                if (paths != null && paths.Length > 0) playlist.AddDirectory(paths[0]);
-            }, null, FileBrowser.PickMode.Folders, false, null, null, "Select Audio Folder", "Select");
-        }
 
         public void Play()
         {
@@ -369,6 +362,14 @@ namespace SoftAware
         public void OnNativePause() { if (isAppPaused) Pause(); else mainThreadActions.Enqueue(Pause); }
         public void OnNativeNext() { if (isAppPaused) PlayNext(true); else mainThreadActions.Enqueue(() => PlayNext()); }
         public void OnNativePrev() { if (isAppPaused) PlayPrevious(); else mainThreadActions.Enqueue(PlayPrevious); }
+
+        private void OnDestroy()
+        {
+            if (playlist != null)
+            {
+                playlist.OnPlaylistReady -= HandlePlaylistReady;
+            }
+        }
 
         private void OnApplicationQuit() => AndroidMediaBridge.StopService();
     }
