@@ -14,6 +14,10 @@ namespace SoftAware
         private const string KEY_BALANCE = "Winamp_Balance";
         private const string KEY_VIS_MODE = "Winamp_VisMode";
         private const string KEY_TIME_MODE = "Winamp_TimeMode";
+        private const string KEY_EQ_ON = "Winamp_EQ_On";
+        private const string KEY_EQ_AUTO = "Winamp_EQ_Auto";
+        private const string KEY_EQ_PREAMP = "Winamp_EQ_Preamp";
+        private const string KEY_EQ_BAND_PREFIX = "Winamp_EQ_Band_";
 
         [Header("Default Values")]
         [SerializeField] private bool defaultShowEQ = true;
@@ -69,6 +73,38 @@ namespace SoftAware
         {
             get => PlayerPrefs.GetInt(KEY_TIME_MODE, 0) == 1;
             set { if (value != IsRemainingMode) { PlayerPrefs.SetInt(KEY_TIME_MODE, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
+        public bool EQOn
+        {
+            get => PlayerPrefs.GetInt(KEY_EQ_ON, 1) == 1;
+            set { if (value != EQOn) { PlayerPrefs.SetInt(KEY_EQ_ON, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
+        public bool EQAuto
+        {
+            get => PlayerPrefs.GetInt(KEY_EQ_AUTO, 0) == 1;
+            set { if (value != EQAuto) { PlayerPrefs.SetInt(KEY_EQ_AUTO, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
+        public float EQPreamp
+        {
+            get => PlayerPrefs.GetFloat(KEY_EQ_PREAMP, 0f);
+            set { if (!Mathf.Approximately(value, EQPreamp)) { PlayerPrefs.SetFloat(KEY_EQ_PREAMP, value); PlayerPrefs.Save(); } }
+        }
+
+        public float GetEQBand(int index)
+        {
+            return PlayerPrefs.GetFloat(KEY_EQ_BAND_PREFIX + index, 0f);
+        }
+
+        public void SetEQBand(int index, float value)
+        {
+            if (!Mathf.Approximately(value, GetEQBand(index)))
+            {
+                PlayerPrefs.SetFloat(KEY_EQ_BAND_PREFIX + index, value);
+                PlayerPrefs.Save();
+            }
         }
 
         private void Awake()

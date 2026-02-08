@@ -33,20 +33,52 @@ namespace SoftAware
         private void Start()
         {
             InitializeSliders();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            if (SettingsManager.Instance == null) return;
+
+            if (onButton != null) onButton.SetState(SettingsManager.Instance.EQOn);
+            if (autoButton != null) autoButton.SetState(SettingsManager.Instance.EQAuto);
+            if (preampSlider != null) preampSlider.value = SettingsManager.Instance.EQPreamp;
+
+            for (int i = 0; i < frequencyBands.Count; i++)
+            {
+                if (frequencyBands[i] != null)
+                {
+                    frequencyBands[i].value = SettingsManager.Instance.GetEQBand(i);
+                }
+            }
         }
 
         private void InitializeSliders()
         {
             if (onButton != null)
             {
-                onButton.OnValueChanged.AddListener((_) => OnValuesChanged?.Invoke());
+                onButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.EQOn = isOn;
+                    OnValuesChanged?.Invoke();
+                });
+            }
+
+            if (autoButton != null)
+            {
+                autoButton.OnValueChanged.AddListener((isOn) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.EQAuto = isOn;
+                    OnValuesChanged?.Invoke();
+                });
             }
 
             if (preampSlider != null)
             {
                 preampSlider.minValue = -20f;
                 preampSlider.maxValue = 20f;
-                preampSlider.onValueChanged.AddListener(OnPreampChanged);
+                preampSlider.onValueChanged.AddListener((val) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.EQPreamp = val;
+                    OnPreampChanged(val);
+                });
             }
 
             for (int i = 0; i < frequencyBands.Count; i++)
@@ -57,7 +89,10 @@ namespace SoftAware
                 {
                     slider.minValue = -20f;
                     slider.maxValue = 20f;
-                    slider.onValueChanged.AddListener((val) => OnBandChanged(index, val));
+                    slider.onValueChanged.AddListener((val) => {
+                        if (SettingsManager.Instance != null) SettingsManager.Instance.SetEQBand(index, val);
+                        OnBandChanged(index, val);
+                    });
                 }
             }
 
@@ -119,6 +154,7 @@ namespace SoftAware
                 if (frequencyBands[i] != null)
                 {
                     frequencyBands[i].value = gains[i];
+                    // Visuals are updated via onValueChanged listener
                 }
             }
             UpdateGraph();

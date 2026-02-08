@@ -43,7 +43,8 @@ namespace SoftAware
         {
             if (targetImage == null || sprites == null || sprites.Count == 0) return;
 
-            value = Mathf.Clamp(slider != null ? (value - slider.minValue) / (slider.maxValue - slider.minValue) : value, 0f, 1f);
+            float range = slider != null ? (slider.maxValue - slider.minValue) : 0f;
+            value = Mathf.Clamp(range > 0.0001f ? (value - slider.minValue) / range : value, 0f, 1f);
             
             // Calculate index: 0 to Count-1
             int maxIndex = sprites.Count - 1;
