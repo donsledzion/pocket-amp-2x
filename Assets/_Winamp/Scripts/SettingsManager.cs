@@ -12,6 +12,8 @@ namespace SoftAware
         private const string KEY_REPEAT = "Winamp_Repeat";
         private const string KEY_VOLUME = "Winamp_Volume";
         private const string KEY_BALANCE = "Winamp_Balance";
+        private const string KEY_VIS_MODE = "Winamp_VisMode";
+        private const string KEY_TIME_MODE = "Winamp_TimeMode";
 
         [Header("Default Values")]
         [SerializeField] private bool defaultShowEQ = true;
@@ -24,37 +26,49 @@ namespace SoftAware
         public bool ShowEQ
         {
             get => PlayerPrefs.GetInt(KEY_SHOW_EQ, defaultShowEQ ? 1 : 0) == 1;
-            set => PlayerPrefs.SetInt(KEY_SHOW_EQ, value ? 1 : 0);
+            set { if (value != ShowEQ) { PlayerPrefs.SetInt(KEY_SHOW_EQ, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         public bool ShowPlaylist
         {
             get => PlayerPrefs.GetInt(KEY_SHOW_PLAYLIST, defaultShowPlaylist ? 1 : 0) == 1;
-            set => PlayerPrefs.SetInt(KEY_SHOW_PLAYLIST, value ? 1 : 0);
+            set { if (value != ShowPlaylist) { PlayerPrefs.SetInt(KEY_SHOW_PLAYLIST, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         public bool Shuffle
         {
             get => PlayerPrefs.GetInt(KEY_SHUFFLE, defaultShuffle ? 1 : 0) == 1;
-            set => PlayerPrefs.SetInt(KEY_SHUFFLE, value ? 1 : 0);
+            set { if (value != Shuffle) { PlayerPrefs.SetInt(KEY_SHUFFLE, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         public bool Repeat
         {
             get => PlayerPrefs.GetInt(KEY_REPEAT, defaultRepeat ? 1 : 0) == 1;
-            set => PlayerPrefs.SetInt(KEY_REPEAT, value ? 1 : 0);
+            set { if (value != Repeat) { PlayerPrefs.SetInt(KEY_REPEAT, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         public float Volume
         {
             get => PlayerPrefs.GetFloat(KEY_VOLUME, defaultVolume);
-            set => PlayerPrefs.SetFloat(KEY_VOLUME, value);
+            set { if (!Mathf.Approximately(value, Volume)) { PlayerPrefs.SetFloat(KEY_VOLUME, value); PlayerPrefs.Save(); } }
         }
 
         public float Balance
         {
             get => PlayerPrefs.GetFloat(KEY_BALANCE, defaultBalance);
-            set => PlayerPrefs.SetFloat(KEY_BALANCE, value);
+            set { if (!Mathf.Approximately(value, Balance)) { PlayerPrefs.SetFloat(KEY_BALANCE, value); PlayerPrefs.Save(); } }
+        }
+
+        public SpectrumVisualizer.VisMode VisualizerMode
+        {
+            get => (SpectrumVisualizer.VisMode)PlayerPrefs.GetInt(KEY_VIS_MODE, (int)SpectrumVisualizer.VisMode.Spectrum);
+            set { if (value != VisualizerMode) { PlayerPrefs.SetInt(KEY_VIS_MODE, (int)value); PlayerPrefs.Save(); } }
+        }
+
+        public bool IsRemainingMode
+        {
+            get => PlayerPrefs.GetInt(KEY_TIME_MODE, 0) == 1;
+            set { if (value != IsRemainingMode) { PlayerPrefs.SetInt(KEY_TIME_MODE, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         private void Awake()

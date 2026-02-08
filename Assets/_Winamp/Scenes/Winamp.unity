@@ -5708,6 +5708,7 @@ MonoBehaviour:
   playlistButton: {fileID: 1395137659}
   eqWindow: {fileID: 693281830}
   playlistWindow: {fileID: 132724954}
+  spectrumVisualizer: {fileID: 1754734119}
   bitrateDisplay: {fileID: 1585088416}
   sampleRateDisplay: {fileID: 581175525}
   timeDisplay: {fileID: 1023889095}
@@ -6669,6 +6670,8 @@ MonoBehaviour:
   defaultShowPlaylist: 1
   defaultShuffle: 0
   defaultRepeat: 0
+  defaultVolume: 0.5
+  defaultBalance: 0.5
 --- !u!4 &1122641398
 Transform:
   m_ObjectHideFlags: 0

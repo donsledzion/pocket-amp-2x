@@ -135,14 +135,22 @@ namespace SoftAware
         private void BindToggles()
         {
             if (panelMain.ShuffleButton != null)
-                panelMain.ShuffleButton.GetComponent<Button>().onClick.AddListener(() => {
-                    playlist.SetShuffle(panelMain.ShuffleButton.IsOn);
+            {
+                panelMain.ShuffleButton.OnValueChanged.AddListener((isOn) => {
+                    playlist.SetShuffle(isOn);
                 });
+                // Initial sync
+                playlist.SetShuffle(panelMain.ShuffleButton.IsOn);
+            }
             
             if (panelMain.RepeatButton != null)
-                panelMain.RepeatButton.GetComponent<Button>().onClick.AddListener(() => {
-                    repeatEnabled = panelMain.RepeatButton.IsOn;
+            {
+                panelMain.RepeatButton.OnValueChanged.AddListener((isOn) => {
+                    repeatEnabled = isOn;
                 });
+                // Initial sync
+                repeatEnabled = panelMain.RepeatButton.IsOn;
+            }
         }
 
         private void BindVolume() => panelMain.VolumeController?.Slider.onValueChanged.AddListener(SetVolume);

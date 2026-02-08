@@ -68,6 +68,12 @@ namespace SoftAware
                 
                 if (balanceController != null && balanceController.Slider != null)
                     balanceController.Slider.value = SettingsManager.Instance.Balance;
+
+                if (spectrumVisualizer != null)
+                    spectrumVisualizer.SetMode(SettingsManager.Instance.VisualizerMode);
+
+                if (timeDisplay != null)
+                    timeDisplay.SetMode(SettingsManager.Instance.IsRemainingMode);
             }
 
             if (eqButton != null)
@@ -115,6 +121,20 @@ namespace SoftAware
                     if (SettingsManager.Instance != null) SettingsManager.Instance.Balance = val;
                 });
             }
+
+            if (spectrumVisualizer != null)
+            {
+                spectrumVisualizer.OnModeChanged += (mode) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.VisualizerMode = mode;
+                };
+            }
+
+            if (timeDisplay != null)
+            {
+                timeDisplay.OnModeChanged += (remaining) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.IsRemainingMode = remaining;
+                };
+            }
         }
 
         private void SetWindowVisibility(GameObject window, bool visible)
@@ -139,6 +159,7 @@ namespace SoftAware
         }
 
         [Header("Audio Info Displays")]
+        [SerializeField] private SpectrumVisualizer spectrumVisualizer;
         [SerializeField] private SpriteTextDisplay bitrateDisplay;
         [SerializeField] private SpriteTextDisplay sampleRateDisplay;
         [SerializeField] private WinampTimeDisplay timeDisplay;

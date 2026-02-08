@@ -31,6 +31,8 @@ namespace SoftAware
         private float blinkTimer = 0f;
         private const float BLINK_INTERVAL = 2.0f;
 
+        public System.Action<bool> OnModeChanged;
+
         private void Start()
         {
             Clear();
@@ -136,10 +138,18 @@ namespace SoftAware
             }
         }
 
+        public void SetMode(bool remaining)
+        {
+            isRemainingMode = remaining;
+            lastCurrentTime = -1f; // Force refresh
+            OnModeChanged?.Invoke(isRemainingMode);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             isRemainingMode = !isRemainingMode;
-            // Force update will happen on next SetTime call
+            lastCurrentTime = -1f; // Force refresh
+            OnModeChanged?.Invoke(isRemainingMode);
         }
 
 #if UNITY_EDITOR

@@ -6,7 +6,7 @@ namespace SoftAware
 {
     public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler
     {
-        public enum VisMode { Spectrum, Waveform }
+        public enum VisMode { Spectrum, Waveform, None }
 
         [Header("References")]
         [SerializeField] private AudioSource audioSource;
@@ -20,6 +20,8 @@ namespace SoftAware
         [SerializeField] private bool showPeaks = true;
         [SerializeField] private float peakFallSpeed = 0.5f;
         [SerializeField] private float peakHoldTime = 0.1f;
+        
+        public System.Action<VisMode> OnModeChanged;
 
         private Texture2D visualizerTexture;
         private Color[] palette;
@@ -116,11 +118,18 @@ namespace SoftAware
                 if (isPausedNow) return; // Frozen - skip draw but don't clear
 #endif
 
+                if (currentMode == VisMode.None)
+                {
+                    ClearTexture();
+                    visualizerTexture.Apply();
+                    return;
+                }
+
                 ClearTexture();
 
                 if (currentMode == VisMode.Spectrum)
                     DrawSpectrum();
-                else
+                else if (currentMode == VisMode.Waveform)
                     DrawWaveform();
 
                 visualizerTexture.Apply();
@@ -215,9 +224,20 @@ namespace SoftAware
             }
         }
 
+        public void SetMode(VisMode mode)
+        {
+            currentMode = mode;
+            OnModeChanged?.Invoke(currentMode);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
-            currentMode = (currentMode == VisMode.Spectrum) ? VisMode.Waveform : VisMode.Spectrum;
+            // Cycle: Spectrum -> Waveform -> None -> Spectrum
+            if (currentMode == VisMode.Spectrum) currentMode = VisMode.Waveform;
+            else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
+            else currentMode = VisMode.Spectrum;
+
+            OnModeChanged?.Invoke(currentMode);
         }
     }
 }
