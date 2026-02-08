@@ -28,6 +28,12 @@ namespace SoftAware
             public bool HasNativePath => !string.IsNullOrEmpty(FilePath);
         }
 
+        [Serializable]
+        private class PlaylistData
+        {
+            public List<string> paths = new List<string>();
+        }
+
         public event Action OnPlaylistChanged;
         public event Action<int> OnCurrentIndexChanged;
         public event Action<int, SongInfo> OnSongMetadataUpdated;
@@ -59,8 +65,14 @@ namespace SoftAware
             StartCoroutine(CheckPermissionsCoroutine());
 #endif
 
+            LoadPlaylist();
+
             if (songs.Count > 0)
-                SetCurrentClip(0);
+            {
+                int lastIndex = SettingsManager.Instance != null ? SettingsManager.Instance.LastPlaylistIndex : 0;
+                lastIndex = Mathf.Clamp(lastIndex, 0, songs.Count - 1);
+                SetCurrentClip(lastIndex);
+            }
         }
 
         private void InitializeInspectorSongs()
@@ -211,7 +223,69 @@ namespace SoftAware
             metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
             
             OnPlaylistChanged?.Invoke();
+            SavePlaylist();
             yield break;
+        }
+
+        private void SavePlaylist()
+        {
+            PlaylistData data = new PlaylistData();
+            foreach (var song in songs)
+            {
+                if (!string.IsNullOrEmpty(song.FilePath))
+                    data.paths.Add(song.FilePath);
+            }
+
+            try
+            {
+                string json = JsonUtility.ToJson(data);
+                File.WriteAllText(GetPlaylistSavePath(), json);
+            }
+            catch (Exception e)
+            {
+                LogDebug($"SAVE ERROR: {e.Message}");
+            }
+        }
+
+        private void LoadPlaylist()
+        {
+            string path = GetPlaylistSavePath();
+            if (!File.Exists(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path);
+                PlaylistData data = JsonUtility.FromJson<PlaylistData>(json);
+                
+                if (data != null && data.paths != null)
+                {
+                    foreach (string filePath in data.paths)
+                    {
+                        // Avoid duplicates if already in list from inspector
+                        if (songs.Exists(s => s.FilePath == filePath)) continue;
+
+                        songs.Add(new SongInfo
+                        {
+                            Title = Path.GetFileName(filePath),
+                            FilePath = filePath,
+                            MetadataLoaded = false
+                        });
+                    }
+                    
+                    if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
+                    metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+                    OnPlaylistChanged?.Invoke();
+                }
+            }
+            catch (Exception e)
+            {
+                LogDebug($"LOAD ERROR: {e.Message}");
+            }
+        }
+
+        private string GetPlaylistSavePath()
+        {
+            return Path.Combine(Application.persistentDataPath, "winamp_playlist.json");
         }
 
         private IEnumerator MetadataScannerCoroutine()
@@ -304,7 +378,12 @@ namespace SoftAware
             if (index < 0 || index >= songs.Count) return;
             bool changed = (currentIndex != index);
             currentIndex = index;
-            if (changed) OnCurrentIndexChanged?.Invoke(currentIndex);
+            if (changed)
+            {
+                OnCurrentIndexChanged?.Invoke(currentIndex);
+                if (SettingsManager.Instance != null)
+                    SettingsManager.Instance.LastPlaylistIndex = currentIndex;
+            }
         }
 
         internal SongInfo GetNextSong()
