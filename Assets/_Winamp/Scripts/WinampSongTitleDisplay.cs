@@ -16,7 +16,7 @@ namespace SoftAware
         [SerializeField] private float scrollSpeed = 0.25f; // Seconds per character shift
         [SerializeField] private int maxVisibleChars = 30; // Capacity of the UI display
         [SerializeField] private string scrollerSeparator = "  ***  "; // Two spaces, three stars, two spaces
-        [SerializeField] private string defaultText = "Winamp 2.91";
+        private static string defaultText => "Winamp " + Application.version;
 
         private string fullText;
         private string scrollBuffer;
