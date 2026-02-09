@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.media.session.MediaSession;
@@ -17,7 +18,7 @@ import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
 
-public class WinampAudioService extends Service {
+public class WinampAudioService extends Service implements AudioManager.OnAudioFocusChangeListener {
     private static final String TAG = "WinampAudioService";
     private static final String CHANNEL_ID = "WinampAudioChannel";
     private static final int NOTIFICATION_ID = 1337;
@@ -25,6 +26,9 @@ public class WinampAudioService extends Service {
     private MediaSession mediaSession;
     private NotificationManager notificationManager;
     private PowerManager.WakeLock wakeLock;
+    private AudioManager audioManager;
+
+    private boolean isPausedByFocusLoss = false;
 
     public interface RemoteControlListener {
         void onPlay();
@@ -43,6 +47,9 @@ public class WinampAudioService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Service onCreate");
+        
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        
         createNotificationChannel();
         setupMediaSession();
         setupWakeLock();
@@ -78,21 +85,31 @@ public class WinampAudioService extends Service {
             @Override
             public void onPlay() {
                 Log.d(TAG, "MediaSession: onPlay");
-                if (listener != null) {
-                    listener.onPlay();
-                } else {
-                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+                if (requestAudioFocus()) {
+                    if (listener != null) {
+                        listener.onPlay();
+                    } else {
+                        UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+                    }
                 }
             }
 
             @Override
             public void onPause() {
                 Log.d(TAG, "MediaSession: onPause");
+                abandonAudioFocus();
                 if (listener != null) {
                     listener.onPause();
                 } else {
                     UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
                 }
+            }
+
+            @Override
+            public void onStop() {
+                Log.d(TAG, "MediaSession: onStop");
+                abandonAudioFocus();
+                super.onStop();
             }
 
             @Override
@@ -138,15 +155,25 @@ public class WinampAudioService extends Service {
             String title = intent.getStringExtra("title");
             String artist = intent.getStringExtra("artist");
             boolean isPlaying = intent.getBooleanExtra("isPlaying", false);
+            
+            // If we are playing, request focus to ensure we have it (e.g. initial start)
+            if (isPlaying) {
+                requestAudioFocus();
+            }
+            
             updateNotification(title, artist, isPlaying);
         } else if (ACTION_STOP_SERVICE.equals(action)) {
             Log.d(TAG, "Stopping service");
+            abandonAudioFocus();
             stopForeground(true);
             stopSelf();
         } else if (ACTION_PLAY.equals(action)) {
-            if (listener != null) listener.onPlay();
-            else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+             if (requestAudioFocus()) {
+                if (listener != null) listener.onPlay();
+                else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+             }
         } else if (ACTION_PAUSE.equals(action)) {
+            abandonAudioFocus();
             if (listener != null) listener.onPause();
             else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
         } else if (ACTION_PREV.equals(action)) {
@@ -225,6 +252,55 @@ public class WinampAudioService extends Service {
         intent.setAction(action);
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
+    
+    // Audio Focus Handling
+    
+    private boolean requestAudioFocus() {
+        if (audioManager == null) return false;
+        
+        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
+    
+    private void abandonAudioFocus() {
+        if (audioManager == null) return;
+        audioManager.abandonAudioFocus(this);
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        Log.d(TAG, "onAudioFocusChange: " + focusChange);
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if (isPausedByFocusLoss) {
+                    if (listener != null) listener.onPlay();
+                    else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePlay", "");
+                    isPausedByFocusLoss = false;
+                }
+                // Also restore volume if ducked (not implemented here but common pattern)
+                break;
+                
+            case AudioManager.AUDIOFOCUS_LOSS:
+                // Permanent loss (other app started playing)
+                if (listener != null) listener.onPause();
+                else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
+                break;
+                
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                // Temporary loss (e.g. phone call)
+                if (listener != null) listener.onPause();
+                else UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePause", "");
+                isPausedByFocusLoss = true;
+                break;
+                
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // We could lower volume here, but for Winamp pausing might be better or just let it mix?
+                // Standard behavior is to duck (lower volume). 
+                // For simplicity and "Winamp" feel, let's keep playing but maybe implemented later.
+                // For now, do nothing (keep playing) or pause if preferred.
+                break;
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -234,6 +310,7 @@ public class WinampAudioService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "Service onDestroy");
+        abandonAudioFocus();
         if (mediaSession != null) {
             mediaSession.setActive(false);
             mediaSession.release();

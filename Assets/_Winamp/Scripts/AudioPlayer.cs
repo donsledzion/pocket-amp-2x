@@ -301,6 +301,7 @@ namespace SoftAware
         private void OnPlaybackStarted()
         {
             UpdateAudioInfo();
+            UpdateNotification(); // Ensure we notify service that we are playing to trigger Audio Focus
         }
 
 
