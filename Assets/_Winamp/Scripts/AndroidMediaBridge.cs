@@ -42,7 +42,7 @@ namespace SoftAware
             #endif
         }
 
-        public static void UpdateMetadata(string title, string artist, bool isPlaying)
+        public static void UpdateMetadata(string title, string artist, int duration, int position, bool isPlaying)
         {
             Initialize();
 
@@ -50,6 +50,8 @@ namespace SoftAware
             serviceIntent.Call<AndroidJavaObject>("setAction", "UPDATE_METADATA");
             serviceIntent.Call<AndroidJavaObject>("putExtra", "title", title);
             serviceIntent.Call<AndroidJavaObject>("putExtra", "artist", artist);
+            serviceIntent.Call<AndroidJavaObject>("putExtra", "duration", (long)duration); // in ms
+            serviceIntent.Call<AndroidJavaObject>("putExtra", "position", (long)position); // in ms
             serviceIntent.Call<AndroidJavaObject>("putExtra", "isPlaying", isPlaying);
 
             if (UnityEngine.Device.Application.platform == RuntimePlatform.Android)

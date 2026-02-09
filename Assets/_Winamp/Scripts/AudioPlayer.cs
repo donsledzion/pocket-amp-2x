@@ -428,7 +428,11 @@ namespace SoftAware
         private void UpdateNotification()
         {
             if (currentSong != null)
-                AndroidMediaBridge.UpdateMetadata(currentSong.Title, "Winamp Android", engine.IsPlaying);
+            {
+                int durationMs = (int)(engine.Duration * 1000);
+                int positionMs = (int)(engine.CurrentTime * 1000);
+                AndroidMediaBridge.UpdateMetadata(currentSong.Title, "Winamp Android", durationMs, positionMs, engine.IsPlaying);
+            }
         }
 
         // Native Callbacks - called from AndroidMediaBridge (proxy) or direct UnitySendMessage

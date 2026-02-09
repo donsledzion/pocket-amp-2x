@@ -155,13 +155,15 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
             String title = intent.getStringExtra("title");
             String artist = intent.getStringExtra("artist");
             boolean isPlaying = intent.getBooleanExtra("isPlaying", false);
+            long duration = intent.getLongExtra("duration", -1);
+            long position = intent.getLongExtra("position", -1);
             
             // If we are playing, request focus to ensure we have it (e.g. initial start)
             if (isPlaying) {
                 requestAudioFocus();
             }
             
-            updateNotification(title, artist, isPlaying);
+            updateNotification(title, artist, duration, position, isPlaying);
         } else if (ACTION_STOP_SERVICE.equals(action)) {
             Log.d(TAG, "Stopping service");
             abandonAudioFocus();
@@ -187,11 +189,16 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
         return START_NOT_STICKY;
     }
 
-    private void updateNotification(String title, String artist, boolean isPlaying) {
+    private void updateNotification(String title, String artist, long duration, long position, boolean isPlaying) {
         // Update Media Metadata
         MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder()
                 .putString(MediaMetadata.METADATA_KEY_TITLE, title)
                 .putString(MediaMetadata.METADATA_KEY_ARTIST, artist);
+        
+        if (duration > 0) {
+            metadataBuilder.putLong(MediaMetadata.METADATA_KEY_DURATION, duration);
+        }
+        
         mediaSession.setMetadata(metadataBuilder.build());
 
         // Update Playback State
@@ -200,8 +207,10 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
                            PlaybackState.ACTION_PLAY_PAUSE |
                            PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS);
         
+        long validPosition = position >= 0 ? position : PlaybackState.PLAYBACK_POSITION_UNKNOWN;
+        
         stateBuilder.setState(isPlaying ? PlaybackState.STATE_PLAYING : PlaybackState.STATE_PAUSED, 
-                             PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1.0f);
+                             validPosition, 1.0f);
         mediaSession.setPlaybackState(stateBuilder.build());
 
         // Build Notification
