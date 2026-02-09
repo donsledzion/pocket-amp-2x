@@ -217,6 +217,7 @@ namespace SoftAware
                 isDraggingSlider = false; 
                 uiController?.SetDragging(false);
                 engine.Seek(panelMain.ProgressSlider.value);
+                UpdateNotification(); // Sync notification after manual seek
             });
             trigger.triggers.Add(entryUp);
         }
