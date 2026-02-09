@@ -118,11 +118,6 @@ namespace SoftAware
                 if (isPausedNow) return; // Frozen - skip draw but don't clear
 #endif
 
-                if (Time.frameCount % 120 == 0)
-                {
-                    Playlist.Log($"[Vis] Mode: {currentMode} | Vol: {vol:F2} | Play: {(audioSource != null && audioSource.isPlaying)}");
-                }
-
                 if (currentMode == VisMode.None)
                 {
                     ClearTexture();
@@ -149,13 +144,12 @@ namespace SoftAware
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             spectrumData = AndroidVisualizerBridge.GetFFTData(512);
-            float baseMult = 2.0f; // Android data is already somewhat scaled in Java
+            float baseMult = 1.0f; 
 #else
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
             float baseMult = 40.0f;
 #endif
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // Android uses SCALING_MODE_NORMALIZED in Java, so it's volume-independent
             float multiplier = baseMult; 
 #else
             float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
@@ -167,11 +161,9 @@ namespace SoftAware
             int barWidth = Width / spectrumBars;
             for (int i = 0; i < spectrumBars; i++)
             {
-                // i+1 to skip DC
                 float val = spectrumData[i + 1] * multiplier;
                 int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
-                // Draw bar
                 for (int y = 0; y < barHeight; y++)
                 {
                     int colorIdx = 17 - y; 
@@ -183,7 +175,6 @@ namespace SoftAware
                     }
                 }
 
-                // Draw peak
                 if (showPeaks)
                 {
                     int peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
@@ -230,7 +221,7 @@ namespace SoftAware
 #if UNITY_ANDROID && !UNITY_EDITOR
             waveformData = AndroidVisualizerBridge.GetWaveformData(512);
             if (waveformData == null || waveformData.Length == 0) return;
-            float baseMult = 10.0f; 
+            float baseMult = 0.8f; 
 #else
             audioSource.GetOutputData(waveformData, 0);
             float baseMult = 1.0f;
@@ -243,30 +234,36 @@ namespace SoftAware
 #endif
 
             int centerY = Height / 2;
+            int lastY = centerY;
+            float samplesPerPixel = 512f / Width;
 
             for (int x = 0; x < Width; x++)
             {
-                // Map Width to waveformData length
-                int sampleIdx = Mathf.Clamp(Mathf.FloorToInt((float)x / Width * 512), 0, 511);
-                float val = waveformData[sampleIdx] * multiplier;
+                int startIdx = Mathf.FloorToInt(x * samplesPerPixel);
+                int endIdx = Mathf.FloorToInt((x + 1) * samplesPerPixel);
+                float sum = 0;
+                int count = 0;
+
+                for (int i = startIdx; i < endIdx && i < waveformData.Length; i++)
+                {
+                    sum += waveformData[i];
+                    count++;
+                }
+
+                float avgVal = (count > 0) ? (sum / count) : 0;
+                float val = avgVal * multiplier;
                 
                 int y = Mathf.Clamp(Mathf.RoundToInt((val + 1f) * 0.5f * Height), 0, Height - 1);
                 
-                // Draw vertical line from center to Y
-                int start = Mathf.Min(y, centerY);
-                int end = Mathf.Max(y, centerY);
+                int startSeg = Mathf.Min(y, lastY);
+                int endSeg = Mathf.Max(y, lastY);
 
-                // Ensure visible movement even for tiny values
-                if (start == end && val != 0)
-                {
-                    if (val > 0) end = Mathf.Min(Height - 1, centerY + 1);
-                    else start = Mathf.Max(0, centerY - 1);
-                }
-
-                for (int ty = start; ty <= end; ty++)
+                for (int ty = startSeg; ty <= endSeg; ty++)
                 {
                     visualizerTexture.SetPixel(x, ty, palette[18]);
                 }
+                
+                lastY = y;
             }
         }
 

@@ -85,7 +85,6 @@ namespace SoftAware
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (javaVisualizer != null)
             {
-                if (Time.frameCount % 60 == 0) Playlist.Log("[Viz] Requesting Waveform PCM...");
                 try
                 {
                     float[] javaData = javaVisualizer.Call<float[]>("getWaveformPCM", dataSize);

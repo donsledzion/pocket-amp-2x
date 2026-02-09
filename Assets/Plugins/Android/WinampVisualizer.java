@@ -61,10 +61,7 @@ public class WinampVisualizer {
                 }
                 
                 if (getWaveformMethod == null) {
-                    Log.e(TAG, "Critical: getWaveform NOT FOUND in method list. Listing options:");
-                    for (Method m : methods) {
-                        Log.e(TAG, "Option: " + m.getName() + " -> " + m.toString());
-                    }
+                    Log.e(TAG, "Critical: getWaveform NOT FOUND in method list.");
                 }
             } catch (Throwable t) {
                 Log.e(TAG, "Brute-force reflection FAILED: " + t.getMessage());
@@ -160,13 +157,13 @@ public class WinampVisualizer {
                     Object statusObj = getWaveformMethod.invoke(visualizer, rawBuffer);
                     status = (statusObj instanceof Integer) ? (Integer)statusObj : -1;
                 } catch (Throwable t) {
-                    if (logCounter % 20 == 0) Log.e(TAG, "Reflection invoke failed: " + t.getMessage());
+                    if (logCounter % 100 == 0) Log.e(TAG, "Reflection invoke failed: " + t.getMessage());
                 }
             } else {
-                if (logCounter % 50 == 0) Log.e(TAG, "getWaveformMethod is NULL - cannot capture PCM");
+                if (logCounter % 100 == 0) Log.e(TAG, "getWaveformMethod is NULL - cannot capture PCM");
             }
 
-            if (logCounter % 10 == 0) {
+            if (logCounter % 100 == 0) {
                 Log.i(TAG, "PCM (" + sessionID + ") stat:" + status + " first:" + (rawBuffer[0] & 0xFF) + " cnt:" + logCounter);
             }
 
