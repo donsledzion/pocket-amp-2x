@@ -533,24 +533,61 @@ namespace SoftAware
             }
         }
 
+        // Thread-safe random for background threads
+        private System.Random rng = new System.Random();
+
         internal SongInfo GetNextSong()
         {
             if (songs.Count == 0) return null;
             
+            int newIndex;
             if (shuffleEnabled)
             {
-                // Random next song
-                int newIndex = UnityEngine.Random.Range(0, songs.Count);
-                SetCurrentClip(newIndex);
+                // Use System.Random for thread safety potential
+                newIndex = rng.Next(0, songs.Count);
             }
             else
             {
                 // Sequential
-                int newIndex = (currentIndex == songs.Count - 1) ? 0 : currentIndex + 1;
-                SetCurrentClip(newIndex);
+                newIndex = (currentIndex == songs.Count - 1) ? 0 : currentIndex + 1;
             }
             
+            SetCurrentClip(newIndex);
+            
             return CurrentSong;
+        }
+
+        // Returns the index of the next song without modifying state
+        public int GetNextSongIndex()
+        {
+            if (songs.Count == 0) return -1;
+            
+            if (shuffleEnabled)
+            {
+                lock(rng) { return rng.Next(0, songs.Count); }
+            }
+            else
+            {
+                return (currentIndex == songs.Count - 1) ? 0 : currentIndex + 1;
+            }
+        }
+        
+        // Returns the index of the previous song without modifying state
+        public int GetPreviousSongIndex()
+        {
+            if (songs.Count == 0) return -1;
+            return (currentIndex <= 0) ? songs.Count - 1 : currentIndex - 1;
+        }
+
+        // Silent update for background threads - updates index but defers events
+        public void SetCurrentIndexSilent(int index)
+        {
+             if (index >= 0 && index < songs.Count)
+             {
+                 currentIndex = index;
+                 // We intentionally do NOT fire events here. 
+                 // The caller (AudioPlayer) must queue a UI update on the main thread.
+             }
         }
 
         public void ToggleShuffle()

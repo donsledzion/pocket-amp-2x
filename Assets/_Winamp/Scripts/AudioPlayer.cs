@@ -61,7 +61,7 @@ namespace SoftAware
 #else
             engine = new UnityPlaybackEngine(audioSource);
 #endif
-            engine.OnPlaybackFinished += () => mainThreadActions.Enqueue(() => PlayNext(true));
+            engine.OnPlaybackFinished += HandlePlaybackFinished;
             
             // Link UI Controller
             if (uiController != null) uiController.Initialize(this);
@@ -92,6 +92,22 @@ namespace SoftAware
                 OnNativePlay, OnNativePause, OnNativeNext, OnNativePrev
             );
 #endif
+        }
+
+        private void HandlePlaybackFinished()
+        {
+            if (isAppPaused)
+            {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                PlayNextBackground();
+#else
+                mainThreadActions.Enqueue(() => PlayNext(true));
+#endif
+            }
+            else
+            {
+                mainThreadActions.Enqueue(() => PlayNext(true));
+            }
         }
 
         private void OnApplicationPause(bool pause)
@@ -309,6 +325,54 @@ namespace SoftAware
             if (wasActive) Play();
             else UpdateAudioInfo();
         }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        private void PlayNextBackground()
+        {
+            // Background Thread Logic
+            // 1. Calculate next index (thread-safe)
+            int nextIndex = playlist.GetNextSongIndex();
+            if (nextIndex == -1) return;
+
+            // 2. Check "Stop after last" logic
+            bool isLast = (playlist.CurrentIndex == playlist.Count - 1);
+            if (!repeatEnabled && !playlist.IsShuffleEnabled && isLast)
+            {
+                  // Stop playback logic from BG?
+                  // Just release native player and queue UI stop
+                  engine.Stop();
+                  mainThreadActions.Enqueue(() => StopPlayback());
+                  return;
+            }
+
+            // 3. Update Playlist index silently
+            playlist.SetCurrentIndexSilent(nextIndex);
+            
+            // 4. Get the song (accessing list is thread safe strictly for reading if list is not modified)
+            // Note: We assume songs list is not modified while playing in background
+            Playlist.SongInfo nextSong = playlist.AllSongs[nextIndex];
+
+            // 5. Trigger Native Play immediately
+            if (nextSong.HasNativePath)
+            {
+                PerformNativePlay(nextSong.FilePath, true); // true = immediate/background mode
+            }
+            
+            // 6. Queue UI updates for when app resumes
+            mainThreadActions.Enqueue(() => {
+                // When we resume, we need to notify UI of the change
+                if (playlist != null)
+                {
+                    // Force the playlist to fire the change event for the NEW index
+                    // We can just call SetCurrentClip again to ensure events fire, 
+                    // or we can manually invoke if we expose an event trigger.
+                    // Safest is to re-set it which is cheap.
+                    playlist.SetCurrentClip(nextIndex);
+                    OnPlaybackStarted();
+                }
+            });
+        }
+#endif
 
         private void Pause()
         {
