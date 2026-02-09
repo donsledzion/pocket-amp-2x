@@ -14,14 +14,18 @@ namespace SoftAware
             try
             {
                 Release();
+
+                // Ensure permission is granted (required for Visualizer API on many devices)
+                if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Microphone))
+                {
+                    UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Microphone);
+                }
                 
-                // FORCE SESSION 0 (Global Output Mix)
-                // This captures everything playing on the device and is often the only way 
-                // to get valid Waveform data on some vendors (Samsung etc.)
-                // Requires android.permission.MODIFY_AUDIO_SETTINGS (which we have)
-                int targetSession = 0; 
+                // Use the provided sessionId (e.g. from MediaPlayer)
+                // Fallback to 0 (Global Mix) only if sessionId is -1
+                int targetSession = (sessionId == -1) ? 0 : sessionId; 
                 
-                Playlist.Log($"[Viz] Java Init FORCE GLOBAL: {targetSession}");
+                Playlist.Log($"[Viz] Java Init Session: {targetSession}");
                 javaVisualizer = new AndroidJavaObject("com.softaware.winamp.WinampVisualizer");
                 bool success = javaVisualizer.Call<bool>("initialize", targetSession);
                 
@@ -54,7 +58,6 @@ namespace SoftAware
         {
             if (TestMode) return GetTestData(dataSize);
 
-            float[] result = new float[dataSize];
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (javaVisualizer != null)
             {
@@ -63,82 +66,51 @@ namespace SoftAware
                     float[] javaData = javaVisualizer.Call<float[]>("getFft", dataSize);
                     if (javaData != null && javaData.Length == dataSize) 
                     {
-                        // Cache for waveform simulation if needed
-                        cachedFftData = javaData;
                         return javaData;
                     }
                 }
-                catch {}
+                catch (Exception e)
+                {
+                    Playlist.Log($"[Viz] GetFFT ERR: {e.Message}");
+                }
             }
 #endif
-            return result;
+            return new float[dataSize];
         }
 
         public static float[] GetWaveformData(int dataSize)
         {
-            // ALWAYS Simulate from FFT.
-            // Native GetWaveform is unreliable on many devices (Samsung, Pixel) returning silence/flatline.
-            // Simulation provides a consistent, high-fidelity experience that looks "correct" to the user.
-            return SimulateWaveformFromFFT(dataSize);
+            if (TestMode) return GetTestData(dataSize);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (javaVisualizer != null)
+            {
+                if (Time.frameCount % 60 == 0) Playlist.Log("[Viz] Requesting Waveform PCM...");
+                try
+                {
+                    float[] javaData = javaVisualizer.Call<float[]>("getWaveformPCM", dataSize);
+                    if (javaData != null && javaData.Length == dataSize) 
+                    {
+                        return javaData;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Playlist.Log($"[Viz] GetWave fatal: {e.Message}");
+                }
+            }
+#endif
+            return new float[dataSize];
         }
-
-        // Generate a jagged, reactive waveform from FFT data (Noise Modulation)
-        private static float[] SimulateWaveformFromFFT(int size)
-        {
-             float[] simulated = new float[size];
-             if (cachedFftData == null) return simulated;
-
-             // 1. Analyze Energy for "Kick" detection
-             float bassEnergy = 0f;
-             float trebleEnergy = 0f;
-             
-             // Bass: bins 0-4
-             for(int k=0; k<5 && k<cachedFftData.Length; k++) bassEnergy += cachedFftData[k];
-             bassEnergy /= 5f; 
-             
-             // Treble: bins 10-32
-             int trebleCount = 0;
-             for(int k=10; k<32 && k<cachedFftData.Length; k++) {
-                 trebleEnergy += cachedFftData[k];
-                 trebleCount++;
-             }
-             if (trebleCount > 0) trebleEnergy /= trebleCount;
-
-             // 2. Dynamic Gain (Expander)
-             float kickRaw = bassEnergy * 8.0f; 
-             float kick = kickRaw * kickRaw; // Square response
-             kick = Mathf.Clamp(kick, 0.1f, 3.0f); 
-             
-             float fizzRaw = trebleEnergy * 4.0f;
-             float fizz = fizzRaw * fizzRaw;
-
-             float t = Time.time;
-             
-             // 3. Synthesize Raw Signal
-             for (int i = 0; i < size; i++)
-             {
-                 float normalizedX = (float)i / size;
-                 
-                 // Sine carrier wobbles with Bass
-                 float carrier = Mathf.Sin(normalizedX * (10f + kick * 2f) + t * 5f);
-                 
-                 // Noise modulated by Treble
-                 float noise = (UnityEngine.Random.value * 2f - 1f) * fizz;
-
-                 // Combine: Carrier provides shape, Noise provides jaggedness
-                 // When bass kicks, the waveform expands vertically
-                 float sample = (carrier * 0.4f * kick) + noise;
-                 
-                 simulated[i] = Mathf.Clamp(sample, -1f, 1f);
-             }
-             return simulated;
-        }
-
 
         private static float[] GetTestData(int dataSize)
         {
             float[] test = new float[dataSize];
-            for (int i = 0; i < dataSize; i++) test[i] = UnityEngine.Random.value * 0.5f;
+            float t = Time.time * 5f;
+            for (int i = 0; i < dataSize; i++) 
+            {
+                test[i] = Mathf.Sin(t + i * 0.1f) * 0.5f + (UnityEngine.Random.value * 0.1f);
+            }
             return test;
         }
 

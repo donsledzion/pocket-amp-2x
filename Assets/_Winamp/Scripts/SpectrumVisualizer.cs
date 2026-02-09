@@ -96,20 +96,20 @@ namespace SoftAware
         {
             try
             {
+                var player = audioSource != null ? audioSource.GetComponent<AudioPlayer>() : null;
+                float vol = (player != null) ? player.CurrentVolume : 1f;
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-                // On Android, the state is managed in AudioPlayer
-                var player = audioSource.GetComponent<AudioPlayer>();
                 if (player != null && player.IsPaused) return; // Freeze
 #else
                 if (audioSource == null) return;
                 
-                var player = audioSource.GetComponent<AudioPlayer>();
                 bool isPausedNow = player != null && player.IsPaused;
 
                 if (!audioSource.isPlaying && !isPausedNow)
                 {
                     // Stopped - clear texture
-                    UpdatePeaks(null);
+                    UpdatePeaks(null, 1.0f);
                     ClearTexture();
                     visualizerTexture.Apply();
                     return;
@@ -117,6 +117,11 @@ namespace SoftAware
 
                 if (isPausedNow) return; // Frozen - skip draw but don't clear
 #endif
+
+                if (Time.frameCount % 120 == 0)
+                {
+                    Playlist.Log($"[Vis] Mode: {currentMode} | Vol: {vol:F2} | Play: {(audioSource != null && audioSource.isPlaying)}");
+                }
 
                 if (currentMode == VisMode.None)
                 {
@@ -128,31 +133,42 @@ namespace SoftAware
                 ClearTexture();
 
                 if (currentMode == VisMode.Spectrum)
-                    DrawSpectrum();
+                    DrawSpectrum(vol);
                 else if (currentMode == VisMode.Waveform)
-                    DrawWaveform();
+                    DrawWaveform(vol);
 
                 visualizerTexture.Apply();
             }
             catch (System.Exception e)
             {
-                Playlist.Log($"[Vis] Update ERR: {e.Message}\n{e.StackTrace.Substring(0, Mathf.Min(e.StackTrace.Length, 100))}");
+                Playlist.Log($"[Vis] Update ERR: {e.Message}");
             }
         }
 
-        private void DrawSpectrum()
+        private void DrawSpectrum(float volume)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             spectrumData = AndroidVisualizerBridge.GetFFTData(512);
+            float baseMult = 2.0f; // Android data is already somewhat scaled in Java
 #else
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+            float baseMult = 40.0f;
 #endif
-            UpdatePeaks(spectrumData);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Android uses SCALING_MODE_NORMALIZED in Java, so it's volume-independent
+            float multiplier = baseMult; 
+#else
+            float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
+            float multiplier = baseMult * sensitivity;
+#endif
+
+            UpdatePeaks(spectrumData, multiplier);
 
             int barWidth = Width / spectrumBars;
             for (int i = 0; i < spectrumBars; i++)
             {
-                float val = spectrumData[i + 1] * 20f;
+                // i+1 to skip DC
+                float val = spectrumData[i + 1] * multiplier;
                 int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
                 // Draw bar
@@ -171,19 +187,22 @@ namespace SoftAware
                 if (showPeaks)
                 {
                     int peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
-                    for (int x = 0; x < barWidth - 1; x++)
+                    if (peakY >= 0)
                     {
-                        visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
+                        for (int x = 0; x < barWidth - 1; x++)
+                        {
+                            visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
+                        }
                     }
                 }
             }
         }
 
-        private void UpdatePeaks(float[] data)
+        private void UpdatePeaks(float[] data, float multiplier = 1.0f)
         {
             for (int i = 0; i < spectrumBars; i++)
             {
-                float val = (data != null && i + 1 < data.Length) ? data[i + 1] * 20f : 0;
+                float val = (data != null && i + 1 < data.Length) ? data[i + 1] * multiplier : 0;
                 
                 if (val >= peakHeights[i])
                 {
@@ -206,22 +225,56 @@ namespace SoftAware
             }
         }
 
-        private void DrawWaveform()
+        private void DrawWaveform(float volume)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             waveformData = AndroidVisualizerBridge.GetWaveformData(512);
+            if (waveformData == null || waveformData.Length == 0) return;
+            float baseMult = 10.0f; 
 #else
             audioSource.GetOutputData(waveformData, 0);
+            float baseMult = 1.0f;
 #endif
+#if UNITY_ANDROID && !UNITY_EDITOR
+            float multiplier = baseMult; 
+#else
+            float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
+            float multiplier = baseMult * sensitivity;
+#endif
+
+            int centerY = Height / 2;
 
             for (int x = 0; x < Width; x++)
             {
-                float val = waveformData[x % 512];
+                // Map Width to waveformData length
+                int sampleIdx = Mathf.Clamp(Mathf.FloorToInt((float)x / Width * 512), 0, 511);
+                float val = waveformData[sampleIdx] * multiplier;
+                
                 int y = Mathf.Clamp(Mathf.RoundToInt((val + 1f) * 0.5f * Height), 0, Height - 1);
                 
-                // Draw only a single pixel at the calculated Y position
-                visualizerTexture.SetPixel(x, y, palette[18]);
+                // Draw vertical line from center to Y
+                int start = Mathf.Min(y, centerY);
+                int end = Mathf.Max(y, centerY);
+
+                // Ensure visible movement even for tiny values
+                if (start == end && val != 0)
+                {
+                    if (val > 0) end = Mathf.Min(Height - 1, centerY + 1);
+                    else start = Mathf.Max(0, centerY - 1);
+                }
+
+                for (int ty = start; ty <= end; ty++)
+                {
+                    visualizerTexture.SetPixel(x, ty, palette[18]);
+                }
             }
+        }
+
+        private void OnDisable()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidVisualizerBridge.Release();
+#endif
         }
 
         public void SetMode(VisMode mode)
@@ -237,6 +290,7 @@ namespace SoftAware
             else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
             else currentMode = VisMode.Spectrum;
 
+            Playlist.Log($"[Vis] Clicked! New Mode: {currentMode}");
             OnModeChanged?.Invoke(currentMode);
         }
     }

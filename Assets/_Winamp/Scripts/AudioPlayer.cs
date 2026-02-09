@@ -37,7 +37,9 @@ namespace SoftAware
 
         // Audio parameters
         private float currentVolume = 1f;
+        public float CurrentVolume => currentVolume;
         private float currentBalance = 0.5f; 
+        public float CurrentBalance => currentBalance;
         private bool repeatEnabled = false;
         private bool isAppPaused = false;
 

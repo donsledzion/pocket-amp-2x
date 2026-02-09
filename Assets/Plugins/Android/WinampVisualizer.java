@@ -8,10 +8,15 @@ public class WinampVisualizer {
     private Visualizer visualizer;
     private byte[] rawBuffer;
     private int captureSize = 1024;
-    private static final String TAG = "WinampVisualizer";
+    private static final String TAG = "Winamp";
     private Method getWaveformMethod;
 
+    private int logCounter = 0;
+    private int sessionID = -1;
+
     public boolean initialize(int sessionId) {
+        this.sessionID = sessionId;
+        Log.i(TAG, "!!! initialize visualizer for session: " + sessionId);
         try {
             release();
             
@@ -27,16 +32,42 @@ public class WinampVisualizer {
             captureSize = Math.min(max, 1024);
             
             visualizer.setCaptureSize(captureSize);
+            
+            // SCALING_MODE_NORMALIZED (added in API 16) makes the visualizer 
+            // independent of player volume. It auto-scales the signal to 8-bit peak-peak.
+            try {
+                visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
+                Log.i(TAG, "Scaling mode set to NORMALIZED");
+            } catch (Exception e) {
+                Log.e(TAG, "Could not set scaling mode: " + e.getMessage());
+            }
+
             rawBuffer = new byte[captureSize];
             
             int status = visualizer.setEnabled(true);
-            Log.d(TAG, "Initialized session " + targetSession + " with size " + captureSize + ". Enabled: " + (status == Visualizer.SUCCESS));
+            Log.i(TAG, "Initialized session " + targetSession + " with size " + captureSize + ". Enabled: " + (status == Visualizer.SUCCESS));
             
-            // Try to find getWaveform via reflection to bypass compiler weirdness
+            // Brute-force reflection: Find getWaveform by iterating through all methods
+            // to bypass signature mismatches in different Android environment versions.
             try {
-                getWaveformMethod = visualizer.getClass().getMethod("getWaveform", byte[].class);
-            } catch (Exception e) {
-                Log.e(TAG, "Could not find getWaveform method: " + e.getMessage());
+                Method[] methods = visualizer.getClass().getMethods();
+                for (Method m : methods) {
+                    if (m.getName().equalsIgnoreCase("getWaveform")) {
+                        getWaveformMethod = m;
+                        getWaveformMethod.setAccessible(true);
+                        Log.i(TAG, "Success! Brute-force found: " + m.toString());
+                        break;
+                    }
+                }
+                
+                if (getWaveformMethod == null) {
+                    Log.e(TAG, "Critical: getWaveform NOT FOUND in method list. Listing options:");
+                    for (Method m : methods) {
+                        Log.e(TAG, "Option: " + m.getName() + " -> " + m.toString());
+                    }
+                }
+            } catch (Throwable t) {
+                Log.e(TAG, "Brute-force reflection FAILED: " + t.getMessage());
             }
 
             return status == Visualizer.SUCCESS;
@@ -52,6 +83,7 @@ public class WinampVisualizer {
             try {
                 visualizer.setEnabled(false);
                 visualizer.release();
+                Log.i(TAG, "Released visualizer");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -62,79 +94,97 @@ public class WinampVisualizer {
 
     // Returns float array with normalized magnitudes (0.0 - 1.0)
     public float[] getFft(int outSize) {
-        if (visualizer == null || rawBuffer == null) return new float[outSize];
+        float[] result = new float[outSize];
+        if (visualizer == null || rawBuffer == null) {
+            if (logCounter % 100 == 0) Log.e(TAG, "FFT: visualizer is null!");
+            return result;
+        }
 
         try {
+            logCounter++;
             if (visualizer.getFft(rawBuffer) != Visualizer.SUCCESS) {
-                return new float[outSize];
+                return result;
             }
 
             // rawBuffer contains [real0, realN, real1, imag1, real2, imag2, ...]
-            // We need to calculate magnitude and fill outSize
-            float[] result = new float[outSize];
-            
-            // Calculate step to map captureSize/2 to outSize
-            // We effective have captureSize/2 frequency bins useful for visualization
             int validBins = captureSize / 2;
             float step = (float)validBins / outSize;
 
+            boolean hasData = false;
             for (int i = 0; i < outSize; i++) {
-                // Determine index in raw buffer
-                // i * step gives bin index. 
-                // rawBuffer index: bin 0 is at 0 (real) and 1 (imag - usually 0 for bin 0)
-                // bin k is at 2k (real) and 2k+1 (imag)
-                // We skip bin 0 (DC offset) usually, starting from bin 1 roughly? 
-                // Let's stick to standard mapping: index = 2 + 2*binIndex
-                
                 int binIndex = (int)(i * step);
                 if (binIndex >= validBins) binIndex = validBins - 1;
                 
-                int rawIndex = 2 + binIndex * 2;
-                if (rawIndex + 1 < rawBuffer.length) {
+                int rawIndex;
+                if (binIndex == 0) rawIndex = 0;
+                else if (binIndex == validBins - 1) rawIndex = 1;
+                else rawIndex = binIndex * 2;
+
+                if (rawIndex < rawBuffer.length) {
                     float real = (float)rawBuffer[rawIndex];
-                    float imag = (float)rawBuffer[rawIndex + 1];
-                    // Magnitude
+                    float imag = (rawIndex + 1 < rawBuffer.length) ? (float)rawBuffer[rawIndex + 1] : 0;
+                    if (binIndex == 0 || binIndex == validBins - 1) imag = 0; 
+
                     float mag = (float)Math.sqrt(real * real + imag * imag);
-                    // Normalize (arbitrary scaling, same as C# 1024f)
-                    result[i] = mag / 1024f;
+                    if (mag > 0.001f) hasData = true;
+                    // Scaling for visibility. 32.0f is more sensitive than 64.0f
+                    result[i] = mag / 32.0f; 
                 }
             }
+
+            if (logCounter % 100 == 0) {
+                Log.i(TAG, "FFT Data - active? " + hasData + " sample[0]:" + result[0]);
+            }
+
             return result;
         } catch (Exception e) {
-            return new float[outSize];
+            return result;
         }
     }
 
     // Returns float array with normalized waveform (-1.0 to 1.0)
-    public float[] getWaveform(int outSize) {
-        if (visualizer == null || rawBuffer == null || getWaveformMethod == null) return new float[outSize];
+    public float[] getWaveformPCM(int outSize) {
+        float[] result = new float[outSize];
+        if (visualizer == null || rawBuffer == null) {
+            if (logCounter % 50 == 0) Log.e(TAG, "WAVE: visualizer is NULL!");
+            return result;
+        }
 
         try {
-            // Use reflection to call getWaveform
-            Object statusObj = getWaveformMethod.invoke(visualizer, rawBuffer);
-            if (statusObj instanceof Integer && ((Integer)statusObj) != Visualizer.SUCCESS) {
-                return new float[outSize];
+            logCounter++;
+            int status = -2;
+            
+            // Try reflection if available
+            if (getWaveformMethod != null) {
+                try {
+                    Object statusObj = getWaveformMethod.invoke(visualizer, rawBuffer);
+                    status = (statusObj instanceof Integer) ? (Integer)statusObj : -1;
+                } catch (Throwable t) {
+                    if (logCounter % 20 == 0) Log.e(TAG, "Reflection invoke failed: " + t.getMessage());
+                }
+            } else {
+                if (logCounter % 50 == 0) Log.e(TAG, "getWaveformMethod is NULL - cannot capture PCM");
             }
 
-            float[] result = new float[outSize];
-            float step = (float)rawBuffer.length / outSize;
+            if (logCounter % 10 == 0) {
+                Log.i(TAG, "PCM (" + sessionID + ") stat:" + status + " first:" + (rawBuffer[0] & 0xFF) + " cnt:" + logCounter);
+            }
 
+            if (status != 0) return result; // 0 == Visualizer.SUCCESS
+
+            float step = (float)rawBuffer.length / outSize;
             for (int i = 0; i < outSize; i++) {
                 int idx = (int)(i * step);
                 if (idx < rawBuffer.length) {
-                    // Java byte is signed -128..127. 
-                    // Visualizer returns unsigned byte 0..255 reinterpreted as signed.
-                    // 128 (unsigned) is silence.
-                    // To get unsigned value: rawBuffer[idx] & 0xFF
-                    int unsignedVal = rawBuffer[idx] & 0xFF;
-                    
-                    // Center around 0 (-1.0 to 1.0)
+                    int unsignedVal = rawBuffer[idx] & 0xFF; 
                     result[i] = (unsignedVal - 128) / 128f;
                 }
             }
+
             return result;
-        } catch (Exception e) {
-            return new float[outSize];
+        } catch (Throwable t) {
+            if (logCounter % 20 == 0) Log.e(TAG, "getWaveform total fatal: " + t.getMessage());
+            return result;
         }
     }
 }

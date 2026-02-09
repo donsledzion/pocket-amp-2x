@@ -114,7 +114,7 @@ namespace SoftAware
                     
                     for (short i = 0; i < numBands; i++)
                     {
-                        int centerFreq = nativeEq.Call<int>("getCenterFreq", (int)i) / 1000; // Hz
+                        int centerFreq = nativeEq.Call<int>("getCenterFreq", i) / 1000; // Hz
                         
                         int winampIndex = FindClosestBand(centerFreq);
                         float gain = lastBands[winampIndex];
