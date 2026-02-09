@@ -24,7 +24,7 @@ namespace SoftAware
             {
                 ReleaseEffects();
                 currentMusicID = musicID;
-                UpdateNativeEQ(); // Re-apply current settings to new session
+                UpdateNativeEQ(true); // Re-apply current settings to new session
             }
         }
 
@@ -104,86 +104,113 @@ namespace SoftAware
 
         private AndroidJavaObject nativeEq;
         private AndroidJavaObject nativeLoudness;
+        
         private bool eqEnabled = false;
         private float[] lastBands;
         private float lastPreamp;
 
+        // Throttling and Cache
+        private float lastUpdateTime = 0f;
+        private const float UpdateThrottle = 0.05f; // 50ms
+        
+        private bool lastAppliedEnabledState = false;
+        private float lastAppliedPreamp = -999f;
+        
+        private short cachedNumBands = -1;
+        private int[] cachedCenterFreqs;
+        private short cachedMinLevel, cachedMaxLevel;
+
         public void SetEqualizerEnabled(bool enabled)
         {
             eqEnabled = enabled;
-            UpdateNativeEQ();
+            UpdateNativeEQ(true); // Forced update for state changes
         }
 
         public void SetEqualizerGains(float preamp, float[] bands)
         {
             lastPreamp = preamp;
             lastBands = bands;
-            UpdateNativeEQ();
+            UpdateNativeEQ(false); // Throttled update for slider moves
         }
 
-        private void UpdateNativeEQ()
+        private void UpdateNativeEQ(bool forced)
         {
             if (currentMusicID == -1) return;
 
+            float currentTime = Time.realtimeSinceStartup;
+            if (!forced && currentTime - lastUpdateTime < UpdateThrottle)
+            {
+                return;
+            }
+
+            lastUpdateTime = currentTime;
+            
             try
             {
-                // 1. Initialize Equalizer
+                // 1. Initialize Effects (if needed)
                 if (nativeEq == null)
                 {
                     nativeEq = new AndroidJavaObject("android.media.audiofx.Equalizer", 0, currentMusicID);
                     Debug.Log($"Created native Equalizer for session {currentMusicID}");
+                    
+                    // Cache hardware info once
+                    cachedNumBands = nativeEq.Call<short>("getNumberOfBands");
+                    short[] range = nativeEq.Call<short[]>("getBandLevelRange");
+                    cachedMinLevel = range[0];
+                    cachedMaxLevel = range[1];
+                    
+                    cachedCenterFreqs = new int[cachedNumBands];
+                    for (short i = 0; i < cachedNumBands; i++)
+                    {
+                        cachedCenterFreqs[i] = nativeEq.Call<int>("getCenterFreq", i) / 1000;
+                    }
                 }
 
-                // 2. Initialize LoudnessEnhancer (for Preamp boost)
                 if (nativeLoudness == null)
                 {
                     nativeLoudness = new AndroidJavaObject("android.media.audiofx.LoudnessEnhancer", currentMusicID);
                     Debug.Log($"Created native LoudnessEnhancer for session {currentMusicID}");
                 }
 
-                // 3. Enable/Disable effects
-                nativeEq.Call<int>("setEnabled", eqEnabled);
-                nativeLoudness.Call<int>("setEnabled", eqEnabled);
+                // 2. Only toggle state if changed (major cause of pops)
+                if (eqEnabled != lastAppliedEnabledState || forced)
+                {
+                    nativeEq.Call<int>("setEnabled", eqEnabled);
+                    nativeLoudness.Call<int>("setEnabled", eqEnabled);
+                    lastAppliedEnabledState = eqEnabled;
+                }
 
-                // 4. Update Volume (Preamp cut)
-                ApplyFinalVolume();
+                // 3. Update Preamp Cut (Volume scaling)
+                if (eqEnabled && !Mathf.Approximately(lastPreamp, lastAppliedPreamp))
+                {
+                    ApplyFinalVolume();
+                }
 
-                // 5. Update Preamp Boost
+                // 4. Update Preamp Boost (LoudnessEnhancer)
                 if (eqEnabled)
                 {
-                    // LoudnessEnhancer takes gain in mB (millibels, 1/100 of a dB)
                     int boostmB = lastPreamp > 0 ? (int)(lastPreamp * 100) : 0;
                     nativeLoudness.Call("setTargetGain", boostmB);
                 }
 
-                // 6. Update Frequency Bands
+                // 5. Update Frequency Bands
                 if (eqEnabled && lastBands != null)
                 {
-                    short numBands = nativeEq.Call<short>("getNumberOfBands");
-                    short[] range = nativeEq.Call<short[]>("getBandLevelRange");
-                    short minLevel = range[0];
-                    short maxLevel = range[1];
-                    
-                    for (short i = 0; i < numBands; i++)
+                    for (short i = 0; i < cachedNumBands; i++)
                     {
-                        int centerFreqHz = nativeEq.Call<int>("getCenterFreq", i) / 1000;
-                        float interpolatedGain = GetInterpolatedWinampGain(centerFreqHz);
-                        
-                        // Map gain (usually -20..+20) to native range
-                        // Winamp sliders are -20..+20. Hardware range varies (often -1500..1500 mB)
-                        // Most hardware supports +/- 15dB or 12dB.
-                        // We clamp the gain to -20..20 before mapping to native levels.
+                        float interpolatedGain = GetInterpolatedWinampGain(cachedCenterFreqs[i]);
                         float clampedGain = Mathf.Clamp(interpolatedGain, -20f, 20f);
                         
-                        // Mapping: -20 dB -> minLevel, +20 dB -> maxLevel
-                        short level = (short)Mathf.Lerp(minLevel, maxLevel, (clampedGain + 20f) / 40f);
+                        short level = (short)Mathf.Lerp(cachedMinLevel, cachedMaxLevel, (clampedGain + 20f) / 40f);
                         nativeEq.Call("setBandLevel", i, level);
                     }
                 }
+
+                lastAppliedPreamp = lastPreamp;
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Native EQ/Loudness Error: {e.Message}\n{e.StackTrace}");
+                Debug.LogError($"Native EQ/Loudness Error: {e.Message}");
                 ReleaseEffects();
             }
         }
