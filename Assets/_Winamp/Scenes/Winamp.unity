@@ -2929,7 +2929,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.7924528, g: 0.59041685, b: 0.30277678, a: 0.14117648}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0.14117648}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -10375,7 +10375,6 @@ MonoBehaviour:
   scrollSpeed: 0.25
   maxVisibleChars: 30
   scrollerSeparator: '  ***  '
-  defaultText: Winamp 2.91
 --- !u!1001 &1419198496
 PrefabInstance:
   m_ObjectHideFlags: 0

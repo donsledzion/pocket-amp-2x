@@ -100,7 +100,18 @@ namespace SoftAware
                 float vol = (player != null) ? player.CurrentVolume : 1f;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-                if (player != null && player.IsPaused) return; // Freeze
+                if (player != null)
+                {
+                    if (player.IsPaused) return; // Frozen
+                    
+                    if (!player.IsPlaying)
+                    {
+                        // Stopped
+                        ClearTexture();
+                        visualizerTexture.Apply();
+                        return;
+                    }
+                }
 #else
                 if (audioSource == null) return;
                 

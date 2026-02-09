@@ -27,6 +27,7 @@ namespace SoftAware
         private Playlist.SongInfo currentSong => playlist.CurrentSong;
         private bool isPaused = false;
         public bool IsPaused => isPaused;
+        public bool IsPlaying => engine != null && engine.IsPlaying;
 
         // Coroutines for track management
         private Coroutine playCoroutine;
