@@ -440,6 +440,34 @@ namespace SoftAware
         public void OnNativePause() { if (isAppPaused) Pause(); else mainThreadActions.Enqueue(Pause); }
         public void OnNativeNext() { if (isAppPaused) PlayNext(true); else mainThreadActions.Enqueue(() => PlayNext()); }
         public void OnNativePrev() { if (isAppPaused) PlayPrevious(); else mainThreadActions.Enqueue(PlayPrevious); }
+        public void OnNativeSeek(string positionMsStr)
+        {
+            if (long.TryParse(positionMsStr, out long positionMs))
+            {
+                float positionSec = positionMs / 1000f;
+                // Clamp to duration if possible or just pass to engine
+                if (engine.Duration > 0)
+                {
+                    // Calculate normalized position for UI slider if needed, but engine.Seek usually takes normalized 0-1
+                    // Wait, check engine.Seek signature. 
+                    // AndroidPlaybackEngine.Seek takes 0-1 float.
+                    // UnityPlaybackEngine.Seek takes 0-1 float.
+                    
+                    float normalized = Mathf.Clamp01(positionSec / engine.Duration);
+                    
+                    Action seekAction = () => {
+                        engine.Seek(normalized);
+                        // Also update UI slider visually if not already updating
+                        if (panelMain.ProgressSlider != null) panelMain.ProgressSlider.value = normalized;
+                        uiController?.UpdateUI(engine.CurrentTime, engine.Duration, engine.IsPlaying, isPaused);
+                        UpdateNotification(); // Confirm the seek to notification
+                    };
+
+                    if (isAppPaused) seekAction();
+                    else mainThreadActions.Enqueue(seekAction);
+                }
+            }
+        }
 
         private void OnDestroy()
         {

@@ -131,9 +131,21 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
                     UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativePrev", "");
                 }
             }
+            @Override
+            public void onSeekTo(long pos) {
+                Log.d(TAG, "MediaSession: onSeekTo " + pos);
+                if (listener != null) {
+                    // listener.onSeekTo(pos); // Not in interface yet, use UnitySendMessage or add to interface
+                    // prioritizing UnitySendMessage for now as interface change requires bridge update
+                     UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeSeek", String.valueOf(pos));
+                } else {
+                    UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeSeek", String.valueOf(pos));
+                }
+            }
         });
         
-        mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | 
+                             MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mediaSession.setActive(true);
     }
 
@@ -205,7 +217,8 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
         PlaybackState.Builder stateBuilder = new PlaybackState.Builder()
                 .setActions(PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PAUSE | 
                            PlaybackState.ACTION_PLAY_PAUSE |
-                           PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS);
+                           PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS |
+                           PlaybackState.ACTION_SEEK_TO);
         
         long validPosition = position >= 0 ? position : PlaybackState.PLAYBACK_POSITION_UNKNOWN;
         
