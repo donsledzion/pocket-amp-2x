@@ -229,7 +229,12 @@ namespace SoftAware
             playCoroutine = StartCoroutine(PlayProcess());
         }
 
-        private void Resume() { isPaused = false; engine.Resume(); }
+        private void Resume() 
+        { 
+            isPaused = false; 
+            engine.Resume(); 
+            UpdateNotification(); // Request Focus
+        }
 
         private IEnumerator PlayProcess()
         {
@@ -382,6 +387,7 @@ namespace SoftAware
 
             isPaused = true;
             engine.Pause();
+            UpdateNotification(); // Abandon Focus / Update UI
         }
 
         public void StopPlayback() { StopPlaybackInternal(); }
