@@ -38,7 +38,7 @@ namespace SoftAware
             SetPlaying(isTrackPlaying);
             
             // If currently selected, refresh background color
-            if (background != null && background.enabled)
+            if (background && background.enabled)
             {
                 background.color = selectedBgColor;
             }
@@ -127,8 +127,7 @@ namespace SoftAware
                 return;
             }
 
-            // Sprawdzamy, ile miejsca potrzebuje pełny tekst (matematycznie)
-            Vector2 preferredSize = tmp.GetPreferredValues(text);
+            var preferredSize = tmp.GetPreferredValues(text);
 
             if (preferredSize.x <= maxWidth)
             {
@@ -136,22 +135,17 @@ namespace SoftAware
             }
             else
             {
-                string t = text;
-                // Ucinamy znak po znaku, sprawdzając szerokość z wielokropkiem
+                var t = text;
                 while (t.Length > 0)
                 {
                     t = t.Substring(0, t.Length - 1);
-                    string candidate = t + "...";
+                    var candidate = t + "...";
                     
-                    // GetPreferredValues jest błyskawiczne i nie wymaga ForceMeshUpdate
-                    if (tmp.GetPreferredValues(candidate).x <= maxWidth)
-                    {
-                        tmp.text = candidate;
-                        return;
-                    }
+                    if (!(tmp.GetPreferredValues(candidate).x <= maxWidth)) continue;
+                    tmp.text = candidate;
+                    return;
                 }
                 
-                // Jeśli nawet same kropki się nie mieszczą, wyświetl je mimo wszystko
                 tmp.text = "...";
             }
         }
@@ -159,10 +153,10 @@ namespace SoftAware
         public void SetPlaying(bool isPlaying)
         {
             isTrackPlaying = isPlaying;
-            Color c = isPlaying ? playingTextColor : normalTextColor;
-            if (indexText != null) indexText.color = c;
-            if (titleText != null) titleText.color = c;
-            if (durationText != null) durationText.color = c;
+            var c = isPlaying ? playingTextColor : normalTextColor;
+            if (indexText) indexText.color = c;
+            if (titleText) titleText.color = c;
+            if (durationText) durationText.color = c;
         }
 
         public void SetSelected(bool isSelected)
@@ -173,7 +167,7 @@ namespace SoftAware
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            float timeSinceLastClick = Time.time - lastClickTime;
+            var timeSinceLastClick = Time.time - lastClickTime;
             if (timeSinceLastClick < DOUBLE_CLICK_TIME)
             {
                 onDoubleClick?.Invoke(index);

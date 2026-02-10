@@ -24,6 +24,8 @@ namespace SoftAware
 
         public Slider Slider => slider;
 
+        private bool isInteracting;
+
         private void Start()
         {
             if (slider != null)
@@ -31,6 +33,43 @@ namespace SoftAware
                 slider.onValueChanged.AddListener(OnValueChanged);
                 // Initialize visual state
                 OnValueChanged(slider.value);
+
+                // Attach interaction helper
+                var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
+                interaction.OnPointerDownAction += OnPointerDown;
+                interaction.OnPointerUpAction += OnPointerUp;
+            }
+        }
+
+        private void OnPointerDown()
+        {
+            isInteracting = true;
+            UpdateTitleDisplay(slider.value);
+        }
+
+        private void OnPointerUp()
+        {
+            isInteracting = false;
+            
+            // Snap to center logic
+            // Center is 0.5. Dead zone is typically around 48% - 52% (approx +/- 0.02 to 0.04)
+            // Let's use a slightly wider snap on release: +/- 0.05 (45% to 55%)
+            if (slider != null)
+            {
+                float val = slider.value;
+                if (Mathf.Abs(val - 0.5f) < 0.05f)
+                {
+                    slider.value = 0.5f;
+                    // Value change listener will update text if we were still interacting, but we are not.
+                    // However, we might want to briefly show "CENTER" before clearing? 
+                    // Standard behavior is usually just snap and clear.
+                }
+            }
+
+            Main main = FindObjectOfType<Main>();
+            if (main != null && main.SongTitleDisplay != null)
+            {
+                main.SongTitleDisplay.ClearOverrideText();
             }
         }
 
@@ -54,6 +93,55 @@ namespace SoftAware
             if (index >= 0 && index < sprites.Count)
             {
                 targetImage.sprite = sprites[index];
+            }
+
+            if (isInteracting)
+            {
+                UpdateTitleDisplay(value);
+            }
+        }
+
+        private void UpdateTitleDisplay(float value)
+        {
+            Main main = FindObjectOfType<Main>();
+            if (main != null && main.SongTitleDisplay != null)
+            {
+                // Logic:
+                // 0% - 48% (approx < 0.48): LEFT
+                // 48% - 52% (approx > 0.48 && < 0.52): CENTER
+                // 52% - 100% (approx > 0.52): RIGHT
+                
+                // Winamp logic is slightly different:
+                // It shows "BALANCE: CENTER" for a range.
+                // It shows "BALANCE: XX% LEFT" or "RIGHT".
+                
+                string text = "";
+                float dist = value - 0.5f; // -0.5 to 0.5
+
+                // Winamp usually treats center as exactly center internally, but displays it with a buffer.
+                // Let's use a small epsilon for display "center"
+                if (Mathf.Abs(dist) < 0.04f) // +/- 4%
+                {
+                    text = "BALANCE: CENTER";
+                }
+                else if (dist < 0)
+                {
+                    // Left
+                    // Map -0.5...-0.04 to 100%...0%
+                    // actually Winamp displays simplified percentage. 
+                    // If slider is 0 (Left), it is 100% Left.
+                    // If slider is 0.25, it is 50% Left.
+                    float percent = (Mathf.Abs(dist) / 0.5f) * 100f;
+                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% LEFT";
+                }
+                else
+                {
+                    // Right
+                    float percent = (dist / 0.5f) * 100f;
+                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% RIGHT";
+                }
+
+                main.SongTitleDisplay.SetOverrideText(text);
             }
         }
 

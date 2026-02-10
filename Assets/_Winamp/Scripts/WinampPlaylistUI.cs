@@ -19,14 +19,21 @@ namespace SoftAware
         [SerializeField] private Winamp.RemoveContextMenu removeContextMenu;
         [SerializeField] private Winamp.ListOptionsContextMenu listOptionsContextMenu;
 
+        [Header("Window Controls")]
+        [SerializeField] private Button closeButton;
+
         private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
         private bool isUpdatingScroll = false;
 
+        private void Start()
+        {
+            if (closeButton != null) closeButton.onClick.AddListener(CloseWindow);
+        }
+
         public void Initialize()
         {
-            if (playlist == null) playlist = GetComponent<Playlist>();
-            if (playlist == null) playlist = FindObjectOfType<Playlist>();
-            if (audioPlayer == null) audioPlayer = FindObjectOfType<AudioPlayer>();
+            if (playlist == null) playlist = FindAnyObjectByType<Playlist>();
+            if (audioPlayer == null) audioPlayer = FindAnyObjectByType<AudioPlayer>();
 
             if (playlist != null)
             {
@@ -134,37 +141,35 @@ namespace SoftAware
             // Clear existing
             foreach (var item in trackUIItems)
             {
-                if (item != null) Destroy(item.gameObject);
+                if (item) Destroy(item.gameObject);
             }
             trackUIItems.Clear();
 
             // Populate
             var songs = playlist.AllSongs;
-            for (int i = 0; i < songs.Count; i++)
+            for (var i = 0; i < songs.Count; i++)
             {
-                GameObject go = Instantiate(trackPrefab, contentContainer);
-                WinampPlaylistTrack trackUI = go.GetComponent<WinampPlaylistTrack>();
-                if (trackUI != null)
+                var go = Instantiate(trackPrefab, contentContainer);
+                var trackUI = go.GetComponent<WinampPlaylistTrack>();
+                if (!trackUI) continue;
+                if (WinampSkinLoader.Instance)
                 {
-                    if (WinampSkinLoader.Instance != null)
-                    {
-                        trackUI.SetColors(
-                            WinampSkinLoader.Instance.PlaylistNormalColor,
-                            WinampSkinLoader.Instance.PlaylistCurrentColor,
-                            WinampSkinLoader.Instance.PlaylistNormalBGColor,
-                            WinampSkinLoader.Instance.PlaylistSelectedBGColor
-                        );
-                    }
-                    trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
-                    trackUIItems.Add(trackUI);
+                    trackUI.SetColors(
+                        WinampSkinLoader.Instance.PlaylistNormalColor,
+                        WinampSkinLoader.Instance.PlaylistCurrentColor,
+                        WinampSkinLoader.Instance.PlaylistNormalBGColor,
+                        WinampSkinLoader.Instance.PlaylistSelectedBGColor
+                    );
                 }
+                trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
+                trackUIItems.Add(trackUI);
             }
 
             UpdateHighlights();
 
             // Reset scroll on refresh
-            if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
-            if (scrollbar != null) scrollbar.value = 1f;
+            if (scrollRect) scrollRect.verticalNormalizedPosition = 1f;
+            if (scrollbar) scrollbar.value = 1f;
         }
 
         private void HandleTrackClick(int index)
@@ -191,11 +196,11 @@ namespace SoftAware
 
         private void UpdateHighlights()
         {
-            int playingIndex = playlist.CurrentIndex;
+            var playingIndex = playlist.CurrentIndex;
             
-            for (int i = 0; i < trackUIItems.Count; i++)
+            for (var i = 0; i < trackUIItems.Count; i++)
             {
-                if (trackUIItems[i] == null) continue;
+                if (!trackUIItems[i]) continue;
                 trackUIItems[i].SetSelected(playlist.IsSelected(i));
                 trackUIItems[i].SetPlaying(i == playingIndex);
             }
@@ -225,6 +230,14 @@ namespace SoftAware
                     );
                     track.SetPlaying(playlist.CurrentIndex == trackUIItems.IndexOf(track));
                 }
+            }
+        }
+        public void CloseWindow()
+        {
+            Main main = FindObjectOfType<Main>(); // Or utilize a Singleton/Service locator if available, but FindObject is safe here
+            if (main != null)
+            {
+                main.ClosePlaylistWindow();
             }
         }
     }

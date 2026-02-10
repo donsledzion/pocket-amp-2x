@@ -1124,6 +1124,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: EQMAIN_CloseNormal
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 190
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2c77105ca17882479ec3c53b8b6b73f
+      internalID: 695421990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EQMAIN_ClosePressed
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 181
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9afe3603179e07e45a9ae2bda890fcc6
+      internalID: 1053808119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1143,6 +1187,8 @@ TextureImporter:
       EQMAIN_Auto_Disabled_Pressed: -999135415
       EQMAIN_Auto_Enabled_Normal: 1253289910
       EQMAIN_Auto_Enabled_Pressed: 459801500
+      EQMAIN_CloseNormal: 695421990
+      EQMAIN_ClosePressed: 1053808119
       EQMAIN_GraphBG: 696333408
       EQMAIN_GraphColors: -1784284843
       EQMAIN_Knob_normal: 1364743285

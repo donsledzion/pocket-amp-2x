@@ -53,6 +53,10 @@ namespace SoftAware
         internal GameObject EqWindow => eqWindow;
         internal GameObject PlaylistWindow => playlistWindow;
 
+        [Header("Window App Controls")]
+        [SerializeField] private Button closeButton;
+        [SerializeField] private Button minimizeButton;
+
         private void Start()
         {
             // Load and Apply Settings
@@ -135,6 +139,9 @@ namespace SoftAware
                     if (SettingsManager.Instance != null) SettingsManager.Instance.IsRemainingMode = remaining;
                 };
             }
+
+            if (closeButton != null) closeButton.onClick.AddListener(CloseApplication);
+            if (minimizeButton != null) minimizeButton.onClick.AddListener(MinimizeApplication);
         }
 
         private void SetWindowVisibility(GameObject window, bool visible)
@@ -173,6 +180,64 @@ namespace SoftAware
 
         [SerializeField] private WinampPlaylistUI playlistUI;
         internal WinampPlaylistUI PlaylistUI => playlistUI;
+
+        // Windows Minimize Support
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool ShowWindow(System.IntPtr hwnd, int nCmdShow);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern System.IntPtr GetActiveWindow();
+        const int SW_MINIMIZE = 6;
+#endif
+
+        public void CloseApplication()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        public void MinimizeApplication()
+        {
+#if UNITY_EDITOR
+            Debug.Log("[Main] Minimize requested (Editor)");
+#elif UNITY_ANDROID
+            try
+            {
+                using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                {
+                    using (AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                    {
+                        activity.Call<bool>("moveTaskToBack", true);
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[Main] Failed to minimize on Android: {e.Message}");
+            }
+#elif UNITY_STANDALONE_WIN
+            ShowWindow(GetActiveWindow(), SW_MINIMIZE);
+#endif
+        }
+
+        public void CloseEqualizerWindow()
+        {
+            if (eqButton != null && eqButton.IsOn)
+            {
+                eqButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
+            }
+        }
+
+        public void ClosePlaylistWindow()
+        {
+            if (playlistButton != null && playlistButton.IsOn)
+            {
+                playlistButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
+            }
+        }
 
         private void OnDestroy()
         {

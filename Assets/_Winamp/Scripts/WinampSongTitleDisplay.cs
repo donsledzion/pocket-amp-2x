@@ -24,6 +24,8 @@ namespace SoftAware
         private float scrollTimer;
         private bool isScrolling;
 
+        private string overrideText;
+
         private void Start()
         {
             if (textDisplay != null)
@@ -58,14 +60,40 @@ namespace SoftAware
             else
             {
                 isScrolling = false;
-                textDisplay.SetText(fullText);
+                // Only update text immediately if not overridden
+                if (string.IsNullOrEmpty(overrideText))
+                {
+                    textDisplay.SetText(fullText);
+                }
             }
+        }
+
+        public void SetOverrideText(string text)
+        {
+            overrideText = text;
+            if (textDisplay != null)
+            {
+                textDisplay.SetText(overrideText);
+            }
+        }
+
+        public void ClearOverrideText()
+        {
+            overrideText = null;
+            // Restore current state
+            if (!isScrolling)
+            {
+                if (textDisplay != null)
+                    textDisplay.SetText(string.IsNullOrEmpty(fullText) ? defaultText : fullText);
+            }
+            // If scrolling, the Update loop will pick it up immediately
         }
 
         public void Clear()
         {
             ResetScroll();
             isScrolling = false;
+            fullText = null; // Clear implementation detail
             if (textDisplay != null)
                 textDisplay.SetText(defaultText);
         }
@@ -78,7 +106,17 @@ namespace SoftAware
 
         private void Update()
         {
-            if (!isScrolling || textDisplay == null) return;
+            if (textDisplay == null) return;
+
+            // If overridden, just show that static text and do NOT scroll
+            if (!string.IsNullOrEmpty(overrideText))
+            {
+                // Ensure text is set (redundant but safe)
+                // textDisplay.SetText(overrideText); 
+                return;
+            }
+
+            if (!isScrolling) return;
 
             scrollTimer += Time.deltaTime;
             if (scrollTimer >= scrollSpeed)

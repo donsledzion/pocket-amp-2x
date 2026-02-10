@@ -24,6 +24,8 @@ namespace SoftAware
 
         public Slider Slider => slider;
 
+        private bool isInteracting;
+
         private void Start()
         {
             if (slider != null)
@@ -31,6 +33,27 @@ namespace SoftAware
                 slider.onValueChanged.AddListener(OnVolumeChanged);
                 // Initialize visual state
                 OnVolumeChanged(slider.value);
+
+                // Attach interaction helper
+                var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
+                interaction.OnPointerDownAction += OnPointerDown;
+                interaction.OnPointerUpAction += OnPointerUp;
+            }
+        }
+
+        private void OnPointerDown()
+        {
+            isInteracting = true;
+            UpdateTitleDisplay(slider.value);
+        }
+
+        private void OnPointerUp()
+        {
+            isInteracting = false;
+            Main main = FindObjectOfType<Main>();
+            if (main != null && main.SongTitleDisplay != null)
+            {
+                main.SongTitleDisplay.ClearOverrideText();
             }
         }
 
@@ -46,6 +69,21 @@ namespace SoftAware
             if (index >= 0 && index < sprites.Count)
             {
                 targetImage.sprite = sprites[index];
+            }
+
+            if (isInteracting)
+            {
+                UpdateTitleDisplay(value);
+            }
+        }
+
+        private void UpdateTitleDisplay(float value)
+        {
+            Main main = FindObjectOfType<Main>();
+            if (main != null && main.SongTitleDisplay != null)
+            {
+                int percent = Mathf.RoundToInt(value * 100f);
+                main.SongTitleDisplay.SetOverrideText($"VOLUME: {percent}%");
             }
         }
 

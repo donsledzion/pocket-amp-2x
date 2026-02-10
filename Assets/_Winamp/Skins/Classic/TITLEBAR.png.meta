@@ -156,6 +156,94 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: TITLEBAR_MinimizeNormal
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 78
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 241cf4c54e51d6e46a090620212d5ca7
+      internalID: 557770258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TITLEBAR_MinimizePressed
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 69
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e210c8a08830e745ac0457f6a80a8d9
+      internalID: -816110837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TITLEBAR_CloseNormal
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 78
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca3bff25211b11f4fb72826f85673901
+      internalID: 557458061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TITLEBAR_ClosePressed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 69
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af0acf5a16c0b5244b20d5819a9ce6ef
+      internalID: -1959093618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -170,7 +258,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      TITLEBAR_CloseNormal: 557458061
+      TITLEBAR_ClosePressed: -1959093618
       TITLEBAR_Focused: 8603628322372704227
+      TITLEBAR_MinimizeNormal: 557770258
+      TITLEBAR_MinimizePressed: -816110837
       TITLEBAR_Unfocused: -840280226
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

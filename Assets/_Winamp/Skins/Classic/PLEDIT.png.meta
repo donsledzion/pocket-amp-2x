@@ -1190,6 +1190,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: PLEDIT_ClosePressed
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 135
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9a3cf09f8b05d44b9f4ac268d65e91c
+      internalID: -2098996743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PLEDIT_CloseNormal
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 175
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42e611bd3d45a8747985de6c4992f913
+      internalID: 964430152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1216,6 +1260,8 @@ TextureImporter:
       PLEDIT_AddUrl_Normal: -975723132
       PLEDIT_Add_Clipper: -1453348707
       PLEDIT_BackgroundBlack: 870045614
+      PLEDIT_CloseNormal: 964430152
+      PLEDIT_ClosePressed: -2098996743
       PLEDIT_Crop_Hovered: -1614733684
       PLEDIT_Crop_Normal: 1331232255
       PLEDIT_FileInf_Hovered: 2119473595
