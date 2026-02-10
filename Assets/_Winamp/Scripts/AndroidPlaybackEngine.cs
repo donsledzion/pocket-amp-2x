@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public class AndroidPlaybackEngine : IPlaybackEngine
     {

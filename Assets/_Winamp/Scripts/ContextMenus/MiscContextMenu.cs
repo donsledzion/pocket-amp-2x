@@ -7,6 +7,11 @@ namespace SoftAware.Winamp
         internal Button SortListButton => MenuButtons[0];
         internal Button FileInfoButton => MenuButtons[1];
         internal Button MiscOptionsButton => MenuButtons[2];
+        
+        public System.Action OnSortListButtonClicked;
+        public System.Action OnFileInfoButtonClicked;
+        public System.Action OnMiscOptionsButtonClicked;
+        
         internal override void SetupBindings()
         {
             SortListButton.onClick.AddListener(SortList);   
@@ -21,10 +26,10 @@ namespace SoftAware.Winamp
             MiscOptionsButton.onClick.RemoveListener(MiscOptions);
         }
 
-        private void SortList() => throw new System.NotImplementedException();
+        private void SortList() => OnSortListButtonClicked?.Invoke();
 
-        private void FileInfo() => throw new System.NotImplementedException();
+        private void FileInfo() => OnFileInfoButtonClicked?.Invoke();
 
-        private void MiscOptions() => throw new System.NotImplementedException();
+        private void MiscOptions() => OnMiscOptionsButtonClicked.Invoke();
     }
 }

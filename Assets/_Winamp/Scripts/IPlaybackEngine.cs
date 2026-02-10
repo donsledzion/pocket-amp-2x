@@ -1,6 +1,4 @@
-using UnityEngine;
-
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public enum PlaybackState
     {

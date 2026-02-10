@@ -1,15 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public class EqualizerController : MonoBehaviour
     {
+        [SerializeField] private Main main;
         [Header("Toggles")]
         [SerializeField] private ToggleButton onButton;
         [SerializeField] private ToggleButton autoButton;
+        [SerializeField] private Button presetsButton;
 
         [Header("Sliders")]
         [SerializeField] private Slider preampSlider;
@@ -45,6 +46,7 @@ namespace SoftAware
             if (allMaxButton != null) allMaxButton.onClick.AddListener(() => SetAllBands(20f));
             if (allMinButton != null) allMinButton.onClick.AddListener(() => SetAllBands(-20f));
             if (allFlatButton != null) allFlatButton.onClick.AddListener(() => SetAllBands(0f));
+            if(presetsButton != null) presetsButton.onClick.AddListener(main.SongTitleDisplay.ShowNotReadyYetMessage);
 
             InitializeSliders();
             LoadSettings();
@@ -136,8 +138,7 @@ namespace SoftAware
         private void OnSliderPointerUp()
         {
             interactingSlider = null;
-            Main main = FindObjectOfType<Main>();
-            if (main != null && main.SongTitleDisplay != null)
+            if (main.SongTitleDisplay != null)
             {
                 main.SongTitleDisplay.ClearOverrideText();
             }

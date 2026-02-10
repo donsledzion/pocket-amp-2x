@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.UI;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public class WinampPlaylistUI : MonoBehaviour
     {
         [Header("References")]
+        [SerializeField] private Main main;
         [SerializeField] private Playlist playlist;
         [SerializeField] private AudioPlayer audioPlayer;
         [SerializeField] private GameObject trackPrefab;
@@ -15,9 +15,10 @@ namespace SoftAware
 
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private Scrollbar scrollbar;
-        [SerializeField] private Winamp.SelectContextMenu selectContextMenu;
-        [SerializeField] private Winamp.RemoveContextMenu removeContextMenu;
-        [SerializeField] private Winamp.ListOptionsContextMenu listOptionsContextMenu;
+        [SerializeField] private SelectContextMenu selectContextMenu;
+        [SerializeField] private RemoveContextMenu removeContextMenu;
+        [SerializeField] private MiscContextMenu miscContextMenu;
+        [SerializeField] private ListOptionsContextMenu listOptionsContextMenu;
 
         [Header("Window Controls")]
         [SerializeField] private Button closeButton;
@@ -66,6 +67,7 @@ namespace SoftAware
                 removeContextMenu.OnRemoveAllRequested += playlist.RemoveAll;
                 removeContextMenu.OnRemoveSelectedRequested += playlist.RemoveSelected;
                 removeContextMenu.OnCropRequested += playlist.Crop;
+                removeContextMenu.OnMiscRequested += main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
 
             if (listOptionsContextMenu != null)
@@ -73,6 +75,13 @@ namespace SoftAware
                 listOptionsContextMenu.OnNewListRequested += playlist.NewList;
                 listOptionsContextMenu.OnSaveListRequested += playlist.PickSaveList;
                 listOptionsContextMenu.OnLoadListRequested += playlist.PickLoadList;
+            }
+
+            if (miscContextMenu != null)
+            {
+                miscContextMenu.OnSortListButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
+                miscContextMenu.OnFileInfoButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
+                miscContextMenu.OnMiscOptionsButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
             
             RefreshList();
@@ -100,6 +109,14 @@ namespace SoftAware
                 removeContextMenu.OnRemoveAllRequested -= playlist.RemoveAll;
                 removeContextMenu.OnRemoveSelectedRequested -= playlist.RemoveSelected;
                 removeContextMenu.OnCropRequested -= playlist.Crop;
+                removeContextMenu.OnMiscRequested -= main.SongTitleDisplay.ShowNotReadyYetMessage;
+            }
+
+            if (miscContextMenu != null)
+            {
+                miscContextMenu.OnSortListButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
+                miscContextMenu.OnFileInfoButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
+                miscContextMenu.OnMiscOptionsButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
 
             if (listOptionsContextMenu != null)
@@ -131,8 +148,8 @@ namespace SoftAware
 
         public void RefreshList()
         {
-            if (playlist == null) return;
-            if (trackPrefab == null)
+            if (!playlist) return;
+            if (!trackPrefab)
             {
                 Debug.LogError("[WinampPlaylistUI] Track Prefab is not assigned!", this);
                 return;
@@ -220,25 +237,17 @@ namespace SoftAware
 
             foreach (var track in trackUIItems)
             {
-                if (track != null)
-                {
-                    track.SetColors(
-                        WinampSkinLoader.Instance.PlaylistNormalColor,
-                        WinampSkinLoader.Instance.PlaylistCurrentColor,
-                        WinampSkinLoader.Instance.PlaylistNormalBGColor,
-                        WinampSkinLoader.Instance.PlaylistSelectedBGColor
-                    );
-                    track.SetPlaying(playlist.CurrentIndex == trackUIItems.IndexOf(track));
-                }
+                if (track == null) continue;
+                track.SetColors(
+                    WinampSkinLoader.Instance.PlaylistNormalColor,
+                    WinampSkinLoader.Instance.PlaylistCurrentColor,
+                    WinampSkinLoader.Instance.PlaylistNormalBGColor,
+                    WinampSkinLoader.Instance.PlaylistSelectedBGColor
+                );
+                track.SetPlaying(playlist.CurrentIndex == trackUIItems.IndexOf(track));
             }
         }
-        public void CloseWindow()
-        {
-            Main main = FindObjectOfType<Main>(); // Or utilize a Singleton/Service locator if available, but FindObject is safe here
-            if (main != null)
-            {
-                main.ClosePlaylistWindow();
-            }
-        }
+
+        private void CloseWindow() => main.ClosePlaylistWindow();
     }
 }

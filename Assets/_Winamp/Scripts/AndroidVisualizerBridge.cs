@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public class AndroidVisualizerBridge : MonoBehaviour
     {

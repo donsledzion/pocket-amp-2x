@@ -11,7 +11,7 @@ using TMPro;
 using UnityEngine.Android;
 #endif
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     [DisallowMultipleComponent]
     public class Playlist : MonoBehaviour

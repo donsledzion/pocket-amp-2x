@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     public class Main : MonoBehaviour
     {

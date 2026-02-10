@@ -81,12 +81,30 @@ namespace SoftAware
         {
             overrideText = null;
             // Restore current state
-            if (!isScrolling)
-            {
-                if (textDisplay != null)
-                    textDisplay.SetText(string.IsNullOrEmpty(fullText) ? defaultText : fullText);
-            }
+            if (isScrolling) return;
+            if (textDisplay)
+                textDisplay.SetText(string.IsNullOrEmpty(fullText) ? defaultText : fullText);
             // If scrolling, the Update loop will pick it up immediately
+        }
+
+        /// <summary>
+        /// Shows a temporary message for a specified duration, then reverts to normal display.
+        /// </summary>
+        /// <param name="message">The message to display (e.g., "Not Implemented Yet", "Coming Soon")</param>
+        /// <param name="duration">Duration in seconds to show the message (default: 2 seconds)</param>
+        public void ShowTemporaryMessage(string message, float duration = 2f)
+        {
+            StopAllCoroutines(); // Stop any existing temporary message
+            StartCoroutine(TemporaryMessageCoroutine(message, duration));
+        }
+
+        public void ShowNotReadyYetMessage() => ShowTemporaryMessage("Not ready yet! :(");
+
+        private IEnumerator TemporaryMessageCoroutine(string message, float duration)
+        {
+            SetOverrideText(message);
+            yield return new WaitForSeconds(duration);
+            ClearOverrideText();
         }
 
         public void Clear()

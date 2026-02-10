@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Concurrent;
 
-namespace SoftAware
+namespace SoftAware.Winamp
 {
     /// <summary>
     /// The main playback manager. Handles playlist logic, high-level states,

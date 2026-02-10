@@ -1351,6 +1351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51dc9b23314960a4aae3a39f00c1ba93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampPlaylistUI
+  main: {fileID: 996247208}
   playlist: {fileID: 204421520}
   audioPlayer: {fileID: 1138104797}
   trackPrefab: {fileID: 4760062922114016676, guid: b92ce15815ec4bf46b7e8b99a42bb9ac, type: 3}
@@ -1359,6 +1360,7 @@ MonoBehaviour:
   scrollbar: {fileID: 1754141645}
   selectContextMenu: {fileID: 820814888}
   removeContextMenu: {fileID: 1779691830}
+  miscContextMenu: {fileID: 5062310}
   listOptionsContextMenu: {fileID: 1533829911}
   closeButton: {fileID: 1415876162}
 --- !u!1 &208121405
@@ -3745,8 +3747,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13103e7e20ba1a9408c65103f57b5b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.EqualizerController
+  main: {fileID: 996247208}
   onButton: {fileID: 801895162}
   autoButton: {fileID: 866168021}
+  presetsButton: {fileID: 1505739995}
   preampSlider: {fileID: 796417078}
   frequencyBands:
   - {fileID: 1363914081}
