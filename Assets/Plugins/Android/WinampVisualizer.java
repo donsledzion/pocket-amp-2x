@@ -13,6 +13,7 @@ public class WinampVisualizer {
 
     private int logCounter = 0;
     private int sessionID = -1;
+    private boolean configLogged = false;
 
     public boolean initialize(int sessionId) {
         this.sessionID = sessionId;
@@ -26,10 +27,10 @@ public class WinampVisualizer {
             visualizer = new Visualizer(targetSession);
             visualizer.setEnabled(false); // Must be disabled to change settings
 
-            // maximize capture size
+            // maximize capture size - boost to 2048 for better bass resolution (21Hz/bin)
             int[] range = Visualizer.getCaptureSizeRange();
-            int max = (range != null && range.length > 1) ? range[1] : 1024;
-            captureSize = Math.min(max, 1024);
+            int max = (range != null && range.length > 1) ? range[1] : 2048;
+            captureSize = Math.min(max, 2048);
             
             visualizer.setCaptureSize(captureSize);
             
@@ -200,7 +201,19 @@ public class WinampVisualizer {
             float[] magnitudes = calculateMagnitudes(rawBuffer);
 
             // Step 2: Downsample to 19 bars (Winamp style)
-            return downsampleTo19Bars(magnitudes);
+            result = downsampleTo19Bars(magnitudes);
+
+            // Debug Dump (every ~2 seconds at 60fps)
+            if (logCounter % 120 == 0) {
+                 StringBuilder sb = new StringBuilder();
+                 sb.append("WinampVis Dump [").append(captureSize).append(" @ ").append(visualizer.getSamplingRate() / 1000).append("kHz]: ");
+                 for (int i=0; i<Math.min(5, result.length); i++) sb.append(String.format("%.2f ", result[i]));
+                 sb.append("... ");
+                 for (int i=Math.max(0, result.length-5); i<result.length; i++) sb.append(String.format("%.2f ", result[i]));
+                 Log.d(TAG, sb.toString());
+            }
+
+            return result;
 
         } catch (Exception e) {
             if (logCounter % 100 == 0) Log.e(TAG, "getWinampFft failed: " + e.getMessage());
@@ -209,90 +222,72 @@ public class WinampVisualizer {
     }
 
     private float[] calculateMagnitudes(byte[] fft) {
-        // FFT data format from Android Visualizer:
-        // [DC, real1, imag1, real2, imag2, ..., nyquist]
-        // We get captureSize/2 frequency bands
-        
         int numBands = fft.length / 2;
         float[] magnitudes = new float[numBands];
         
-        // Skip DC component (index 0) to avoid huge spike
-        magnitudes[0] = 0; 
+        magnitudes[0] = 0; // Skip DC
         
-        // Calculate magnitude for each frequency band
         for (int i = 2; i < fft.length; i += 2) {
             int bandIndex = i / 2;
-            
             float real = (float) fft[i];
             float imag = (float) fft[i + 1];
-            
-            // Calculate magnitude
             float magnitude = (float) Math.sqrt(real * real + imag * imag);
             
-            // Normalize to 0-1 range (approximate) using sqrt for better dynamics (like VU meter)
-            // 8-bit samples, max magnitude is approx 180.
-            // Sqrt(180) ~= 13.4. We divide by 16.0f to be safe.
-            // This acts as a compressor/limiter lifting quiet sounds.
-            magnitudes[bandIndex] = (float)Math.sqrt(magnitude) / 14.0f;
+            // Back to punchy linear scaling - log10 was too sensitive for high bins.
+            // Using 120 as a divisor to prevent constant clipping.
+            magnitudes[bandIndex] = magnitude / 120.0f;
         }
         
         return magnitudes;
     }
     
+    // Calibrated Winamp frequency ranges for 19 bars
+    // Shifted higher thresholds to ensure "Kick" hits early bars (0-2)
+    private static final int[] WINAMP_RANGES_HZ = {
+        100, 200, 300, 450, 600,    // 0-4
+        900, 1300, 1800, 2500, 3300, // 5-9
+        4500, 6000, 8000, 10000, 12000, // 10-14
+        14000, 16000, 18000, 21000 // 15-18
+    };
+
     private float[] downsampleTo19Bars(float[] magnitudes) {
         float[] bars = new float[19];
         int numBands = magnitudes.length;
         
-        // Winamp-style logarithmic grouping
-        // We want more resolution in lower frequencies.
-        // Formula: index = start_index * powertrain ^ bar_index
-        
-        // We skip band 0 (DC). Start from band 1.
-        // Effective range: 1 to numBands.
-        
-        // Logarithmic interpolation indices for 512 bands (Capture size 1024)
-        // These are manually tuned to resemble Winamp's distribution
-        int[] limits = new int[20];
-        limits[0] = 1; // Start at 1 to skip DC
-        
-        // Generate logarithmic stops
-        // We want the last band to end around numBands * 0.75 (cut off extreme highs > 16kHz)
-        // If numBands = 512 (22kHz), we want to end around 370 (~16kHz).
-        float maxBand = numBands * 0.75f; 
-        if (maxBand < 20) maxBand = numBands; // Fallback for very low capture size
+        int samplingRate = (visualizer != null) ? visualizer.getSamplingRate() : 44100000;
+        samplingRate /= 1000;
+        float nyquist = samplingRate / 2.0f;
+        float bandwidthPerBin = nyquist / numBands;
 
-        for (int i = 1; i <= 19; i++) {
-             // Logarithmic scale: 1 ... maxBand
-             // val = 1 * (maxBand)^(i/19)
-             double val = Math.pow(maxBand, (double)i / 19.0);
-             limits[i] = (int)val;
-             // Ensure monotonic growth
-             if (limits[i] <= limits[i-1]) limits[i] = limits[i-1] + 1;
-        }
+        int startBin = 1;
 
         for (int bar = 0; bar < 19; bar++) {
-            int startBand = limits[bar];
-            int endBand = limits[bar+1];
+            float cutoffHz = WINAMP_RANGES_HZ[bar];
+            int endBin = (int)(cutoffHz / bandwidthPerBin);
             
-            // Safety clamp
-            if (startBand >= numBands) startBand = numBands - 1;
-            if (endBand > numBands) endBand = numBands;
-            
-            float sum = 0;
-            int count = 0;
-            
-            for (int band = startBand; band < endBand; band++) {
-                sum += magnitudes[band];
-                count++;
+            if (endBin >= numBands) endBin = numBands;
+            if (endBin <= startBin) endBin = startBin + 1;
+            if (endBin > numBands) endBin = numBands;
+
+            float maxVal = 0;
+            for (int band = startBin; band < endBin; band++) {
+                if (magnitudes[band] > maxVal) maxVal = magnitudes[band];
             }
             
-            float avg = (count > 0) ? sum / count : 0;
+            // Raw peak value per bar
+            float targetVal = maxVal;
             
-            // Additional Linear Boost for High Frequencies (Pre-emphasis)
-            // Highs are naturally weaker in music
-            float boost = 1.0f + (bar * 0.05f); // 0% boost at bass, almost 100% boost at treble
+            // Milder Treble Boost to balance visual energy (max ~3.8x)
+            float trebleBoost = 1.0f + (bar * 0.15f); 
+            targetVal *= trebleBoost;
             
-            bars[bar] = avg * boost;
+            bars[bar] = targetVal;
+            
+            // Clamp
+            if (bars[bar] > 1.0f) bars[bar] = 1.0f;
+            if (bars[bar] < 0.0f) bars[bar] = 0.0f;
+            
+            startBin = endBin;
         }
         
         return bars;

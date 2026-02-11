@@ -151,40 +151,57 @@ namespace SoftAware.Winamp
             }
         }
 
+        // Calibrated Winamp frequency ranges for 19 bars
+        // Shifted higher thresholds to ensure "Kick" hits early bars (0-2)
+        private static readonly int[] WINAMP_RANGES_HZ = {
+            100, 200, 300, 450, 600, 900, 1300, 1800, 2500, 3300, 4500, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 21000
+        };
+
         private void DrawSpectrum(float volume)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // Android: Get pre-processed 19 bars directly from native code
-            float[] androidBars = AndroidVisualizerBridge.GetWinampFFT();
-#else
-            // Desktop: Get raw FFT and process
-            audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
-            float baseMult = 40.0f;
-            float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
-            float multiplier = baseMult * sensitivity;
-#endif
+            float[] bars = new float[spectrumBars];
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // Update peaks first (Android data is already normalized 0-1 approx)
-             UpdatePeaks(androidBars, 1.0f);
+            // Android: Get pre-processed (now with high treble boost) 19 bars
+            bars = AndroidVisualizerBridge.GetWinampFFT();
 #else
-            UpdatePeaks(spectrumData, multiplier);
+            // Desktop: Get raw FFT and group into 19 log bars
+            audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+            
+            float nyquist = AudioSettings.outputSampleRate / 2.0f;
+            float binWidth = nyquist / spectrumData.Length;
+            int startBin = 1;
+
+            for (int i = 0; i < spectrumBars; i++)
+            {
+                int endBin = Mathf.FloorToInt(WINAMP_RANGES_HZ[i] / binWidth);
+                if (endBin <= startBin) endBin = startBin + 1;
+                if (endBin > spectrumData.Length) endBin = spectrumData.Length;
+
+                float maxVal = 0;
+                for (int b = startBin; b < endBin; b++)
+                {
+                    if (spectrumData[b] > maxVal) maxVal = spectrumData[b];
+                }
+
+                // Desktop normalization: 
+                // Unity FFT results are linear power. We use sqrt to get amplitude, 
+                // then apply a calibrated multiplier and a milder Treble Boost.
+                float amplitude = Mathf.Sqrt(maxVal); 
+                float trebleBoost = 1.0f + (i * 0.15f); // 1x to ~3.8x boost
+                bars[i] = amplitude * 3.5f * trebleBoost;
+                
+                startBin = endBin;
+            }
 #endif
+
+            // Update peaks
+            UpdatePeaks(bars, 1.0f);
 
             int barWidth = Width / spectrumBars;
             for (int i = 0; i < spectrumBars; i++)
             {
-#if UNITY_ANDROID && !UNITY_EDITOR
-                // Android: data provided is already 19 bars.
-                float val = androidBars[i]; 
-                // Apply a bit of boost if needed, but Java side does 0-1
-                val *= 1.5f; 
-#else
-                // Desktop: 512 samples. We only show a subset or need to group them properly.
-                // The original code was: spectrumData[i + 1] which is linear and likely wrong for high bands,
-                // but we keep it for now to avoid breaking desktop if user didn't ask for desktop fix.
-                float val = spectrumData[i + 1] * multiplier;
-#endif
+                float val = bars[i];
                 int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
                 for (int y = 0; y < barHeight; y++)
