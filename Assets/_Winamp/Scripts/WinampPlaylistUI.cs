@@ -23,7 +23,7 @@ namespace SoftAware.Winamp
         [Header("Window Controls")]
         [SerializeField] private Button closeButton;
 
-        private List<WinampPlaylistTrack> trackUIItems = new List<WinampPlaylistTrack>();
+        private readonly List<WinampPlaylistTrack> trackUIItems = new ();
         private bool isUpdatingScroll = false;
 
         private void Start()

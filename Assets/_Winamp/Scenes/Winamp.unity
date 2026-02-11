@@ -831,7 +831,7 @@ MonoBehaviour:
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 1
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -1045,7 +1045,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 0}
+  m_SizeDelta: {x: 275, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132724956
 MonoBehaviour:
@@ -1321,6 +1321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202dc5b2c6cf35c4abb209b2cba8dcc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Playlist
+  main: {fileID: 996247208}
   songs: []
   debugText: {fileID: 740344165}
   addContextMenu: {fileID: 1483184873}
@@ -3675,7 +3676,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 0}
+  m_SizeDelta: {x: 275, y: 116}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &693281832
 MonoBehaviour:

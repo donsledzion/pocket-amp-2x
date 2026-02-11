@@ -25,6 +25,9 @@ public class FitToWidth : MonoBehaviour
 
     private IEnumerator ApplyCoroutine()
     {
+        // 1. Wymuszenie poprawnych ustawień layoutu przed obliczeniami
+        EnforceCorrectLayout();
+
         yield return null; // ← KLUCZOWE
 
         // skala
@@ -49,5 +52,50 @@ public class FitToWidth : MonoBehaviour
             Mathf.Max(0f, unscaledHeight - mainHeight);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(panelContainer);
+    }
+
+    /// <summary>
+    /// Naprawia konflikt layoutu: wymusza, aby Equalizer miał stałą wysokość, 
+    /// a Playlist wypełniał resztę - przy włączonym ControlChildSize.
+    /// </summary>
+    [ContextMenu("Enforce Layout Settings")]
+    private void EnforceCorrectLayout()
+    {
+        // 1. Napraw ustawienia kontenera (BottomContainer)
+        if (bottomLayout != null)
+        {
+            var vlg = bottomLayout.GetComponent<VerticalLayoutGroup>();
+            if (vlg != null)
+            {
+                // To musi być włączone, żeby Playlist nie uciekał
+                vlg.childControlHeight = true; 
+                // To musi być wyłączone, żeby nie rozciągać Equalizera na siłę
+                vlg.childForceExpandHeight = false; 
+            }
+
+            // 2. Napraw Equalizer (stała wysokość)
+            Transform bottomTr = bottomLayout.transform;
+            Transform eqTr = bottomTr.Find("Equalizer");
+            if (eqTr != null)
+            {
+                var le = eqTr.GetComponent<LayoutElement>();
+                if (le == null) le = eqTr.gameObject.AddComponent<LayoutElement>();
+
+                le.flexibleHeight = 0;      // Nie rozciągaj się
+                le.preferredHeight = 116f;  // Oryginalna wysokość Winampa
+                le.minHeight = 116f;        // Wymuś minimalną
+            }
+
+            // 3. Napraw Playlist (wypełnij resztę)
+            Transform plTr = bottomTr.Find("Playlist");
+            if (plTr != null)
+            {
+                var le = plTr.GetComponent<LayoutElement>();
+                if (le == null) le = plTr.gameObject.AddComponent<LayoutElement>();
+
+                le.flexibleHeight = 1;      // Rozciągnij się na resztę miejsca
+                le.preferredHeight = 0;     // Nie narzucaj preferowanej
+            }
+        }
     }
 }

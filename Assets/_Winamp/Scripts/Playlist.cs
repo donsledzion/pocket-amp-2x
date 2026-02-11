@@ -41,13 +41,14 @@ namespace SoftAware.Winamp
         public event Action OnPlaylistReady;
         public event Action OnSelectionChanged;
 
-        [SerializeField] private List<SongInfo> songs = new List<SongInfo>();
+        [SerializeField] private Main main;
+        [SerializeField] private List<SongInfo> songs = new ();
         [SerializeField] private TextMeshProUGUI debugText;
-        [SerializeField] private Winamp.AddContextMenu addContextMenu;
+        [SerializeField] private AddContextMenu addContextMenu;
         private static Playlist instance;
         
         private int currentIndex = -1;
-        private HashSet<int> selectedIndices = new HashSet<int>();
+        private HashSet<int> selectedIndices = new ();
         private bool shuffleEnabled = false;
         private Coroutine metadataScannerCoroutine;
         internal SongInfo CurrentSong => (songs.Count > 0 && currentIndex >= 0) ? songs[currentIndex] : null;
@@ -79,6 +80,7 @@ namespace SoftAware.Winamp
             {
                 addContextMenu.OnAddDirRequested += PickFolder;
                 addContextMenu.OnAddFileRequested += PickFile;
+                addContextMenu.OnAddUrlRequested += main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
 
             StartCoroutine(InitializeDemoTrackCoroutine());
@@ -90,13 +92,14 @@ namespace SoftAware.Winamp
             {
                 addContextMenu.OnAddDirRequested -= PickFolder;
                 addContextMenu.OnAddFileRequested -= PickFile;
+                addContextMenu.OnAddUrlRequested -= main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
         }
 
         private IEnumerator InitializeDemoTrackCoroutine()
         {
-            string demoFileName = "demo.mp3";
-            string targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
+            var demoFileName = "demo.mp3";
+            var targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
 
             // Copy from StreamingAssets if it doesn't exist in persistentDataPath
             if (!File.Exists(targetPath))
