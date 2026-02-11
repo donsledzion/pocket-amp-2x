@@ -154,25 +154,37 @@ namespace SoftAware.Winamp
         private void DrawSpectrum(float volume)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            spectrumData = AndroidVisualizerBridge.GetFFTData(512);
-            float baseMult = 1.0f; 
+            // Android: Get pre-processed 19 bars directly from native code
+            float[] androidBars = AndroidVisualizerBridge.GetWinampFFT();
 #else
+            // Desktop: Get raw FFT and process
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
             float baseMult = 40.0f;
-#endif
-#if UNITY_ANDROID && !UNITY_EDITOR
-            float multiplier = baseMult; 
-#else
             float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
             float multiplier = baseMult * sensitivity;
 #endif
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Update peaks first (Android data is already normalized 0-1 approx)
+             UpdatePeaks(androidBars, 1.0f);
+#else
             UpdatePeaks(spectrumData, multiplier);
+#endif
 
             int barWidth = Width / spectrumBars;
             for (int i = 0; i < spectrumBars; i++)
             {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                // Android: data provided is already 19 bars.
+                float val = androidBars[i]; 
+                // Apply a bit of boost if needed, but Java side does 0-1
+                val *= 1.5f; 
+#else
+                // Desktop: 512 samples. We only show a subset or need to group them properly.
+                // The original code was: spectrumData[i + 1] which is linear and likely wrong for high bands,
+                // but we keep it for now to avoid breaking desktop if user didn't ask for desktop fix.
                 float val = spectrumData[i + 1] * multiplier;
+#endif
                 int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
                 for (int y = 0; y < barHeight; y++)
@@ -204,7 +216,11 @@ namespace SoftAware.Winamp
         {
             for (int i = 0; i < spectrumBars; i++)
             {
-                float val = (data != null && i + 1 < data.Length) ? data[i + 1] * multiplier : 0;
+                float val;
+                if (data == null) val = 0;
+                else if (data.Length == spectrumBars) val = data[i] * multiplier; // Exact match (Android)
+                else if (i + 1 < data.Length) val = data[i + 1] * multiplier; // Raw FFT (skip DC)
+                else val = 0;
                 
                 if (val >= peakHeights[i])
                 {

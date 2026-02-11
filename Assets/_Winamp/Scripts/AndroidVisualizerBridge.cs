@@ -78,6 +78,30 @@ namespace SoftAware.Winamp
             return new float[dataSize];
         }
 
+        public static float[] GetWinampFFT()
+        {
+            if (TestMode) return GetTestData(19);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (javaVisualizer != null)
+            {
+                try
+                {
+                    float[] javaData = javaVisualizer.Call<float[]>("getWinampFft");
+                    if (javaData != null && javaData.Length == 19) 
+                    {
+                        return javaData;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Playlist.Log($"[Viz] GetWinampFFT ERR: {e.Message}");
+                }
+            }
+#endif
+            return new float[19];
+        }
+
         public static float[] GetWaveformData(int dataSize)
         {
             if (TestMode) return GetTestData(dataSize);

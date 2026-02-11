@@ -184,4 +184,117 @@ public class WinampVisualizer {
             return result;
         }
     }
+    // Returns 19-bar float array with Winamp-style grouping (0.0 - 1.0)
+    public float[] getWinampFft() {
+        float[] result = new float[19];
+        if (visualizer == null || rawBuffer == null) {
+            return result;
+        }
+
+        try {
+            if (visualizer.getFft(rawBuffer) != Visualizer.SUCCESS) {
+                return result;
+            }
+
+            // Step 1: Convert FFT byte data to magnitudes
+            float[] magnitudes = calculateMagnitudes(rawBuffer);
+
+            // Step 2: Downsample to 19 bars (Winamp style)
+            return downsampleTo19Bars(magnitudes);
+
+        } catch (Exception e) {
+            if (logCounter % 100 == 0) Log.e(TAG, "getWinampFft failed: " + e.getMessage());
+            return result;
+        }
+    }
+
+    private float[] calculateMagnitudes(byte[] fft) {
+        // FFT data format from Android Visualizer:
+        // [DC, real1, imag1, real2, imag2, ..., nyquist]
+        // We get captureSize/2 frequency bands
+        
+        int numBands = fft.length / 2;
+        float[] magnitudes = new float[numBands];
+        
+        // Skip DC component (index 0) to avoid huge spike
+        magnitudes[0] = 0; 
+        
+        // Calculate magnitude for each frequency band
+        for (int i = 2; i < fft.length; i += 2) {
+            int bandIndex = i / 2;
+            
+            float real = (float) fft[i];
+            float imag = (float) fft[i + 1];
+            
+            // Calculate magnitude
+            float magnitude = (float) Math.sqrt(real * real + imag * imag);
+            
+            // Normalize to 0-1 range (approximate) using sqrt for better dynamics (like VU meter)
+            // 8-bit samples, max magnitude is approx 180.
+            // Sqrt(180) ~= 13.4. We divide by 16.0f to be safe.
+            // This acts as a compressor/limiter lifting quiet sounds.
+            magnitudes[bandIndex] = (float)Math.sqrt(magnitude) / 14.0f;
+        }
+        
+        return magnitudes;
+    }
+    
+    private float[] downsampleTo19Bars(float[] magnitudes) {
+        float[] bars = new float[19];
+        int numBands = magnitudes.length;
+        
+        // Winamp-style logarithmic grouping
+        // We want more resolution in lower frequencies.
+        // Formula: index = start_index * powertrain ^ bar_index
+        
+        // We skip band 0 (DC). Start from band 1.
+        // Effective range: 1 to numBands.
+        
+        // Logarithmic interpolation indices for 512 bands (Capture size 1024)
+        // These are manually tuned to resemble Winamp's distribution
+        int[] limits = new int[20];
+        limits[0] = 1; // Start at 1 to skip DC
+        
+        // Generate logarithmic stops
+        // We want the last band to end around numBands * 0.75 (cut off extreme highs > 16kHz)
+        // If numBands = 512 (22kHz), we want to end around 370 (~16kHz).
+        float maxBand = numBands * 0.75f; 
+        if (maxBand < 20) maxBand = numBands; // Fallback for very low capture size
+
+        for (int i = 1; i <= 19; i++) {
+             // Logarithmic scale: 1 ... maxBand
+             // val = 1 * (maxBand)^(i/19)
+             double val = Math.pow(maxBand, (double)i / 19.0);
+             limits[i] = (int)val;
+             // Ensure monotonic growth
+             if (limits[i] <= limits[i-1]) limits[i] = limits[i-1] + 1;
+        }
+
+        for (int bar = 0; bar < 19; bar++) {
+            int startBand = limits[bar];
+            int endBand = limits[bar+1];
+            
+            // Safety clamp
+            if (startBand >= numBands) startBand = numBands - 1;
+            if (endBand > numBands) endBand = numBands;
+            
+            float sum = 0;
+            int count = 0;
+            
+            for (int band = startBand; band < endBand; band++) {
+                sum += magnitudes[band];
+                count++;
+            }
+            
+            float avg = (count > 0) ? sum / count : 0;
+            
+            // Additional Linear Boost for High Frequencies (Pre-emphasis)
+            // Highs are naturally weaker in music
+            float boost = 1.0f + (bar * 0.05f); // 0% boost at bass, almost 100% boost at treble
+            
+            bars[bar] = avg * boost;
+        }
+        
+        return bars;
+    }
 }
