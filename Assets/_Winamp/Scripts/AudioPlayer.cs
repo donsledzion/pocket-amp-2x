@@ -219,6 +219,13 @@ namespace SoftAware.Winamp
                 UpdateNotification(); // Sync notification after manual seek
             });
             trigger.triggers.Add(entryUp);
+
+            panelMain.ProgressSlider.onValueChanged.AddListener((val) => {
+                if (isDraggingSlider)
+                {
+                    uiController?.HandleSliderDrag(val, engine.Duration);
+                }
+            });
         }
 
 

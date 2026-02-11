@@ -29,6 +29,28 @@ namespace SoftAware.Winamp
         public void SetDragging(bool dragging)
         {
             isDraggingSlider = dragging;
+            if (!dragging && mainPanel.SongTitleDisplay != null)
+            {
+                mainPanel.SongTitleDisplay.ClearOverrideText();
+            }
+        }
+
+        public void HandleSliderDrag(float normalizedValue, float duration)
+        {
+            if (mainPanel.SongTitleDisplay == null) return;
+
+            int minutesTotal = (int)(duration / 60);
+            int secondsTotal = (int)(duration % 60);
+            string totalTimeStr = $"{minutesTotal}:{secondsTotal:D2}";
+
+            float currentTime = normalizedValue * duration;
+            int minutesCurrent = (int)(currentTime / 60);
+            int secondsCurrent = (int)(currentTime % 60);
+            string currentTimeStr = $"{minutesCurrent}:{secondsCurrent:D2}";
+
+            int percent = Mathf.RoundToInt(normalizedValue * 100f);
+
+            mainPanel.SongTitleDisplay.SetOverrideText($"SEEK TO: {currentTimeStr}/{totalTimeStr} ({percent}%)");
         }
 
         public void UpdateUI(float currentTime, float duration, bool isPlaying, bool isPaused)
