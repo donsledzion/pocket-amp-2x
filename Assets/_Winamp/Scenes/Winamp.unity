@@ -1322,7 +1322,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Playlist
   main: {fileID: 996247208}
-  songs: []
+  songs:
+  - Title: 
+    Artist: 
+    Clip: {fileID: 8300000, guid: 3bb2d50d7c970c147b4bbe85cc85a9b8, type: 3}
+    FilePath: 
+    Duration: 0
+    MetadataLoaded: 0
   debugText: {fileID: 740344165}
   addContextMenu: {fileID: 1483184873}
 --- !u!4 &204421521

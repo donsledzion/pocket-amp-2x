@@ -282,11 +282,12 @@ namespace SoftAware.Winamp
                         androidEngine.Resume(); 
                         OnPlaybackStarted();
 
-                        // Delayed Visualizer Init (only on main thread)
-                        if (!immediate) 
-                            StartCoroutine(InitVisualizerDelayed(id));
+                        // Init Visualizer immediately (must be on main thread)
+                        // Note: If we are calling from immediate/background callback, we must queue to main thread
+                        if (immediate) 
+                            mainThreadActions.Enqueue(() => AndroidVisualizerBridge.Initialize(id));
                         else
-                            mainThreadActions.Enqueue(() => StartCoroutine(InitVisualizerDelayed(id)));
+                            AndroidVisualizerBridge.Initialize(id);
                     }
                 };
 
@@ -297,11 +298,7 @@ namespace SoftAware.Winamp
 #endif
         }
 
-        private IEnumerator InitVisualizerDelayed(int sessionId)
-        {
-            yield return new WaitForSeconds(0.5f);
-            AndroidVisualizerBridge.Initialize(sessionId);
-        }
+
 
         private void OnPlaybackStarted()
         {
