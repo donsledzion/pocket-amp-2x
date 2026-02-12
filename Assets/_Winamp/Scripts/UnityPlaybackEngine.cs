@@ -115,11 +115,12 @@ namespace SoftAware.Winamp
             currentDuration = 0f;
         }
 
-        public void Seek(float normalizedTime)
+        public void Seek(float time, bool isNormalized = true)
         {
             if (audioSource == null) return;
 
-            float targetTime = Duration * Mathf.Clamp01(normalizedTime);
+            float targetTime = isNormalized ? (Duration * Mathf.Clamp01(time)) : time;
+            targetTime = Mathf.Clamp(targetTime, 0f, Duration);
             
             if (audioSource.clip != null)
             {

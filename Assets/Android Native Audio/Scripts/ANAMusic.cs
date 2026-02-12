@@ -26,6 +26,9 @@ public static class ANAMusic
 
 	// Set DEBUG to "true" to enable activity logging
 	static bool DEBUG = false;
+    
+    // Lock for thread-safety when called from background threads (e.g. MediaSession)
+    static readonly object _lock = new object();
 
 	static bool _hasOBB;
 	static AndroidJavaObject _assets;
@@ -57,8 +60,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "getCurrentPosition(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		return _mediaPlayers[musicID].AndroidJavaObject.Call<int>("getCurrentPosition");
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			return _mediaPlayers[musicID].AndroidJavaObject.Call<int>("getCurrentPosition");
+		}
 	}
 
 
@@ -67,8 +73,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "getDuration(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		return _mediaPlayers[musicID].AndroidJavaObject.Call<int>("getDuration");
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			return _mediaPlayers[musicID].AndroidJavaObject.Call<int>("getDuration");
+		}
 	}
 
 
@@ -77,8 +86,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "isLooping(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		return _mediaPlayers[musicID].AndroidJavaObject.Call<bool>("isLooping");
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			return _mediaPlayers[musicID].AndroidJavaObject.Call<bool>("isLooping");
+		}
 	}
 
 
@@ -87,8 +99,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "isPlaying(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		return _mediaPlayers[musicID].AndroidJavaObject.Call<bool>("isPlaying");
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			return _mediaPlayers[musicID].AndroidJavaObject.Call<bool>("isPlaying");
+		}
 	}
 
 
@@ -139,7 +154,10 @@ public static class ANAMusic
 			mediaPlayer.Call("prepare");
 
 		var id = mediaPlayer.Call<int>("getAudioSessionId");
-		_mediaPlayers.Add(id, new AndroidMediaPlayer(mediaPlayer, id, playInBackground));
+        lock (_lock)
+        {
+		    _mediaPlayers.Add(id, new AndroidMediaPlayer(mediaPlayer, id, playInBackground));
+        }
 		CheckPauseMonitor(playInBackground);
 		return id;
 	}
@@ -162,8 +180,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "pause(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		_mediaPlayers[musicID].AndroidJavaObject.Call("pause");
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			_mediaPlayers[musicID].AndroidJavaObject.Call("pause");
+		}
 	}
 
 
@@ -172,12 +193,15 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "pauseAll()");
 
-		foreach (var mediaPlayer in _mediaPlayers)
-			if (mediaPlayer.Value != null && isPlaying(mediaPlayer.Value.ID))
-			{
-				pause(mediaPlayer.Value.ID);
-				mediaPlayer.Value.IsAllPaused = true;
-			}
+		lock (_lock)
+		{
+			foreach (var mediaPlayer in _mediaPlayers)
+				if (mediaPlayer.Value != null && isPlaying(mediaPlayer.Value.ID))
+				{
+					pause(mediaPlayer.Value.ID);
+					mediaPlayer.Value.IsAllPaused = true;
+				}
+		}
 	}
 
 
@@ -186,13 +210,16 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "play(" + musicID + ", " + completionCallback + ")");
 
-		CheckMusicID(musicID);
-		var mediaPlayer = _mediaPlayers[musicID].AndroidJavaObject;
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			var mediaPlayer = _mediaPlayers[musicID].AndroidJavaObject;
 
-		if (completionCallback != null)
-			mediaPlayer.Call("setOnCompletionListener", new OnCompletionListener(completionCallback));
+			if (completionCallback != null)
+				mediaPlayer.Call("setOnCompletionListener", new OnCompletionListener(completionCallback));
 
-		mediaPlayer.Call("start");
+			mediaPlayer.Call("start");
+		}
 	}
 
 
@@ -201,10 +228,13 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "release(" + musicID + ")");
 
-		CheckMusicID(musicID);
-		_mediaPlayers[musicID].AndroidJavaObject.Call("release");
-		_mediaPlayers[musicID].AndroidJavaObject.Dispose();
-		_mediaPlayers.Remove(musicID);
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			_mediaPlayers[musicID].AndroidJavaObject.Call("release");
+			_mediaPlayers[musicID].AndroidJavaObject.Dispose();
+			_mediaPlayers.Remove(musicID);
+		}
 	}
 
 
@@ -213,12 +243,15 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "resumeAll()");
 
-		foreach (var mediaPlayer in _mediaPlayers)
-			if (mediaPlayer.Value != null && mediaPlayer.Value.IsAllPaused)
-			{
-				play(mediaPlayer.Value.ID);
-				mediaPlayer.Value.IsAllPaused = false;
-			}
+		lock (_lock)
+		{
+			foreach (var mediaPlayer in _mediaPlayers)
+				if (mediaPlayer.Value != null && mediaPlayer.Value.IsAllPaused)
+				{
+					play(mediaPlayer.Value.ID);
+					mediaPlayer.Value.IsAllPaused = false;
+				}
+		}
 	}
 
 
@@ -227,8 +260,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "seekTo(" + musicID + ", " + msec + ")");
 
-		CheckMusicID(musicID);
-		_mediaPlayers[musicID].AndroidJavaObject.Call("seekTo", msec);
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			_mediaPlayers[musicID].AndroidJavaObject.Call("seekTo", msec);
+		}
 	}
 
 
@@ -237,8 +273,11 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "setLooping(" + musicID + ", " + looping + ")");
 
-		CheckMusicID(musicID);
-		_mediaPlayers[musicID].AndroidJavaObject.Call("setLooping", looping);
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			_mediaPlayers[musicID].AndroidJavaObject.Call("setLooping", looping);
+		}
 	}
 
 
@@ -247,7 +286,10 @@ public static class ANAMusic
 		if (DEBUG)
 			Debug.Log(_logPrefix + "setPlayInBackground(" + musicID + ", " + playInBackground + ")");
 
-		_mediaPlayers[musicID].PlayInBackground = playInBackground;
+		lock (_lock)
+		{
+			_mediaPlayers[musicID].PlayInBackground = playInBackground;
+		}
 		CheckPauseMonitor(playInBackground);
 	}
 
@@ -260,33 +302,42 @@ public static class ANAMusic
 		if (rightVolume == -1)
 			rightVolume = leftVolume;
 
-		CheckMusicID(musicID);
-		_mediaPlayers[musicID].AndroidJavaObject.Call("setVolume", leftVolume, rightVolume);
+		lock (_lock)
+		{
+			CheckMusicID(musicID);
+			_mediaPlayers[musicID].AndroidJavaObject.Call("setVolume", leftVolume, rightVolume);
+		}
 	}
 
 
 	static void BackgroundPause()
 	{
-		foreach (var mediaPlayer in _mediaPlayers)
+		lock (_lock)
 		{
-			if (mediaPlayer.Value.PlayInBackground)
-				continue;
-			if (isPlaying(mediaPlayer.Value.ID))
+			foreach (var mediaPlayer in _mediaPlayers)
 			{
-				mediaPlayer.Value.WasPlaying = true;
-				pause(mediaPlayer.Value.ID);
+				if (mediaPlayer.Value.PlayInBackground)
+					continue;
+				if (isPlaying(mediaPlayer.Value.ID))
+				{
+					mediaPlayer.Value.WasPlaying = true;
+					pause(mediaPlayer.Value.ID);
+				}
+				else
+					mediaPlayer.Value.WasPlaying = false;
 			}
-			else
-				mediaPlayer.Value.WasPlaying = false;
 		}
 	}
 
 
 	static void BackgroundResume()
 	{
-		foreach (var mediaPlayer in _mediaPlayers)
-			if (!mediaPlayer.Value.PlayInBackground && mediaPlayer.Value.WasPlaying)
-				play(mediaPlayer.Value.ID);
+		lock (_lock)
+		{
+			foreach (var mediaPlayer in _mediaPlayers)
+				if (!mediaPlayer.Value.PlayInBackground && mediaPlayer.Value.WasPlaying)
+					play(mediaPlayer.Value.ID);
+		}
 	}
 
 

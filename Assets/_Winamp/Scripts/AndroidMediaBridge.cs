@@ -6,24 +6,31 @@ namespace SoftAware
     public class AndroidMediaBridge
     {
         public delegate void RemoteControlAction();
+        public delegate void RemoteControlSeekAction(long positionMs);
         
         private class AndroidMediaCallbackProxy : AndroidJavaProxy
         {
             private readonly RemoteControlAction _onPlay, _onPause, _onNext, _onPrev;
+            private readonly RemoteControlSeekAction _onSeek;
 
-            public AndroidMediaCallbackProxy(RemoteControlAction play, RemoteControlAction pause, RemoteControlAction next, RemoteControlAction prev) 
+            public AndroidMediaCallbackProxy(RemoteControlAction play, RemoteControlAction pause, RemoteControlAction next, RemoteControlAction prev, RemoteControlSeekAction seek) 
                 : base("com.softaware.winamp.WinampAudioService$RemoteControlListener")
             {
                 _onPlay = play;
                 _onPause = pause;
                 _onNext = next;
                 _onPrev = prev;
+                _onSeek = seek;
             }
 
+            // IMPORTANT: These callbacks are executed on the Android Background Java Thread.
+            // DO NOT call Unity APIs or touch UI elements directly here!
+            // Enqueue actions to the main thread instead.
             void onPlay() => _onPlay?.Invoke();
             void onPause() => _onPause?.Invoke();
             void onNext() => _onNext?.Invoke();
             void onPrev() => _onPrev?.Invoke();
+            void onSeekTo(long pos) => _onSeek?.Invoke(pos);
         }
 
         private static AndroidJavaObject serviceIntent;
@@ -82,10 +89,10 @@ namespace SoftAware
             #endif
         }
 
-        public static void RegisterRemoteControlListener(RemoteControlAction onPlay, RemoteControlAction onPause, RemoteControlAction onNext, RemoteControlAction onPrev)
+        public static void RegisterRemoteControlListener(RemoteControlAction onPlay, RemoteControlAction onPause, RemoteControlAction onNext, RemoteControlAction onPrev, RemoteControlSeekAction onSeek)
         {
             #if UNITY_ANDROID && !UNITY_EDITOR
-            var proxy = new AndroidMediaCallbackProxy(onPlay, onPause, onNext, onPrev);
+            var proxy = new AndroidMediaCallbackProxy(onPlay, onPause, onNext, onPrev, onSeek);
             using (var serviceClass = new AndroidJavaClass("com.softaware.winamp.WinampAudioService"))
             {
                 serviceClass.CallStatic("setListener", proxy);

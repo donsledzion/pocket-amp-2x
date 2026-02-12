@@ -15,7 +15,7 @@ namespace SoftAware.Winamp
         void Pause();
         void Resume();
         void Stop();
-        void Seek(float normalizedTime);
+        void Seek(float time, bool isNormalized = true);
         void SetVolume(float left, float right);
         
         bool IsPlaying { get; }

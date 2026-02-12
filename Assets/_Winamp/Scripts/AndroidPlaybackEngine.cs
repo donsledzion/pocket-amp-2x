@@ -66,12 +66,20 @@ namespace SoftAware.Winamp
             }
         }
 
-        public void Seek(float normalizedTime)
+        public void Seek(float time, bool isNormalized = true)
         {
             if (currentMusicID != -1)
             {
-                int duration = ANAMusic.getDuration(currentMusicID);
-                ANAMusic.seekTo(currentMusicID, (int)(duration * Mathf.Clamp01(normalizedTime)));
+                if (isNormalized)
+                {
+                    int duration = ANAMusic.getDuration(currentMusicID);
+                    ANAMusic.seekTo(currentMusicID, (int)(duration * Mathf.Clamp01(time)));
+                }
+                else
+                {
+                    // Absolute time in seconds -> milliseconds
+                    ANAMusic.seekTo(currentMusicID, (int)(time * 1000f));
+                }
             }
         }
 
@@ -110,8 +118,9 @@ namespace SoftAware.Winamp
         private float lastPreamp;
 
         // Throttling and Cache
-        private float lastUpdateTime = 0f;
-        private const float UpdateThrottle = 0.05f; // 50ms
+        private static readonly System.Diagnostics.Stopwatch _throttleClock = System.Diagnostics.Stopwatch.StartNew();
+        private long lastUpdateTimeMs = 0;
+        private const int UpdateThrottleMs = 50; 
         
         private bool lastAppliedEnabledState = false;
         private float lastAppliedPreamp = -999f;
@@ -137,13 +146,13 @@ namespace SoftAware.Winamp
         {
             if (currentMusicID == -1) return;
 
-            float currentTime = Time.realtimeSinceStartup;
-            if (!forced && currentTime - lastUpdateTime < UpdateThrottle)
+            long currentTimeMs = _throttleClock.ElapsedMilliseconds;
+            if (!forced && currentTimeMs - lastUpdateTimeMs < UpdateThrottleMs)
             {
                 return;
             }
 
-            lastUpdateTime = currentTime;
+            lastUpdateTimeMs = currentTimeMs;
             
             try
             {

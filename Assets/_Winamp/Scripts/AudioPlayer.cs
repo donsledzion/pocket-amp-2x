@@ -88,7 +88,7 @@ namespace SoftAware.Winamp
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             AndroidMediaBridge.RegisterRemoteControlListener(
-                OnNativePlay, OnNativePause, OnNativeNext, OnNativePrev
+                OnNativePlay, OnNativePause, OnNativeNext, OnNativePrev, OnNativeSeek
             );
 #endif
         }
@@ -215,7 +215,7 @@ namespace SoftAware.Winamp
             entryUp.callback.AddListener((data) => { 
                 isDraggingSlider = false; 
                 uiController?.SetDragging(false);
-                engine.Seek(panelMain.ProgressSlider.value);
+                engine.Seek(panelMain.ProgressSlider.value, true);
                 UpdateNotification(); // Sync notification after manual seek
             });
             trigger.triggers.Add(entryUp);
@@ -275,37 +275,53 @@ namespace SoftAware.Winamp
             UpdateNotification();
         }
 
-        private void PerformNativePlay(string path, bool immediate)
+        private int currentLoadingTicket = 0;
+
+        /// <summary>
+        /// Orchestrates native playback. 
+        /// Executes native commands (Stop/Load) immediately for responsiveness in background,
+        /// but uses 'loadingTicket' to ensure only the last requested track actually plays.
+        /// </summary>
+        private void PerformNativePlay(string path, bool isHeadless)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+            int myTicket = ++currentLoadingTicket;
+
+            // 1. Immediate Native Stop: Prevents multiple songs from playing at once.
+            // Safe to call from background thread now that ANAMusic has locks.
             engine.Stop();
+
+            // 2. Immediate Native Load: Starts loading right away even in background.
             ANAMusic.load(path, false, false, (id) => {
-                Action setupAction = () => {
-                    if (engine is AndroidPlaybackEngine androidEngine)
-                    {
-                        androidEngine.SetNativeMusicID(id);
-                        androidEngine.SetVolume(currentVolume, currentVolume); 
-                        Application.runInBackground = true; 
-                        androidEngine.Resume(); 
+                
+                // --- Background Thread (Native Callback) ---
+                
+                // 3. Stacking Prevention: If a newer ticket exists, this request is obsolete.
+                if (myTicket != currentLoadingTicket)
+                {
+                    ANAMusic.release(id); // Discard the orphaned player immediately
+                    return;
+                }
+
+                if (engine is AndroidPlaybackEngine androidEngine)
+                {
+                    // 4. Immediate Native Resume: Start audio NOW.
+                    androidEngine.SetNativeMusicID(id);
+                    androidEngine.SetVolume(currentVolume, currentVolume); 
+                    androidEngine.Resume(); 
+
+                    // 5. Defer Unity/UI updates to the main thread.
+                    mainThreadActions.Enqueue(() => {
+                        // Double check ticket on main thread too before UI sync
+                        if (myTicket != currentLoadingTicket) return;
+
                         OnPlaybackStarted();
-
-                        // Init Visualizer immediately (must be on main thread)
-                        // Note: If we are calling from immediate/background callback, we must queue to main thread
-                        if (immediate) 
-                            mainThreadActions.Enqueue(() => AndroidVisualizerBridge.Initialize(id));
-                        else
-                            AndroidVisualizerBridge.Initialize(id);
-                    }
-                };
-
-                if (immediate) setupAction();
-                else mainThreadActions.Enqueue(setupAction);
-
+                        AndroidVisualizerBridge.Initialize(id);
+                    });
+                }
             }, true, true);
 #endif
         }
-
-
 
         private void OnPlaybackStarted()
         {
@@ -339,48 +355,51 @@ namespace SoftAware.Winamp
 #if UNITY_ANDROID && !UNITY_EDITOR
         private void PlayNextBackground()
         {
-            // Background Thread Logic
-            // 1. Calculate next index (thread-safe)
+            // Headless transition: Calculate next and start audio immediately without touching UI.
+            // This runs on the Android Background Thread (Native Callback).
+            
             int nextIndex = playlist.GetNextSongIndex();
             if (nextIndex == -1) return;
 
-            // 2. Check "Stop after last" logic
             bool isLast = (playlist.CurrentIndex == playlist.Count - 1);
             if (!repeatEnabled && !playlist.IsShuffleEnabled && isLast)
             {
-                  // Stop playback logic from BG?
-                  // Just release native player and queue UI stop
-                  engine.Stop();
-                  mainThreadActions.Enqueue(() => StopPlayback());
-                  return;
+                // In background, we stop immediately to avoid "Stacking" if focused later
+                engine.Stop();
+                mainThreadActions.Enqueue(() => StopPlayback());
+                return;
             }
 
-            // 3. Update Playlist index silently
+            // Update Playlist index silently (state change only, no events)
             playlist.SetCurrentIndexSilent(nextIndex);
-            
-            // 4. Get the song (accessing list is thread safe strictly for reading if list is not modified)
-            // Note: We assume songs list is not modified while playing in background
             Playlist.SongInfo nextSong = playlist.AllSongs[nextIndex];
 
-            // 5. Trigger Native Play immediately
             if (nextSong.HasNativePath)
             {
-                PerformNativePlay(nextSong.FilePath, true); // true = immediate/background mode
+                PerformNativePlay(nextSong.FilePath, true); 
+                
+                // Update notification IMMEDIATELY so the user sees the new title in the tray.
+                // This is safe because AndroidMediaBridge handles the JNI call.
+                int durationMs = (int)(AndroidAudioInfoBridge.GetDuration(nextSong.FilePath) * 1000);
+                AndroidMediaBridge.UpdateMetadata(nextSong.Title, "Winamp Android", durationMs, 0, true);
             }
-            
-            // 6. Queue UI updates for when app resumes
-            mainThreadActions.Enqueue(() => {
-                // When we resume, we need to notify UI of the change
-                if (playlist != null)
-                {
-                    // Force the playlist to fire the change event for the NEW index
-                    // We can just call SetCurrentClip again to ensure events fire, 
-                    // or we can manually invoke if we expose an event trigger.
-                    // Safest is to re-set it which is cheap.
-                    playlist.SetCurrentClip(nextIndex);
-                    OnPlaybackStarted();
-                }
-            });
+        }
+
+        private void PlayPreviousBackground()
+        {
+            int prevIndex = playlist.GetPreviousSongIndex();
+            if (prevIndex == -1) return;
+
+            playlist.SetCurrentIndexSilent(prevIndex);
+            Playlist.SongInfo prevSong = playlist.AllSongs[prevIndex];
+
+            if (prevSong.HasNativePath)
+            {
+                PerformNativePlay(prevSong.FilePath, true);
+                
+                int durationMs = (int)(AndroidAudioInfoBridge.GetDuration(prevSong.FilePath) * 1000);
+                AndroidMediaBridge.UpdateMetadata(prevSong.Title, "Winamp Android", durationMs, 0, true);
+            }
         }
 #endif
 
@@ -439,39 +458,51 @@ namespace SoftAware.Winamp
             }
         }
 
-        // Native Callbacks - called from AndroidMediaBridge (proxy) or direct UnitySendMessage
+#if UNITY_ANDROID && !UNITY_EDITOR
+        // Native Callbacks - called from AndroidMediaBridge (via JNI proxy)
+        // --------------------------------------------------------------------------
+        // IMPORTANT: These methods are called from a Java background thread.
+        // DO NOT call Unity APIs or modify UI components directly here.
+        // We use isAppPaused to determine if we should switch to "Background" logic
+        // which only interacts with the native Android engine components.
+        // --------------------------------------------------------------------------
+
         public void OnNativePlay() { if (isAppPaused) Resume(); else mainThreadActions.Enqueue(Play); }
         public void OnNativePause() { if (isAppPaused) Pause(); else mainThreadActions.Enqueue(Pause); }
-        public void OnNativeNext() { if (isAppPaused) PlayNext(true); else mainThreadActions.Enqueue(() => PlayNext()); }
-        public void OnNativePrev() { if (isAppPaused) PlayPrevious(); else mainThreadActions.Enqueue(PlayPrevious); }
+        public void OnNativeNext() { if (isAppPaused) PlayNextBackground(); else mainThreadActions.Enqueue(() => PlayNext()); }
+        public void OnNativePrev() { if (isAppPaused) PlayPreviousBackground(); else mainThreadActions.Enqueue(PlayPrevious); }
         public void OnNativeSeek(string positionMsStr)
         {
             if (long.TryParse(positionMsStr, out long positionMs))
             {
-                float positionSec = positionMs / 1000f;
-                // Clamp to duration if possible or just pass to engine
-                if (engine.Duration > 0)
-                {
-                    // Calculate normalized position for UI slider if needed, but engine.Seek usually takes normalized 0-1
-                    // Wait, check engine.Seek signature. 
-                    // AndroidPlaybackEngine.Seek takes 0-1 float.
-                    // UnityPlaybackEngine.Seek takes 0-1 float.
-                    
-                    float normalized = Mathf.Clamp01(positionSec / engine.Duration);
-                    
-                    Action seekAction = () => {
-                        engine.Seek(normalized);
-                        // Also update UI slider visually if not already updating
-                        if (panelMain.ProgressSlider != null) panelMain.ProgressSlider.value = normalized;
-                        uiController?.UpdateUI(engine.CurrentTime, engine.Duration, engine.IsPlaying, isPaused);
-                        UpdateNotification(); // Confirm the seek to notification
-                    };
-
-                    if (isAppPaused) seekAction();
-                    else mainThreadActions.Enqueue(seekAction);
-                }
+                OnNativeSeek(positionMs);
             }
         }
+
+        public void OnNativeSeek(long positionMs)
+        {
+            float positionSec = positionMs / 1000f;
+            
+            Action seekAction = () => {
+                // Use absolute seek
+                engine.Seek(positionSec, false);
+                
+                // Update UI slider if possible
+                if (panelMain.ProgressSlider != null)
+                {
+                    float duration = engine.Duration;
+                    if (duration > 0)
+                        panelMain.ProgressSlider.value = Mathf.Clamp01(positionSec / duration);
+                }
+                
+                uiController?.UpdateUI(engine.CurrentTime, engine.Duration, engine.IsPlaying, isPaused);
+                UpdateNotification(); // Confirm the seek to notification
+            };
+
+            if (isAppPaused) seekAction();
+            else mainThreadActions.Enqueue(seekAction);
+        }
+#endif
 
         private void OnDestroy()
         {

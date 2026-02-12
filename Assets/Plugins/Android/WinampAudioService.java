@@ -35,6 +35,7 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
         void onPause();
         void onNext();
         void onPrev();
+        void onSeekTo(long pos);
     }
 
     private static RemoteControlListener listener;
@@ -135,9 +136,7 @@ public class WinampAudioService extends Service implements AudioManager.OnAudioF
             public void onSeekTo(long pos) {
                 Log.d(TAG, "MediaSession: onSeekTo " + pos);
                 if (listener != null) {
-                    // listener.onSeekTo(pos); // Not in interface yet, use UnitySendMessage or add to interface
-                    // prioritizing UnitySendMessage for now as interface change requires bridge update
-                     UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeSeek", String.valueOf(pos));
+                    listener.onSeekTo(pos);
                 } else {
                     UnityPlayer.UnitySendMessage("AudioPlayer", "OnNativeSeek", String.valueOf(pos));
                 }
