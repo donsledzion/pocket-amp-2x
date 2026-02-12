@@ -431,6 +431,10 @@ namespace SoftAware.Winamp
         {
             if (currentSong == null) { uiController?.ClearSongInfo(); return; }
 
+            // Ensure playlist UI (highlights) stays in sync, 
+            // especially after background transitions.
+            playlist.UI_SyncIndex();
+
             int bitrateK = 0;
             int sampleRateK = 0;
 
@@ -483,10 +487,13 @@ namespace SoftAware.Winamp
         {
             float positionSec = positionMs / 1000f;
             
-            Action seekAction = () => {
-                // Use absolute seek
-                engine.Seek(positionSec, false);
-                
+            // 1. IMMEDIATE Native Action: Change playback position NOW.
+            // This is safe to call from background thread and ensures responsiveness.
+            engine.Seek(positionSec, false);
+            
+            // 2. ENQUEUED UI Action: Update sliders and text.
+            // Unity UI (MarkDirty) is NEVER thread-safe, even when app is paused.
+            mainThreadActions.Enqueue(() => {
                 // Update UI slider if possible
                 if (panelMain.ProgressSlider != null)
                 {
@@ -497,10 +504,7 @@ namespace SoftAware.Winamp
                 
                 uiController?.UpdateUI(engine.CurrentTime, engine.Duration, engine.IsPlaying, isPaused);
                 UpdateNotification(); // Confirm the seek to notification
-            };
-
-            if (isAppPaused) seekAction();
-            else mainThreadActions.Enqueue(seekAction);
+            });
         }
 #endif
 

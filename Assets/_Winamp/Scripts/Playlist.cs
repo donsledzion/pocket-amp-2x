@@ -669,9 +669,20 @@ namespace SoftAware.Winamp
              if (index >= 0 && index < songs.Count)
              {
                  currentIndex = index;
-                 // We intentionally do NOT fire events here. 
-                 // The caller (AudioPlayer) must queue a UI update on the main thread.
              }
+        }
+
+        /// <summary>
+        /// Forces the OnCurrentIndexChanged event to fire, synchronizing the UI 
+        /// (e.g. playlist highlights) with the current state.
+        /// Call this from the Main Thread.
+        /// </summary>
+        public void UI_SyncIndex()
+        {
+            if (currentIndex >= 0 && currentIndex < songs.Count)
+            {
+                OnCurrentIndexChanged?.Invoke(currentIndex);
+            }
         }
 
         public void ToggleShuffle()
