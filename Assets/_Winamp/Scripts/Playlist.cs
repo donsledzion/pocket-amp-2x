@@ -32,7 +32,10 @@ namespace SoftAware.Winamp
         [Serializable]
         private class PlaylistData
         {
+            // For backward compatibility
             public List<string> paths = new List<string>();
+            // For rich metadata persistence
+            public List<SongInfo> songs = new List<SongInfo>();
         }
 
         public event Action OnPlaylistChanged;
@@ -100,6 +103,9 @@ namespace SoftAware.Winamp
         {
             var demoFileName = "demo.mp3";
             var targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
+            var playlistPath = GetPlaylistSavePath();
+            bool isFirstRun = SettingsManager.Instance != null && SettingsManager.Instance.IsFirstRun;
+            bool playlistExists = File.Exists(playlistPath);
 
             // Copy from StreamingAssets if it doesn't exist in persistentDataPath
             if (!File.Exists(targetPath))
@@ -130,8 +136,8 @@ namespace SoftAware.Winamp
 #endif
             }
 
-            // Ensure demo track is in playlist if it's the first run or playlist is empty
-            if (File.Exists(targetPath))
+            // Ensure demo track is in playlist ONLY if it's first run or NO playlist exists yet
+            if (File.Exists(targetPath) && (isFirstRun || !playlistExists))
             {
                 if (!songs.Exists(s => s.FilePath == targetPath))
                 {
@@ -141,6 +147,10 @@ namespace SoftAware.Winamp
                         FilePath = targetPath,
                         MetadataLoaded = false
                     });
+                    
+                    if (isFirstRun && SettingsManager.Instance != null)
+                        SettingsManager.Instance.IsFirstRun = false;
+
                     OnPlaylistChanged?.Invoke();
                     SavePlaylist();
                 }
@@ -353,6 +363,7 @@ namespace SoftAware.Winamp
 
         public void SavePlaylist(string path = null)
         {
+            bool isExplicitPath = !string.IsNullOrEmpty(path);
             if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
             
             // Ensure directory exists for custom paths too
@@ -363,7 +374,18 @@ namespace SoftAware.Winamp
             foreach (var song in songs)
             {
                 if (!string.IsNullOrEmpty(song.FilePath))
+                {
+                    // Add to both for maximum compatibility/visibility
                     data.paths.Add(song.FilePath);
+                    data.songs.Add(new SongInfo
+                    {
+                        Title = song.Title,
+                        Artist = song.Artist,
+                        FilePath = song.FilePath,
+                        Duration = song.Duration,
+                        MetadataLoaded = song.MetadataLoaded
+                    });
+                }
             }
 
             try
@@ -371,6 +393,12 @@ namespace SoftAware.Winamp
                 string json = JsonUtility.ToJson(data);
                 File.WriteAllText(path, json);
                 LogDebug($"Playlist SAVED to: {path}");
+
+                // If we saved an explicit external path, also update our master playlist
+                if (isExplicitPath && path != GetPlaylistSavePath())
+                {
+                    SavePlaylist(null);
+                }
             }
             catch (Exception e)
             {
@@ -380,6 +408,7 @@ namespace SoftAware.Winamp
 
         public void LoadPlaylist(string path = null)
         {
+            bool isMaster = string.IsNullOrEmpty(path);
             if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
             if (!File.Exists(path)) return;
 
@@ -388,20 +417,39 @@ namespace SoftAware.Winamp
                 string json = File.ReadAllText(path);
                 PlaylistData data = JsonUtility.FromJson<PlaylistData>(json);
                 
-                if (data != null && data.paths != null)
+                if (data != null)
                 {
-                    songs.Clear(); // Clear current for explicit load
+                    songs.Clear(); 
                     selectedIndices.Clear();
                     currentIndex = -1;
 
-                    foreach (string filePath in data.paths)
+                    // Support for Rich metadata (new format)
+                    if (data.songs != null && data.songs.Count > 0)
                     {
-                        songs.Add(new SongInfo
+                        foreach (var song in data.songs)
                         {
-                            Title = Path.GetFileName(filePath),
-                            FilePath = filePath,
-                            MetadataLoaded = false
-                        });
+                            songs.Add(new SongInfo
+                            {
+                                Title = song.Title,
+                                Artist = song.Artist,
+                                FilePath = song.FilePath,
+                                Duration = song.Duration,
+                                MetadataLoaded = song.MetadataLoaded
+                            });
+                        }
+                    }
+                    // Support for Backward compatibility (old format)
+                    else if (data.paths != null && data.paths.Count > 0)
+                    {
+                        foreach (string filePath in data.paths)
+                        {
+                            songs.Add(new SongInfo
+                            {
+                                Title = Path.GetFileName(filePath),
+                                FilePath = filePath,
+                                MetadataLoaded = false
+                            });
+                        }
                     }
                     
                     if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
@@ -411,7 +459,7 @@ namespace SoftAware.Winamp
                     OnCurrentIndexChanged?.Invoke(currentIndex);
                     LogDebug($"Playlist LOADED from: {path}");
 
-                    if (path == GetPlaylistSavePath()) 
+                    if (isMaster) 
                     {
                         // If we loaded default, try to restore settings index
                         if (SettingsManager.Instance != null)
@@ -419,6 +467,11 @@ namespace SoftAware.Winamp
                              int lastIndex = SettingsManager.Instance.LastPlaylistIndex;
                              if (lastIndex >= 0 && lastIndex < songs.Count) SetCurrentClip(lastIndex);
                         }
+                    }
+                    else
+                    {
+                        // If we loaded EXTERNAL list, we should save it immediately as our master list
+                        SavePlaylist(null);
                     }
                 }
             }
@@ -440,6 +493,7 @@ namespace SoftAware.Winamp
 
         private IEnumerator MetadataScannerCoroutine()
         {
+            bool anyMetadataUpdated = false;
             // Scan through all songs that haven't loaded metadata yet
             for (int i = 0; i < songs.Count; i++)
             {
@@ -458,14 +512,32 @@ namespace SoftAware.Winamp
                     song.Title = meta[0];
                     if (!string.IsNullOrEmpty(meta[1])) // Artist
                     {
+                        song.Artist = meta[1];
                         song.Title = $"{meta[1]} - {meta[0]}";
                     }
+                    else
+                    {
+                        song.Artist = "";
+                    }
+                    anyMetadataUpdated = true;
+                }
+                else
+                {
+                    // If no native title, use filename but mark as loaded so we don't try again
+                    song.Title = Path.GetFileName(path);
+                    song.Artist = "";
                 }
 #endif
                 song.MetadataLoaded = true;
                 OnSongMetadataUpdated?.Invoke(i, song);
                 yield return null; // Wait for next frame to avoid hitching
             }
+
+            if (anyMetadataUpdated)
+            {
+                SavePlaylist(); // Auto-save updated metadata
+            }
+
             metadataScannerCoroutine = null;
         }
 
