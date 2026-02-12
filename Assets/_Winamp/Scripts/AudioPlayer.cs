@@ -229,9 +229,18 @@ namespace SoftAware.Winamp
         }
 
 
+        private Playlist.SongInfo lastPlayedSong;
+
         public void Play()
         {
-            if (isPaused) { Resume(); return; }
+            // If we are paused AND it's the same song, just resume.
+            // If it's a DIFFERENT song, we must start a fresh playback process.
+            if (isPaused && currentSong == lastPlayedSong && lastPlayedSong != null) 
+            { 
+                Resume(); 
+                return; 
+            }
+
             if (playCoroutine != null) StopCoroutine(playCoroutine);
             playCoroutine = StartCoroutine(PlayProcess());
         }
@@ -246,6 +255,7 @@ namespace SoftAware.Winamp
         private IEnumerator PlayProcess()
         {
             isPaused = false;
+            lastPlayedSong = currentSong;
             uiController?.ShowLoading();
 
             if (currentSong == null)
