@@ -323,6 +323,11 @@ namespace SoftAware.Winamp
 
             LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
             
+            if (currentIndex == -1 && songs.Count > 0)
+            {
+                SetCurrentClip(0);
+            }
+            
             if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
             metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
             
@@ -466,12 +471,16 @@ namespace SoftAware.Winamp
                         {
                              int lastIndex = SettingsManager.Instance.LastPlaylistIndex;
                              if (lastIndex >= 0 && lastIndex < songs.Count) SetCurrentClip(lastIndex);
+                             else if (songs.Count > 0) SetCurrentClip(0);
                         }
                     }
                     else
                     {
                         // If we loaded EXTERNAL list, we should save it immediately as our master list
                         SavePlaylist(null);
+                        
+                        // Always set first track as current for explicit external load
+                        if (songs.Count > 0) SetCurrentClip(0);
                     }
                 }
             }
@@ -710,6 +719,11 @@ namespace SoftAware.Winamp
                 FilePath = filePath,
                 MetadataLoaded = false
             });
+            
+            if (currentIndex == -1 && songs.Count > 0)
+            {
+                SetCurrentClip(0);
+            }
             
             if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
             metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
