@@ -307,7 +307,7 @@ namespace SoftAware.Winamp
                             // Unified Fast Path for ALL platforms
                             songs.Add(new SongInfo 
                             { 
-                                Title = entry.Name, 
+                                Title = GetCleanFileName(entry.Path), 
                                 Clip = null, 
                                 FilePath = entry.Path,
                                 Duration = 0,
@@ -450,7 +450,7 @@ namespace SoftAware.Winamp
                         {
                             songs.Add(new SongInfo
                             {
-                                Title = Path.GetFileName(filePath),
+                                Title = GetCleanFileName(filePath),
                                 FilePath = filePath,
                                 MetadataLoaded = false
                             });
@@ -533,7 +533,7 @@ namespace SoftAware.Winamp
                 else
                 {
                     // If no native title, use filename but mark as loaded so we don't try again
-                    song.Title = Path.GetFileName(path);
+                    song.Title = GetCleanFileName(path);
                     song.Artist = "";
                 }
 #endif
@@ -726,7 +726,7 @@ namespace SoftAware.Winamp
             
             songs.Add(new SongInfo 
             { 
-                Title = Path.GetFileName(filePath), 
+                Title = GetCleanFileName(filePath), 
                 FilePath = filePath,
                 MetadataLoaded = false
             });
@@ -849,6 +849,15 @@ namespace SoftAware.Winamp
         private void OnApplicationQuit()
         {
             // No cleanup needed anymore since we don't copy files!
+        }
+        private string GetCleanFileName(string path)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return AndroidAudioInfoBridge.GetFileName(path);
+#else
+            try { return Path.GetFileName(path); }
+            catch { return path; }
+#endif
         }
     }
 }

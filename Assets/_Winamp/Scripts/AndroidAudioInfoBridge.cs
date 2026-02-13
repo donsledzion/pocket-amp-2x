@@ -272,6 +272,71 @@ namespace SoftAware
             return new string[] { "", "" };
         }
 
+        /// <summary>
+        /// Attempts to get a clean file name from a path or content URI.
+        /// </summary>
+        public static string GetFileName(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return "";
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (path.StartsWith("content://"))
+            {
+                try
+                {
+                    using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                    using (var currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                    using (var contentResolver = currentActivity.Call<AndroidJavaObject>("getContentResolver"))
+                    using (var uriClass = new AndroidJavaClass("android.net.Uri"))
+                    using (var uri = uriClass.CallStatic<AndroidJavaObject>("parse", path))
+                    {
+                        // Open cursor for the URI
+                        // Columns: _display_name (standard for SAF)
+                        using (var cursor = contentResolver.Call<AndroidJavaObject>("query", uri, null, null, null, null))
+                        {
+                            if (cursor != null && cursor.Call<bool>("moveToFirst"))
+                            {
+                                int nameIndex = cursor.Call<int>("getColumnIndex", "_display_name");
+                                if (nameIndex != -1)
+                                {
+                                    string name = cursor.Call<string>("getString", nameIndex);
+                                    if (!string.IsNullOrEmpty(name)) return name;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[AndroidAudioInfoBridge] Failed to query display name for {path}: {e.Message}");
+                }
+
+                // Fallback for content URIs: Try to unescape the last segment
+                try 
+                {
+                    string lastSegment = path.Substring(path.LastIndexOf('/') + 1);
+                    return System.Uri.UnescapeDataString(lastSegment);
+                }
+                catch { }
+            }
+#endif
+            // Standard file path or fallback
+            try
+            {
+                string fileName = System.IO.Path.GetFileName(path);
+                // Even for regular paths, it might be URL encoded if it came from certain Android sources
+                if (fileName.Contains("%"))
+                {
+                    return System.Uri.UnescapeDataString(fileName);
+                }
+                return fileName;
+            }
+            catch
+            {
+                return path;
+            }
+        }
+
         private static void SetRetrieverDataSource(AndroidJavaObject retriever, string path)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
