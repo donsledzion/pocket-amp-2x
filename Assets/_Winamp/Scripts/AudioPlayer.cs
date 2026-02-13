@@ -23,6 +23,9 @@ namespace SoftAware.Winamp
         private AudioSource audioSource;
         private IPlaybackEngine engine;
         
+        public float CurrentTime => engine != null ? engine.CurrentTime : 0;
+        public float Duration => engine != null ? engine.Duration : 0;
+        
         private Playlist.SongInfo currentSong => playlist.CurrentSong;
         private bool isPaused = false;
         public bool IsPaused => isPaused;

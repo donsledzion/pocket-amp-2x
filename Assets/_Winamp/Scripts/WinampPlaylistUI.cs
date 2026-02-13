@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
+
 
 namespace SoftAware.Winamp
 {
@@ -22,9 +24,14 @@ namespace SoftAware.Winamp
 
         [Header("Window Controls")]
         [SerializeField] private Button closeButton;
+        [SerializeField] private TextMeshProUGUI timeCounterText;
+        [SerializeField] private TextMeshProUGUI currentTrackTimeText;
+
 
         private readonly List<WinampPlaylistTrack> trackUIItems = new ();
         private bool isUpdatingScroll = false;
+        private bool isRemainingMode = false;
+        private float lastUpdateTime = 0f;
 
         private void Start()
         {
@@ -83,9 +90,18 @@ namespace SoftAware.Winamp
                 miscContextMenu.OnFileInfoButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnMiscOptionsButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
             }
+
+            if (main != null && main.TimeDisplay != null)
+            {
+                main.TimeDisplay.OnModeChanged += HandleTimeModeChanged;
+                // Initial sync
+                isRemainingMode = SettingsManager.Instance != null ? SettingsManager.Instance.IsRemainingMode : false;
+            }
             
             RefreshList();
+            UpdateTimeCounter();
         }
+
 
         private void OnDestroy()
         {
@@ -126,6 +142,11 @@ namespace SoftAware.Winamp
                 listOptionsContextMenu.OnLoadListRequested -= playlist.PickLoadList;
             }
 
+            if (main != null && main.TimeDisplay != null)
+            {
+                main.TimeDisplay.OnModeChanged -= HandleTimeModeChanged;
+            }
+
             if (scrollRect != null) scrollRect.onValueChanged.RemoveListener(HandleScrollRectChanged);
             if (scrollbar != null) scrollbar.onValueChanged.RemoveListener(HandleScrollbarChanged);
         }
@@ -144,6 +165,16 @@ namespace SoftAware.Winamp
             isUpdatingScroll = true;
             scrollRect.verticalNormalizedPosition = value;
             isUpdatingScroll = false;
+        }
+
+        private void Update()
+        {
+            // Simple throttle for UI update
+            if (Time.time - lastUpdateTime > 0.1f)
+            {
+                UpdateCurrentTrackTime();
+                lastUpdateTime = Time.time;
+            }
         }
 
         public void RefreshList()
@@ -187,7 +218,9 @@ namespace SoftAware.Winamp
             // Reset scroll on refresh
             if (scrollRect) scrollRect.verticalNormalizedPosition = 1f;
             if (scrollbar) scrollbar.value = 1f;
+            UpdateTimeCounter();
         }
+
 
         private void HandleTrackClick(int index)
         {
@@ -209,7 +242,9 @@ namespace SoftAware.Winamp
         private void HandleSongMetadataUpdated(int index, Playlist.SongInfo song)
         {
             UpdateTrackDuration(index, song.Title, song.Duration);
+            UpdateTimeCounter();
         }
+
 
         private void UpdateHighlights()
         {
@@ -221,7 +256,10 @@ namespace SoftAware.Winamp
                 trackUIItems[i].SetSelected(playlist.IsSelected(i));
                 trackUIItems[i].SetPlaying(i == playingIndex);
             }
+
+            UpdateTimeCounter();
         }
+
 
         public void UpdateTrackDuration(int index, string title, float duration)
         {
@@ -248,6 +286,59 @@ namespace SoftAware.Winamp
             }
         }
 
+        private void UpdateTimeCounter()
+        {
+            if (timeCounterText == null || playlist == null) return;
+
+            float totalDuration = 0;
+            float selectedDuration = 0;
+            var songs = playlist.AllSongs;
+
+            for (int i = 0; i < songs.Count; i++)
+            {
+                totalDuration += songs[i].Duration;
+                if (playlist.IsSelected(i))
+                {
+                    selectedDuration += songs[i].Duration;
+                }
+            }
+
+            string totalStr = AudioMetadataUtils.FormatTime(totalDuration);
+            string selectedStr = AudioMetadataUtils.FormatTime(selectedDuration);
+
+            timeCounterText.text = $"{selectedStr}/{totalStr}";
+        }
+
+        private void UpdateCurrentTrackTime()
+        {
+            if (currentTrackTimeText == null || audioPlayer == null) return;
+
+            if (!audioPlayer.IsPlaying && !audioPlayer.IsPaused)
+            {
+                currentTrackTimeText.text = "";
+                return;
+            }
+
+            float currentTime = audioPlayer.CurrentTime;
+            float totalTime = audioPlayer.Duration;
+            float displayTime = isRemainingMode ? (totalTime - currentTime) : currentTime;
+
+            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(displayTime));
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+
+            string timeStr = isRemainingMode ? $"-{minutes}  {seconds:D2}" : $"{minutes}  {seconds:D2}";
+            currentTrackTimeText.text = timeStr;
+        }
+
+        private void HandleTimeModeChanged(bool remaining)
+        {
+            isRemainingMode = remaining;
+            UpdateCurrentTrackTime();
+        }
+
         private void CloseWindow() => main.ClosePlaylistWindow();
+
+
     }
 }

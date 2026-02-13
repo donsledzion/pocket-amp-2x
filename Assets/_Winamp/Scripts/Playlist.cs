@@ -536,6 +536,11 @@ namespace SoftAware.Winamp
                     song.Title = GetCleanFileName(path);
                     song.Artist = "";
                 }
+#else
+                // In Editor/Non-Android, we don't have a fast native way to get duration
+                // without loading the whole clip. We'll mark it as loaded for now, 
+                // and it will be updated when the song is actually played/loaded.
+                if (string.IsNullOrEmpty(song.Title)) song.Title = GetCleanFileName(song.FilePath);
 #endif
                 song.MetadataLoaded = true;
                 OnSongMetadataUpdated?.Invoke(i, song);
@@ -593,8 +598,15 @@ namespace SoftAware.Winamp
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     clip.name = song.Title;
                     song.Clip = clip;
+                    
+                    // Update duration if it was 0 or incorrect
+                    if (song.Duration <= 0)
+                    {
+                        song.Duration = clip.length;
+                        OnSongMetadataUpdated?.Invoke(songs.IndexOf(song), song);
+                    }
 
-                    LogDebug($"<color=green>LOADED: {clip.name}</color>");
+                    LogDebug($"<color=green>LOADED: {clip.name} (Duration: {song.Duration:F2}s)</color>");
                 }
                 else
                 {
