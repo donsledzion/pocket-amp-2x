@@ -129,17 +129,27 @@ namespace SoftAware.Winamp
         private int[] cachedCenterFreqs;
         private short cachedMinLevel, cachedMaxLevel;
 
+        private long lastInteractionTimeMs = 0;
+        private bool isPendingUpdate = false;
+        private const int SettleTimeMs = 1000; // Winamp-style delay
+
         public void SetEqualizerEnabled(bool enabled)
         {
-            eqEnabled = enabled;
-            UpdateNativeEQ(true); // Forced update for state changes
+            if (eqEnabled != enabled)
+            {
+                eqEnabled = enabled;
+                UpdateNativeEQ(true); // Forced update ONLY for real state changes (ON/OFF)
+            }
         }
 
         public void SetEqualizerGains(float preamp, float[] bands)
         {
             lastPreamp = preamp;
             lastBands = bands;
-            UpdateNativeEQ(false); // Throttled update for slider moves
+            
+            // Interaction detected: reset settle timer
+            lastInteractionTimeMs = _throttleClock.ElapsedMilliseconds;
+            isPendingUpdate = true;
         }
 
         private void UpdateNativeEQ(bool forced)
@@ -159,8 +169,8 @@ namespace SoftAware.Winamp
                 // 1. Initialize Effects (if needed)
                 if (nativeEq == null)
                 {
-                    nativeEq = new AndroidJavaObject("android.media.audiofx.Equalizer", 0, currentMusicID);
-                    Debug.Log($"Created native Equalizer for session {currentMusicID}");
+                    nativeEq = new AndroidJavaObject("android.media.audiofx.Equalizer", 1000, currentMusicID);
+                    Debug.Log($"Created native Equalizer for session {currentMusicID} with priority 1000");
                     
                     // Cache hardware info once
                     cachedNumBands = nativeEq.Call<short>("getNumberOfBands");
@@ -177,6 +187,7 @@ namespace SoftAware.Winamp
 
                 if (nativeLoudness == null)
                 {
+                    // priority 1000 not supported by LoudnessEnhancer constructor in the same way, but it's fine
                     nativeLoudness = new AndroidJavaObject("android.media.audiofx.LoudnessEnhancer", currentMusicID);
                     Debug.Log($"Created native LoudnessEnhancer for session {currentMusicID}");
                 }
@@ -221,6 +232,19 @@ namespace SoftAware.Winamp
             {
                 Debug.LogError($"Native EQ/Loudness Error: {e.Message}");
                 ReleaseEffects();
+            }
+        }
+
+        public void Update()
+        {
+            if (isPendingUpdate)
+            {
+                long currentTimeMs = _throttleClock.ElapsedMilliseconds;
+                if (currentTimeMs - lastInteractionTimeMs >= SettleTimeMs)
+                {
+                    isPendingUpdate = false;
+                    UpdateNativeEQ(true); // Apply settled changes
+                }
             }
         }
 

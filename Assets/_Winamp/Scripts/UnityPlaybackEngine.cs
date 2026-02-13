@@ -157,5 +157,10 @@ namespace SoftAware.Winamp
         {
             // Stub implementation for Unity editor/desktop.
         }
+
+        public void Update()
+        {
+            // No periodic logic needed for UnityPlaybackEngine for now
+        }
     }
 }

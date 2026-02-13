@@ -123,6 +123,9 @@ namespace SoftAware.Winamp
                 action?.Invoke();
             }
 
+            // Update playback engine (for debounce timers, etc.)
+            engine?.Update();
+
             // Centralized UI Update
             if (uiController && engine != null)
             {
