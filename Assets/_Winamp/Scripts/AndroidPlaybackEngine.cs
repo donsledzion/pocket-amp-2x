@@ -108,7 +108,13 @@ namespace SoftAware.Winamp
                 multiplier = Mathf.Pow(10f, lastPreamp / 20f);
             }
 
-            ANAMusic.setVolume(currentMusicID, baseVolumeL * multiplier, baseVolumeR * multiplier);
+            // Fix for Android hardware/FX mute bug at extreme balance:
+            // Some devices mute the whole session if one channel is exactly 0.0 while effects are active.
+            // Using a tiny epsilon (0.001f is ~ -60dB, effectively silent but not zero).
+            float volL = Mathf.Max(baseVolumeL * multiplier, 0.001f);
+            float volR = Mathf.Max(baseVolumeR * multiplier, 0.001f);
+
+            ANAMusic.setVolume(currentMusicID, volL, volR);
         }
 
         private AndroidJavaObject nativeEq;
