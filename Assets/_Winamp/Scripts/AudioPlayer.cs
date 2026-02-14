@@ -191,8 +191,23 @@ namespace SoftAware.Winamp
             }
         }
 
-        private void BindVolume() => panelMain.VolumeController?.Slider.onValueChanged.AddListener(SetVolume);
-        private void BindBalance() => panelMain.BalanceController?.Slider.onValueChanged.AddListener(SetBalance);
+        private void BindVolume() 
+        {
+            if (panelMain.VolumeController != null && panelMain.VolumeController.Slider != null)
+            {
+                panelMain.VolumeController.Slider.onValueChanged.AddListener(SetVolume);
+                SetVolume(panelMain.VolumeController.Slider.value);
+            }
+        }
+
+        private void BindBalance() 
+        {
+            if (panelMain.BalanceController != null && panelMain.BalanceController.Slider != null)
+            {
+                panelMain.BalanceController.Slider.onValueChanged.AddListener(SetBalance);
+                SetBalance(panelMain.BalanceController.Slider.value);
+            }
+        }
 
         private void SetVolume(float volume) { currentVolume = volume; ApplyVolumeBalance(); }
         private void SetBalance(float balance) { currentBalance = balance; ApplyVolumeBalance(); }
@@ -323,7 +338,14 @@ namespace SoftAware.Winamp
                 {
                     // 4. Immediate Native Resume: Start audio NOW.
                     androidEngine.SetNativeMusicID(id);
-                    androidEngine.SetVolume(currentVolume, currentVolume); 
+                    
+                    // Calculate L/R based on balance
+                    float left = currentVolume;
+                    float right = currentVolume;
+                    if (currentBalance < 0.5f) right *= currentBalance * 2f;
+                    else if (currentBalance > 0.5f) left *= (1f - currentBalance) * 2f;
+                    
+                    androidEngine.SetVolume(left, right); 
                     androidEngine.Resume(); 
 
                     // 5. Defer Unity/UI updates to the main thread.

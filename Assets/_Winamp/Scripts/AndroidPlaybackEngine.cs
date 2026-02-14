@@ -24,6 +24,7 @@ namespace SoftAware.Winamp
             {
                 ReleaseEffects();
                 currentMusicID = musicID;
+                ApplyFinalVolume(); // Ensure the new session gets the current volume/balance immediately
                 UpdateNativeEQ(true); // Re-apply current settings to new session
             }
         }
