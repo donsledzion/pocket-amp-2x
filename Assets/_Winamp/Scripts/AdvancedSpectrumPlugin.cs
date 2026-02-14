@@ -65,6 +65,9 @@ namespace SoftAware.Winamp.Visualizers
         {
             if (dataTexture == null) return;
 
+            // Filter out junk/DC offset from first bins (0-2) to avoid flickering in silence
+            for(int k=0; k<3; k++) fftData[k] = 0;
+
             // Upload FFT data to texture efficiently
             dataTexture.GetRawTextureData<float>().CopyFrom(fftData);
             dataTexture.Apply();
@@ -79,8 +82,8 @@ namespace SoftAware.Winamp.Visualizers
 
                 // Calculate smoothed peak for beat-like effects
                 float currentPeak = 0;
-                // Sample sub-bass and bass (bins 0-10 at 1024 resolution)
-                for(int j=0; j<10; j++) currentPeak = Mathf.Max(currentPeak, fftData[j]);
+                // Sample bass (now from bin 3 up to 12)
+                for(int j=3; j<13; j++) currentPeak = Mathf.Max(currentPeak, fftData[j]);
                 
                 // Logarithmic compression for more natural "jump"
                 currentPeak = Mathf.Sqrt(currentPeak); 

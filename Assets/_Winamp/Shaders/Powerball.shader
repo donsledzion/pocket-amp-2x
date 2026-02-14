@@ -70,6 +70,10 @@ Shader "Winamp/Visualizer/Powerball"
                 float s2 = tex2D(_AudioData, float2(basePos + 0.01, 0.5)).r;
                 float fftSample = ((s0 * 2.0) + s1 + s2) * 0.25 * _Sensitivity;
                 
+                // --- NOISE GATE ---
+                // Avoids flickering peaks when music is off
+                fftSample = max(0, fftSample - 0.005); 
+                
                 float pulse = _BeatPulse * _Sensitivity * 0.4;
                 float coreRadius = 0.2 + pulse * 0.25;
 
