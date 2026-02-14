@@ -61,15 +61,11 @@ namespace SoftAware.Winamp
 
         private void Start()
         {
-            // Sync initial state of the window
+            // VisWindow zawsze startuje jako wyłączony (nie zapamiętujemy stanu)
             if (visWindow != null)
             {
-                isVisWindowOpen = visWindow.activeSelf;
-                // If the window is "hidden" via alpha (SetWindowVisibility logic), 
-                // we should check its alpha/interactability. 
-                // But usually checking activeSelf/CanvasGroup is enough.
-                CanvasGroup cg = visWindow.GetComponent<CanvasGroup>();
-                if (cg != null) isVisWindowOpen = cg.alpha > 0.5f;
+                isVisWindowOpen = false;
+                SetWindowVisibility(visWindow, false);
             }
 
             // Fallback for spectrumVisualizer if not assigned in Inspector

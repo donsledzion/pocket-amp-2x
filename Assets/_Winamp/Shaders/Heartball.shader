@@ -6,7 +6,7 @@ Shader "Winamp/Visualizer/Heartball"
         _AudioData ("Audio FFT Data", 2D) = "black" {}
         _ColorCenter ("Center Color", Color) = (1.0, 0.1, 0.3, 1) // Deep Red/Pink
         _ColorOuter ("Outer Color", Color) = (1.0, 0.4, 0.6, 1)  // Hot Pink
-        _Sensitivity ("Sensitivity", Range(1, 50)) = 25.0
+        _Sensitivity ("Sensitivity", Range(1, 50)) = 50.0
         _Exposure ("Glow Intensity", Range(1, 15)) = 1.0
         _GlobalScale ("Global Scale", Range(0.1, 2.0)) = 0.65
         _Aspect ("Aspect Ratio (W/H)", Float) = 1.0

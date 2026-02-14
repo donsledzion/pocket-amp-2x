@@ -47,6 +47,7 @@ namespace SoftAware.Winamp.Visualizers
                 visMaterial = new Material(visualizerShader);
                 display.material = visMaterial;
                 display.color = Color.white; // Ensure base color doesn't interfere
+                display.raycastTarget = false;
             }
             else
             {

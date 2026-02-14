@@ -29,28 +29,24 @@ namespace SoftAware.Winamp.Visualizers
         {
             // Auto-start if a plugin is assigned in the Inspector
             if (initialPlugin != null && initialPlugin is IVisualizerPlugin plugin)
-            {
                 SetPlugin(plugin);
-            }
         }
 
-        public void SetPlugin(IVisualizerPlugin plugin)
+        private void SetPlugin(IVisualizerPlugin plugin)
         {
-            if (activePlugin != null) activePlugin.OnPluginDisable();
-            
+            activePlugin?.OnPluginDisable();
+
             activePlugin = plugin;
-            
-            if (activePlugin != null && visWindow != null)
-            {
-                activePlugin.OnPluginEnable(visWindow.Container.gameObject);
-                visWindow.SetTitle(activePlugin.PluginName);
-            }
+
+            if (activePlugin == null || visWindow == null) return;
+            activePlugin.OnPluginEnable(visWindow.Container.gameObject);
+            visWindow.SetTitle(activePlugin.PluginName);
         }
 
         private void Update()
         {
             if (activePlugin == null) return;
-            if (visWindow == null || !visWindow.gameObject.activeInHierarchy) return;
+            if (!visWindow || !visWindow.gameObject.activeInHierarchy) return;
 
             CaptureData();
             activePlugin.OnUpdate(fftBuffer, waveBuffer);
