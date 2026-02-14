@@ -68,16 +68,28 @@ namespace SoftAware.Winamp.Visualizers
             // Upload FFT data to texture efficiently
             dataTexture.GetRawTextureData<float>().CopyFrom(fftData);
             dataTexture.Apply();
-
+            
             if (visMaterial != null)
             {
+                // Set aspect ratio for the shader to maintain perfect circle
+                float aspect = (float)display.rectTransform.rect.width / display.rectTransform.rect.height;
+                visMaterial.SetFloat("_Aspect", aspect);
+
                 visMaterial.SetTexture("_AudioData", dataTexture);
+
+                // Calculate smoothed peak for beat-like effects
+                float currentPeak = 0;
+                // Sample sub-bass and bass (bins 0-10 at 1024 resolution)
+                for(int j=0; j<10; j++) currentPeak = Mathf.Max(currentPeak, fftData[j]);
                 
-                // Calculate simple peak for beat-like effects in shader
-                float peak = 0;
-                for(int j=0; j<10; j++) peak = Mathf.Max(peak, fftData[j]); // Sample low bands
-                visMaterial.SetFloat("_BeatPulse", peak);
+                // Logarithmic compression for more natural "jump"
+                currentPeak = Mathf.Sqrt(currentPeak); 
+
+                _lastPeak = Mathf.Lerp(_lastPeak, currentPeak, Time.deltaTime * 8f);
+                visMaterial.SetFloat("_BeatPulse", _lastPeak);
             }
         }
+
+        private float _lastPeak = 0;
     }
 }
