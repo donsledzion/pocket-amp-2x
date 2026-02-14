@@ -91,7 +91,17 @@ namespace SoftAware.Winamp
         {
             baseVolumeL = left;
             baseVolumeR = right;
-            ApplyFinalVolume();
+            
+            if (eqEnabled)
+            {
+                isVolumeDirty = true;
+                lastVolInteractionTimeMs = _throttleClock.ElapsedMilliseconds;
+            }
+            else
+            {
+                ApplyFinalVolume();
+                isVolumeDirty = false;
+            }
         }
 
         private void ApplyFinalVolume()
@@ -139,6 +149,10 @@ namespace SoftAware.Winamp
         private long lastInteractionTimeMs = 0;
         private bool isPendingUpdate = false;
         private const int SettleTimeMs = 1000; // Winamp-style delay
+
+        private bool isVolumeDirty = false;
+        private long lastVolInteractionTimeMs = 0;
+        private const int VolSettleTimeMs = 250; 
 
         public void SetEqualizerEnabled(bool enabled)
         {
@@ -244,13 +258,24 @@ namespace SoftAware.Winamp
 
         public void Update()
         {
+            long currentTimeMs = _throttleClock.ElapsedMilliseconds;
+
             if (isPendingUpdate)
             {
-                long currentTimeMs = _throttleClock.ElapsedMilliseconds;
                 if (currentTimeMs - lastInteractionTimeMs >= SettleTimeMs)
                 {
                     isPendingUpdate = false;
+                    isVolumeDirty = false; // UpdateNativeEQ will handle volume
                     UpdateNativeEQ(true); // Apply settled changes
+                }
+            }
+
+            if (isVolumeDirty)
+            {
+                if (currentTimeMs - lastVolInteractionTimeMs >= VolSettleTimeMs)
+                {
+                    isVolumeDirty = false;
+                    ApplyFinalVolume();
                 }
             }
         }
