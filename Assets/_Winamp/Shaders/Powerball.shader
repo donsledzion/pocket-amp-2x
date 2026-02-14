@@ -6,7 +6,7 @@ Shader "Winamp/Visualizer/Powerball"
         _AudioData ("Audio FFT Data", 2D) = "black" {}
         _ColorCenter ("Center Color", Color) = (0.3, 0.6, 1.0, 1)
         _ColorOuter ("Outer Color", Color) = (1.0, 0.2, 0.6, 1)
-        _Sensitivity ("Sensitivity", Range(1, 30)) = 15.0
+        _Sensitivity ("Sensitivity", Range(1, 30)) = 3.0
         _Exposure ("Glow Intensity", Range(1, 15)) = 6.0
         _Aspect ("Aspect Ratio (W/H)", Float) = 1.0
     }
@@ -60,43 +60,45 @@ Shader "Winamp/Visualizer/Powerball"
                 float angle = atan2(uv.y, uv.x) / (2.0 * 3.14159) + 0.5;
 
                 // 2. QUAD MIRRORING (Perfect Symmetry, No Seams)
-                // Maps 0-1 to 0-1-0-1 in 4 quadrants. Seamless on all axes.
                 float quadAngle = abs(frac(angle * 2.0) - 0.5) * 2.0;
                 
-                // 3. FFT Sampling (Smooth & Shared)
-                float fftSample = tex2D(_AudioData, float2(pow(quadAngle, 1.2) * 0.45, 0.5)).r * _Sensitivity;
+                // 3. SEAMLESS & SMOOTH FFT SAMPLING
+                // Instead of one point, we sample a small range to blur the spikes
+                float basePos = pow(quadAngle, 1.3) * 0.45;
+                float s0 = tex2D(_AudioData, float2(basePos, 0.5)).r;
+                float s1 = tex2D(_AudioData, float2(basePos - 0.01, 0.5)).r;
+                float s2 = tex2D(_AudioData, float2(basePos + 0.01, 0.5)).r;
+                float fftSample = ((s0 * 2.0) + s1 + s2) * 0.25 * _Sensitivity;
+                
                 float pulse = _BeatPulse * _Sensitivity * 0.4;
                 float coreRadius = 0.2 + pulse * 0.25;
 
-                // 4. LAYER 1: THE CORE (Volumetric Glow)
+                // 4. LAYER 1: THE CORE
                 float coreGlow = pow(max(0, 1.0 - dist / coreRadius), 10.0);
                 float4 coreCol = _ColorCenter * coreGlow * (3.0 + pulse * 12.0);
 
-                // 5. LAYER 2: DEFINED WAVES (Distinct energy tendrils)
-                // Use sine-waves modulated by FFT to create "spikes"
-                float waveFreq = 40.0;
-                float wave = sin(angle * waveFreq + _Time.z * 5.0) * 0.5 + 0.5;
-                wave *= fftSample; // Modulate by music
+                // 5. LAYER 2: DEFINED WAVES (Smooth & Broad)
+                float waveFreq = 45.0;
+                float wave = sin(angle * waveFreq + _Time.z * 4.0) * 0.5 + 0.5;
                 
-                float rayPos = coreRadius + wave * 0.6;
-                // Sharper energy falloff for "clarity"
-                float rayGlow = exp(-abs(dist - rayPos) * 25.0); 
+                // Use square root on fftSample for more volume, less spikes
+                float energy = sqrt(fftSample) * 0.6; 
+                float rayPos = coreRadius + (wave * energy);
                 
-                // Add secondary wave layer for "living" feel
-                float wave2 = cos(angle * 25.0 - _Time.y * 3.0) * 0.5 + 0.5;
-                float rayPos2 = coreRadius + wave2 * fftSample * 0.4;
-                float rayGlow2 = exp(-abs(dist - rayPos2) * 35.0);
+                // Lower falloff coefficient (25 -> 15) makes rays look broader/liquid
+                float rayGlow = exp(-abs(dist - rayPos) * 15.0); 
+                
+                // Layer 2b: Motion blur/Aura effect
+                float rayGlow2 = exp(-abs(dist - (rayPos*0.9)) * 10.0) * 0.3;
 
-                float4 rayCol = _ColorOuter * (rayGlow + rayGlow2 * 0.5) * (2.0 + fftSample * 8.0);
+                float4 rayCol = _ColorOuter * (rayGlow + rayGlow2) * (1.5 + energy * 6.0);
 
                 // 6. LAYER 3: OUTER DIFFUSION
-                float diffusion = smoothstep(1.3, 0.3, dist) * 0.5;
+                float diffusion = smoothstep(1.4, 0.3, dist);
                 
                 // Final Mix
                 float4 final = (coreCol + rayCol) * diffusion * _Exposure;
-                
-                // Hard mask at edges
-                final *= step(dist, 1.2);
+                final *= step(dist, 1.25);
 
                 return float4(final.rgb, 1.0);
             }
