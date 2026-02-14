@@ -15,6 +15,7 @@ namespace SoftAware.Winamp
         [SerializeField] private RectTransform mainPanel;
         [SerializeField] private RectTransform eqPanel;
         [SerializeField] private RectTransform playlistPanel;
+        [SerializeField] private RectTransform visualizationPanel;
 
         [Header("Configuration")]
         [SerializeField] private float nativeWidth = 275f;
@@ -205,18 +206,53 @@ namespace SoftAware.Winamp
                 nextY -= eqHeight;
             }
 
-            ConfigureColumn(rightColumn, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, nextY));
-            
-            float unscaledScreenHeight = screenHeight / currentScale;
-            float playlistHeight = unscaledScreenHeight + nextY; 
-            
-            rightColumn.sizeDelta = new Vector2(nativeWidth, Mathf.Max(0, playlistHeight));
-            
-            if (showDebugLogs)
-                Debug.Log($"[WinampLayout] Portrait Playlist: TopY={nextY}, Scale={currentScale}");
+            // Sprawdź czy pokazujemy VisualizationPanel czy Playlist
+            bool showVis = IsPanelVisible(visualizationPanel);
+            bool showPlaylist = IsPanelVisible(playlistPanel);
 
-            if (playlistPanel != null)
+            if (showVis)
+            {
+                // VisualizationPanel - kwadrat pod EQ/Main
+                PositionPanel(visualizationPanel, nextY);
+                visualizationPanel.sizeDelta = new Vector2(nativeWidth, nativeWidth); // Kwadrat
+                nextY -= nativeWidth;
+
+                // Playlist pod VisualizationPanel (jeśli widoczna)
+                if (showPlaylist)
+                {
+                    ConfigureColumn(rightColumn, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, nextY));
+                    
+                    float unscaledScreenHeight = screenHeight / currentScale;
+                    float playlistHeight = unscaledScreenHeight + nextY;
+                    
+                    rightColumn.sizeDelta = new Vector2(nativeWidth, Mathf.Max(0, playlistHeight));
+                    SetPanelStretch(playlistPanel);
+                }
+                else
+                {
+                    // Brak playlisty - RightColumn pusta
+                    rightColumn.sizeDelta = Vector2.zero;
+                }
+            }
+            else if (showPlaylist)
+            {
+                // Tylko Playlist - rozciągnięta od EQ/Main do dołu
+                ConfigureColumn(rightColumn, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, nextY));
+                
+                float unscaledScreenHeight = screenHeight / currentScale;
+                float playlistHeight = unscaledScreenHeight + nextY;
+                
+                rightColumn.sizeDelta = new Vector2(nativeWidth, Mathf.Max(0, playlistHeight));
                 SetPanelStretch(playlistPanel);
+            }
+            else
+            {
+                // Ani Vis ani Playlist - RightColumn pusta
+                rightColumn.sizeDelta = Vector2.zero;
+            }
+
+            if (showDebugLogs)
+                Debug.Log($"[WinampLayout] Portrait: Vis={showVis}, Playlist={showPlaylist}, NextY={nextY}");
         }
 
         private void ApplyLandscapeLayout(float screenWidth, float screenHeight)
@@ -251,15 +287,42 @@ namespace SoftAware.Winamp
             if (IsPanelVisible(eqPanel))
                 PositionPanel(eqPanel, -mainHeight);
 
+            // Prawa kolumna - VisualizationPanel (kwadrat) lub Playlist (pełna wysokość)
             float remainingWidthScaled = screenWidth - scaledLeftWidth;
             float remainingWidthUnscaled = remainingWidthScaled / currentScale;
             float unscaledScreenHeight = screenHeight / currentScale;
 
             ConfigureColumn(rightColumn, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(nativeWidth, 0));
-            rightColumn.sizeDelta = new Vector2(remainingWidthUnscaled, unscaledScreenHeight);
 
-            if (playlistPanel != null)
+            bool showVis = IsPanelVisible(visualizationPanel);
+            bool showPlaylist = IsPanelVisible(playlistPanel);
+
+            if (showVis)
+            {
+                // VisualizationPanel - kwadrat w prawej kolumnie (wycentrowany pionowo)
+                rightColumn.sizeDelta = new Vector2(remainingWidthUnscaled, unscaledScreenHeight);
+                
+                // Pozycjonuj vis jako kwadrat, wycentrowany w prawej kolumnie
+                visualizationPanel.anchorMin = new Vector2(0.5f, 0.5f);
+                visualizationPanel.anchorMax = new Vector2(0.5f, 0.5f);
+                visualizationPanel.pivot = new Vector2(0.5f, 0.5f);
+                visualizationPanel.anchoredPosition = Vector2.zero;
+                visualizationPanel.sizeDelta = new Vector2(nativeWidth, nativeWidth); // Kwadrat
+            }
+            else if (showPlaylist)
+            {
+                // Playlist - pełna wysokość prawej kolumny
+                rightColumn.sizeDelta = new Vector2(remainingWidthUnscaled, unscaledScreenHeight);
                 SetPanelStretch(playlistPanel);
+            }
+            else
+            {
+                // Ani Vis ani Playlist - prawa kolumna pusta
+                rightColumn.sizeDelta = new Vector2(remainingWidthUnscaled, 0);
+            }
+
+            if (showDebugLogs)
+                Debug.Log($"[WinampLayout] Landscape: Vis={showVis}, Playlist={showPlaylist}");
         }
 
         private void ConfigureColumn(RectTransform col, Vector2 anchor, Vector2 pivot, Vector2 pos)

@@ -5222,6 +5222,7 @@ MonoBehaviour:
   mainPanel: {fileID: 996247204}
   eqPanel: {fileID: 693281831}
   playlistPanel: {fileID: 132724955}
+  visualizationPanel: {fileID: 1777476129}
   nativeWidth: 275
   mainHeight: 116
   eqHeight: 116
@@ -9844,7 +9845,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1777476129}
   - {fileID: 1448670017}
   - {fileID: 776791690}
   m_Father: {fileID: 604934310}
@@ -15402,20 +15402,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777476128}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 281245790}
   - {fileID: 684665965}
   - {fileID: 547235590}
-  m_Father: {fileID: 1147423833}
+  m_Father: {fileID: 1893449500}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 512}
-  m_SizeDelta: {x: 978, y: 978}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -253.76257}
+  m_SizeDelta: {x: 275, y: 275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1777476130
 MonoBehaviour:
@@ -16212,6 +16212,7 @@ RectTransform:
   m_Children:
   - {fileID: 996247204}
   - {fileID: 693281831}
+  - {fileID: 1777476129}
   m_Father: {fileID: 776791690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
