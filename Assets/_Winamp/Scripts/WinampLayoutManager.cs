@@ -29,25 +29,64 @@ namespace SoftAware.Winamp
         [SerializeField] private bool showDebugLogs = true;
         [SerializeField] private Color debugColor = Color.yellow;
 
-        private bool lastEqActive;
-        private bool lastPlaylistActive;
+        private CanvasGroup eqCanvasGroup;
+        private CanvasGroup playlistCanvasGroup;
+        private bool isDirty;
 
-        private void OnEnable()
+        private void Awake()
         {
-            UpdateLayout();
+            CacheComponents();
         }
 
-        private void Update()
+        private void OnValidate()
         {
-            bool eqActive = IsPanelVisible(eqPanel);
-            bool playlistActive = IsPanelVisible(playlistPanel);
+            // Resetuj cache przy zmianach w inspektorze
+            CacheComponents();
+        }
 
-            if (eqActive != lastEqActive || playlistActive != lastPlaylistActive || !Application.isPlaying || transform.hasChanged)
+        private void Start()
+        {
+            // Subskrypcja zdarzeń z Main
+            Main main = FindFirstObjectByType<Main>();
+            if (main != null)
             {
-                lastEqActive = eqActive;
-                lastPlaylistActive = playlistActive;
+                if (main.EqButton != null) 
+                    main.EqButton.OnValueChanged.AddListener(_ => SetDirty());
+                if (main.PlaylistButton != null) 
+                    main.PlaylistButton.OnValueChanged.AddListener(_ => SetDirty());
+            }
+            
+            SetDirty();
+        }
+
+        private void CacheComponents()
+        {
+            if (eqPanel != null) eqPanel.TryGetComponent(out eqCanvasGroup);
+            if (playlistPanel != null) playlistPanel.TryGetComponent(out playlistCanvasGroup);
+        }
+
+        private void OnRectTransformDimensionsChange()
+        {
+            SetDirty();
+        }
+
+        private void LateUpdate()
+        {
+            if (isDirty)
+            {
+                UpdateLayout();
+                isDirty = false;
+            }
+
+            if (!Application.isPlaying && transform.hasChanged)
+            {
                 UpdateLayout();
             }
+        }
+
+        public void SetDirty()
+        {
+            isDirty = true;
         }
 
         private bool IsPanelVisible(RectTransform panel)
@@ -55,9 +94,17 @@ namespace SoftAware.Winamp
             if (panel == null) return false;
             if (!panel.gameObject.activeInHierarchy) return false;
 
-            // Sprawdzamy CanvasGroup (alpha), ponieważ Main.cs ukrywa okna przez alpha
-            CanvasGroup cg = panel.GetComponent<CanvasGroup>();
+            // Spróbuj pobrać CanvasGroup jeśli cache jest pusty (szczególnie w Editorze)
+            CanvasGroup cg = null;
+            if (panel == eqPanel) cg = eqCanvasGroup;
+            else if (panel == playlistPanel) cg = playlistCanvasGroup;
+
+            if (cg == null) panel.TryGetComponent(out cg);
+
             if (cg != null && cg.alpha <= 0.001f) return false;
+
+            // Dodatkowo sprawdźmy LayoutElement.ignoreLayout (na wszelki wypadek)
+            if (panel.TryGetComponent(out LayoutElement le) && le.ignoreLayout) return false;
 
             return true;
         }
