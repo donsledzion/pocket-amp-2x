@@ -70,6 +70,12 @@ namespace SoftAware.Winamp
             SetDirty();
         }
 
+#if UNITY_EDITOR
+        private Vector2 lastParentSize;
+#endif
+        private ScreenOrientation lastOrientation;
+        private Vector2 lastRuntimeParentSize;
+
         private void LateUpdate()
         {
             if (isDirty)
@@ -78,9 +84,49 @@ namespace SoftAware.Winamp
                 isDirty = false;
             }
 
-            if (!Application.isPlaying && transform.hasChanged)
+#if UNITY_EDITOR
+            // W edytorze (Simulator) śledź zmiany rozmiaru rodzica
+            if (!Application.isPlaying)
             {
-                UpdateLayout();
+                RectTransform parentRect = transform.parent as RectTransform;
+                if (parentRect != null)
+                {
+                    Vector2 currentSize = parentRect.rect.size;
+                    if (currentSize != lastParentSize)
+                    {
+                        lastParentSize = currentSize;
+                        SetDirty();
+                    }
+                }
+                
+                if (transform.hasChanged)
+                {
+                    UpdateLayout();
+                }
+            }
+#endif
+
+            // W runtime śledź zmiany orientacji i rozmiaru
+            if (Application.isPlaying)
+            {
+                ScreenOrientation currentOrientation = Screen.orientation;
+                if (currentOrientation != lastOrientation)
+                {
+                    lastOrientation = currentOrientation;
+                    SetDirty();
+                }
+
+                // Dodatkowo śledź rozmiar rodzica (SafeArea może się zmienić)
+                RectTransform parentRect = transform.parent as RectTransform;
+                if (parentRect != null)
+                {
+                    Vector2 currentSize = parentRect.rect.size;
+                    if (currentSize != lastRuntimeParentSize)
+                    {
+                        lastRuntimeParentSize = currentSize;
+                        SetDirty();
+                    }
+                }
             }
         }
 
