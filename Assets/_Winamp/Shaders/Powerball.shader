@@ -6,8 +6,9 @@ Shader "Winamp/Visualizer/Powerball"
         _AudioData ("Audio FFT Data", 2D) = "black" {}
         _ColorCenter ("Center Color", Color) = (0.3, 0.6, 1.0, 1)
         _ColorOuter ("Outer Color", Color) = (1.0, 0.2, 0.6, 1)
-        _Sensitivity ("Sensitivity", Range(1, 30)) = 3.0
+        _Sensitivity ("Sensitivity", Range(1, 30)) = 20.0
         _Exposure ("Glow Intensity", Range(1, 15)) = 6.0
+        _GlobalScale ("Global Scale", Range(0.1, 2.0)) = 0.75
         _Aspect ("Aspect Ratio (W/H)", Float) = 1.0
     }
 
@@ -37,7 +38,7 @@ Shader "Winamp/Visualizer/Powerball"
 
             sampler2D _AudioData;
             float4 _ColorCenter, _ColorOuter;
-            float _Sensitivity, _Exposure, _Aspect, _BeatPulse;
+            float _Sensitivity, _Exposure, _Aspect, _BeatPulse, _GlobalScale;
 
             v2f vert (appdata_t v) {
                 v2f o;
@@ -53,10 +54,10 @@ Shader "Winamp/Visualizer/Powerball"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // 1. Correct Aspect Ratio & Polar Space
-                float2 uv = i.screenUV - 0.5;
+                // 1. Correct Aspect Ratio & Polar Space with Global Scale
+                float2 uv = (i.screenUV - 0.5);
                 uv.x *= _Aspect;
-                float dist = length(uv) * 2.0;
+                float dist = (length(uv) * 2.0) / _GlobalScale; // Apply scale here
                 float angle = atan2(uv.y, uv.x) / (2.0 * 3.14159) + 0.5;
 
                 // 2. QUAD MIRRORING (Perfect Symmetry, No Seams)
@@ -98,11 +99,14 @@ Shader "Winamp/Visualizer/Powerball"
                 float4 rayCol = _ColorOuter * (rayGlow + rayGlow2) * (1.5 + energy * 6.0);
 
                 // 6. LAYER 3: OUTER DIFFUSION
-                float diffusion = smoothstep(1.4, 0.3, dist);
+                float diffusion = smoothstep(1.4, 0.6, dist);
                 
                 // Final Mix
                 float4 final = (coreCol + rayCol) * diffusion * _Exposure;
-                final *= step(dist, 1.25);
+                
+                // Safety mask: Cut off at the edges of the scaled view
+                final *= smoothstep(1.3, 1.0, dist); // Fade out instead of hard cut
+                final *= step(dist, 1.4);
 
                 return float4(final.rgb, 1.0);
             }

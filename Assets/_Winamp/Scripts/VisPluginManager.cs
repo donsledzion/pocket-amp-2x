@@ -12,7 +12,9 @@ namespace SoftAware.Winamp.Visualizers
         [SerializeField] private VisWindow visWindow;
         
         [Header("Settings")]
-        [SerializeField] private MonoBehaviour initialPlugin; // Drag a plugin MonoBehaviour here
+        [SerializeField] private MonoBehaviour initialPlugin; 
+        [SerializeField] private float editorGain = 1.0f;
+        [SerializeField] private float androidGain = 0.5f;
 
         private IVisualizerPlugin activePlugin;
         private float[] fftBuffer = new float[1024];
@@ -56,17 +58,33 @@ namespace SoftAware.Winamp.Visualizers
 
         private void CaptureData()
         {
+            float currentGain = 1.0f;
 #if UNITY_ANDROID && !UNITY_EDITOR
+            currentGain = androidGain;
             float[] sharedFft = AndroidVisualizerBridge.GetSharedFFT(1024);
             float[] sharedWave = AndroidVisualizerBridge.GetSharedWaveform(1024);
             
-            if (sharedFft != null) System.Array.Copy(sharedFft, fftBuffer, 1024);
-            if (sharedWave != null) System.Array.Copy(sharedWave, waveBuffer, 1024);
+            if (sharedFft != null) 
+            {
+                for(int i=0; i<1024; i++) 
+                {
+                    fftBuffer[i] = sharedFft[i] * currentGain;
+                    waveBuffer[i] = sharedWave[i] * currentGain;
+                }
+            }
 #else
+            currentGain = editorGain;
             if (audioSource != null && audioSource.isPlaying)
             {
                 audioSource.GetSpectrumData(fftBuffer, 0, FFTWindow.BlackmanHarris);
                 audioSource.GetOutputData(waveBuffer, 0);
+                
+                // Apply gain
+                for(int i=0; i<1024; i++) 
+                {
+                    fftBuffer[i] *= currentGain;
+                    waveBuffer[i] *= currentGain;
+                }
             }
             else if (audioSource == null)
             {

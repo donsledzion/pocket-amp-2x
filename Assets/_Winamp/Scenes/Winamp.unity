@@ -4224,6 +4224,8 @@ MonoBehaviour:
   audioSource: {fileID: 1138104798}
   visWindow: {fileID: 1777476130}
   initialPlugin: {fileID: 691537094}
+  editorGain: 1
+  androidGain: 0.05
 --- !u!4 &691537093
 Transform:
   m_ObjectHideFlags: 0
@@ -4848,7 +4850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &765255064
 MonoBehaviour:
   m_ObjectHideFlags: 0
