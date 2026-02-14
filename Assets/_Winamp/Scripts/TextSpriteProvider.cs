@@ -10,6 +10,7 @@ namespace SoftAware
     /// </summary>
     public class TextSpriteProvider : MonoBehaviour
     {
+        private static bool debugMissingCharacters;
         [SerializeField] private Sprite[] textSprites;
         
         private static TextSpriteProvider instance;
@@ -72,7 +73,7 @@ namespace SoftAware
         /// </summary>
         public static Sprite GetSprite(char c)
         {
-            if (instance == null || !instance.isInitialized)
+            if (!instance || !instance.isInitialized)
             {
                 Debug.LogWarning("[TextSpriteProvider] Not initialized!");
                 return null;
@@ -85,8 +86,8 @@ namespace SoftAware
             {
                 return sprite;
             }
-
-            Debug.LogWarning($"[TextSpriteProvider] Sprite not found for character: {c}");
+            if(debugMissingCharacters)
+                Debug.LogWarning($"[TextSpriteProvider] Sprite not found for character: {c}");
             return null;
         }
 

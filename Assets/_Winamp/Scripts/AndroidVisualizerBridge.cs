@@ -50,6 +50,38 @@ namespace SoftAware.Winamp
 #endif
         }
 
+        // New Plugin-Friendly API (Non-invasive)
+        // ---------------------------------------------------------
+        private static float[] _latestFft;
+        private static float[] _latestWave;
+        private static int _lastFrameUpdate = -1;
+
+        /// <summary>
+        /// Returns the latest FFT data captured in the current frame.
+        /// This allows multiple plugins to share the same capture without additional JNI overhead.
+        /// </summary>
+        public static float[] GetSharedFFT(int size)
+        {
+            UpdateSharedData(size);
+            return _latestFft;
+        }
+
+        public static float[] GetSharedWaveform(int size)
+        {
+            UpdateSharedData(size);
+            return _latestWave;
+        }
+
+        private static void UpdateSharedData(int size)
+        {
+            if (Time.frameCount == _lastFrameUpdate) return;
+            
+            _latestFft = GetFFTData(size);
+            _latestWave = GetWaveformData(size);
+            _lastFrameUpdate = Time.frameCount;
+        }
+        // ---------------------------------------------------------
+
 
         private static int silenceCounter = 0;
         private static float[] cachedFftData;

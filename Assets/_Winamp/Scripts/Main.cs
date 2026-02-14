@@ -41,16 +41,20 @@ namespace SoftAware.Winamp
         [SerializeField] private ToggleButton repeatButton;
         [SerializeField] private ToggleButton eqButton;
         [SerializeField] private ToggleButton playlistButton;
+        [SerializeField] private ToggleButton visButton; // New toggle for Vis Window
         internal ToggleButton ShuffleButton => shuffleButton;
         internal ToggleButton RepeatButton => repeatButton;
         internal ToggleButton EqButton => eqButton;
         internal ToggleButton PlaylistButton => playlistButton;
+        internal ToggleButton VisButton => visButton;
 
         [Header("Windows")]
         [SerializeField] private GameObject eqWindow;
         [SerializeField] private GameObject playlistWindow;
+        [SerializeField] private GameObject visWindow; // Reference to the new VisWindow GameObject
         internal GameObject EqWindow => eqWindow;
         internal GameObject PlaylistWindow => playlistWindow;
+        internal GameObject VisWindow => visWindow;
 
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
@@ -95,6 +99,14 @@ namespace SoftAware.Winamp
                     SetWindowVisibility(playlistWindow, isOn);
                 });
                 SetWindowVisibility(playlistWindow, playlistButton.IsOn);
+            }
+
+            if (visButton != null)
+            {
+                visButton.OnValueChanged.AddListener((isOn) => {
+                    SetWindowVisibility(visWindow, isOn);
+                });
+                SetWindowVisibility(visWindow, visButton.IsOn);
             }
 
             if (shuffleButton != null)
