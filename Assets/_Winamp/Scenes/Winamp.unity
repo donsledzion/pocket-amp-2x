@@ -3542,7 +3542,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &547235590
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4129,7 +4129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &684665965
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4156,7 +4156,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684665964}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
@@ -4253,7 +4253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1497194a8dc2a2e4ea07576075c6e0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Winamp.Visualizers.AdvancedSpectrumPlugin
-  visualizerShader: {fileID: 4800000, guid: 9ca484bbe22d3614fa5d5fcdf951d5b3, type: 3}
+  visualizerShader: {fileID: 4800000, guid: a1fe79a8ca611294cb2b296a76c0b749, type: 3}
 --- !u!1 &693281830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4850,7 +4850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &765255064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4865,10 +4865,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.ToggleButton
   button: {fileID: 765255066}
   targetImage: {fileID: 765255065}
-  offNormal: {fileID: -2011619263, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
-  offPressed: {fileID: -1119785181, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
-  onNormal: {fileID: 1520315265, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
-  onPressed: {fileID: 54996646, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  offNormal: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
+  offPressed: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
+  onNormal: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
+  onPressed: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
   OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4892,7 +4892,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2011619263, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+  m_Sprite: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4932,7 +4932,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: -1119785181, guid: 96a24613d64d126419b89bdfffb93b23, type: 3}
+    m_PressedSprite: {fileID: -674878550, guid: e91204c317dd80d41bccb91fb087a48e, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -4970,8 +4970,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 95, y: 11.699951}
-  m_SizeDelta: {x: 23, y: 12}
+  m_AnchoredPosition: {x: 119.7, y: -40.5}
+  m_SizeDelta: {x: 21, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &769275746
 GameObject:
@@ -7924,7 +7924,6 @@ MonoBehaviour:
   repeatButton: {fileID: 1347582004}
   eqButton: {fileID: 257304246}
   playlistButton: {fileID: 1395137659}
-  visButton: {fileID: 765255064}
   eqWindow: {fileID: 693281830}
   playlistWindow: {fileID: 132724954}
   visWindow: {fileID: 1777476128}
@@ -9749,8 +9748,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1448670017}
   - {fileID: 1777476129}
+  - {fileID: 1448670017}
   m_Father: {fileID: 604934310}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

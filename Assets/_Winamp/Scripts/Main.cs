@@ -41,17 +41,15 @@ namespace SoftAware.Winamp
         [SerializeField] private ToggleButton repeatButton;
         [SerializeField] private ToggleButton eqButton;
         [SerializeField] private ToggleButton playlistButton;
-        [SerializeField] private ToggleButton visButton; // New toggle for Vis Window
         internal ToggleButton ShuffleButton => shuffleButton;
         internal ToggleButton RepeatButton => repeatButton;
         internal ToggleButton EqButton => eqButton;
         internal ToggleButton PlaylistButton => playlistButton;
-        internal ToggleButton VisButton => visButton;
 
         [Header("Windows")]
         [SerializeField] private GameObject eqWindow;
         [SerializeField] private GameObject playlistWindow;
-        [SerializeField] private GameObject visWindow; // Reference to the new VisWindow GameObject
+        [SerializeField] private GameObject visWindow; 
         internal GameObject EqWindow => eqWindow;
         internal GameObject PlaylistWindow => playlistWindow;
         internal GameObject VisWindow => visWindow;
@@ -59,9 +57,28 @@ namespace SoftAware.Winamp
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
         [SerializeField] private Button minimizeButton;
+        private bool isVisWindowOpen = false;
 
         private void Start()
         {
+            // Sync initial state of the window
+            if (visWindow != null)
+            {
+                isVisWindowOpen = visWindow.activeSelf;
+                // If the window is "hidden" via alpha (SetWindowVisibility logic), 
+                // we should check its alpha/interactability. 
+                // But usually checking activeSelf/CanvasGroup is enough.
+                CanvasGroup cg = visWindow.GetComponent<CanvasGroup>();
+                if (cg != null) isVisWindowOpen = cg.alpha > 0.5f;
+            }
+
+            // Fallback for spectrumVisualizer if not assigned in Inspector
+            if (spectrumVisualizer == null)
+            {
+                spectrumVisualizer = FindFirstObjectByType<SpectrumVisualizer>();
+                if (spectrumVisualizer != null) Playlist.Log("[Main] Found SpectrumVisualizer via Fallback.");
+            }
+
             // Load and Apply Settings
             if (SettingsManager.Instance != null)
             {
@@ -101,14 +118,6 @@ namespace SoftAware.Winamp
                 SetWindowVisibility(playlistWindow, playlistButton.IsOn);
             }
 
-            if (visButton != null)
-            {
-                visButton.OnValueChanged.AddListener((isOn) => {
-                    SetWindowVisibility(visWindow, isOn);
-                });
-                SetWindowVisibility(visWindow, visButton.IsOn);
-            }
-
             if (shuffleButton != null)
             {
                 shuffleButton.OnValueChanged.AddListener((isOn) => {
@@ -139,9 +148,17 @@ namespace SoftAware.Winamp
 
             if (spectrumVisualizer != null)
             {
+                Playlist.Log("[Main] Subscribing to SpectrumVisualizer DoubleClick.");
                 spectrumVisualizer.OnModeChanged += (mode) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.VisualizerMode = mode;
                 };
+
+                // Subscribing to the DoubleClick event to toggle the window
+                spectrumVisualizer.OnDoubleClick += ToggleVisWindow;
+            }
+            else
+            {
+                Playlist.Log("[Main] ERR: SpectrumVisualizer NOT FOUND!");
             }
 
             if (timeDisplay != null)
@@ -248,6 +265,13 @@ namespace SoftAware.Winamp
             {
                 playlistButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
             }
+        }
+
+        public void ToggleVisWindow()
+        {
+            isVisWindowOpen = !isVisWindowOpen;
+            SetWindowVisibility(visWindow, isVisWindowOpen);
+            Playlist.Log($"[Main] Visualizer Window Toggled: {isVisWindowOpen}");
         }
 
         private void OnDestroy()

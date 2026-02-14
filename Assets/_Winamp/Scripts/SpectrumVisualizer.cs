@@ -22,6 +22,7 @@ namespace SoftAware.Winamp
         [SerializeField] private float peakHoldTime = 0.1f;
         
         public System.Action<VisMode> OnModeChanged;
+        public System.Action OnDoubleClick;
 
         private Texture2D visualizerTexture;
         private Color[] palette;
@@ -30,6 +31,8 @@ namespace SoftAware.Winamp
         private float[] peakHeights;
         private float[] peakTimers;
         private Color colorTransparent;
+        private float _lastClickTime = 0;
+        private const float DOUBLE_CLICK_TIME = 0.3f;
 
         private const int Width = 76;
         private const int Height = 16;
@@ -326,13 +329,29 @@ namespace SoftAware.Winamp
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            // Cycle: Spectrum -> Waveform -> None -> Spectrum
-            if (currentMode == VisMode.Spectrum) currentMode = VisMode.Waveform;
-            else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
-            else currentMode = VisMode.Spectrum;
+            float timeSinceLastClick = Time.time - _lastClickTime;
+            Playlist.Log($"[Vis] Click! Delta: {timeSinceLastClick:F3}s");
 
-            Playlist.Log($"[Vis] Clicked! New Mode: {currentMode}");
-            OnModeChanged?.Invoke(currentMode);
+            if (timeSinceLastClick < DOUBLE_CLICK_TIME)
+            {
+                // Double click detected manually
+                Playlist.Log("[Vis] Double Click Detected (Manual)!");
+                OnDoubleClick?.Invoke();
+                _lastClickTime = 0; // Reset to avoid triple click triggering second double click
+            }
+            else
+            {
+                // Single click
+                _lastClickTime = Time.time;
+                
+                // Cycle modes (Spectrum -> Waveform -> None)
+                if (currentMode == VisMode.Spectrum) currentMode = VisMode.Waveform;
+                else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
+                else currentMode = VisMode.Spectrum;
+
+                Playlist.Log($"[Vis] Mode Cycle: {currentMode}");
+                OnModeChanged?.Invoke(currentMode);
+            }
         }
     }
 }
