@@ -93,6 +93,34 @@ namespace SoftAware
         public Sprite PosKnobNormal;
         public Sprite PosKnobPressed;
 
+        [Header("Equalizer (EQMAIN.BMP)")]
+        public Sprite EqBackground;
+        public Sprite EqTitleBar;
+        public Sprite EqCloseNormal;
+        public Sprite EqClosePressed;
+        
+        public Sprite EqOn_Off_Normal;
+        public Sprite EqOn_Off_Pressed;
+        public Sprite EqOn_On_Normal;
+        public Sprite EqOn_On_Pressed;
+        
+        public Sprite EqAuto_Off_Normal;
+        public Sprite EqAuto_Off_Pressed;
+        public Sprite EqAuto_On_Normal;
+        public Sprite EqAuto_On_Pressed;
+        
+        public Sprite EqPresetsNormal;
+        public Sprite EqPresetsPressed;
+        
+        public Sprite EqKnobNormal;
+        public Sprite EqKnobPressed;
+        
+        public Sprite[] EqSliderBackgrounds; // 28 states
+        
+        public Sprite EqGraphBackground;
+        public Sprite EqGraphColors;
+        public Sprite EqGraphPreampLine;
+
         [Header("Visualizer (VISCOLOR.TXT)")]
         public Color[] VisColors;
         

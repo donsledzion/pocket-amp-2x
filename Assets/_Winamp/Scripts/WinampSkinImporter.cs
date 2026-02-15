@@ -463,6 +463,67 @@ namespace SoftAware
             }
         }
 
+        public async Task LoadEqMainAsync(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            Texture2D eqMainTex = await LoadSkinFileAsync(new[] { "EQMAIN.BMP", "eqmain.bmp", "EQMAIN.PNG", "eqmain.png" });
+
+            if (eqMainTex != null)
+            {
+                Log($"Slicing Equalizer components from {eqMainTex.name} ({eqMainTex.width}x{eqMainTex.height})");
+                
+                // Background & Title
+                skin.EqBackground = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.Background);
+                skin.EqTitleBar = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.TitleBar);
+                
+                // Close button
+                skin.EqCloseNormal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.CloseNormal);
+                skin.EqClosePressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.ClosePressed);
+                
+                // Toggles (On/Auto)
+                skin.EqOn_Off_Normal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.On_Off_Normal);
+                skin.EqOn_On_Normal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.On_On_Normal);
+                skin.EqOn_Off_Pressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.On_Off_Pressed);
+                skin.EqOn_On_Pressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.On_On_Pressed);
+                
+                skin.EqAuto_Off_Normal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.Auto_Off_Normal);
+                skin.EqAuto_On_Normal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.Auto_On_Normal);
+                skin.EqAuto_Off_Pressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.Auto_Off_Pressed);
+                skin.EqAuto_On_Pressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.Auto_On_Pressed);
+                
+                // Presets
+                skin.EqPresetsNormal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.PresetsNormal);
+                skin.EqPresetsPressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.PresetsPressed);
+                
+                // Knob
+                skin.EqKnobNormal = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.KnobNormal);
+                skin.EqKnobPressed = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.KnobPressed);
+                
+                // Slider Backgrounds (28 frames)
+                var sliderFames = new List<Sprite>();
+                Rect first = WinampSkinSlicer.Equalizer.SliderFirstFrame;
+                for (int row = 0; row < 2; row++)
+                {
+                    for (int col = 0; col < 14; col++)
+                    {
+                        Rect frameRect = new Rect(
+                            first.x + (col * 15), 
+                            first.y + (row * 65), 
+                            first.width, 
+                            first.height);
+                        sliderFames.Add(WinampSkinSlicer.SliceSprite(eqMainTex, frameRect));
+                    }
+                }
+                skin.EqSliderBackgrounds = sliderFames.ToArray();
+                
+                // Graph Elements
+                skin.EqGraphBackground = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.GraphBG);
+                skin.EqGraphColors = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.GraphColors);
+                skin.EqGraphPreampLine = WinampSkinSlicer.SliceSprite(eqMainTex, WinampSkinSlicer.Equalizer.PreampLine);
+            }
+        }
+
         private Color[] ParseVisColor(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;

@@ -14,11 +14,14 @@ namespace SoftAware
     /// changing the background sprite based on the slider's value.
     /// Used for Volume, Preamp, and EQ Bands.
     /// </summary>
-    public class WinampSliderVisuals : MonoBehaviour
+    public class WinampSliderVisuals : MonoBehaviour, IWinampSkinApplicator
     {
+        public enum SliderType { Volume, Balance, Preamp, EQBand }
+
         [Header("References")]
         [SerializeField] private Slider slider;
         [SerializeField] private Image targetImage;
+        [SerializeField] private SliderType sliderType;
 
         [Header("Data")]
         [SerializeField] private List<Sprite> sprites = new List<Sprite>();
@@ -54,6 +57,58 @@ namespace SoftAware
             {
                 targetImage.sprite = sprites[index];
             }
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            // 1. Update Slider Background Sprites
+            switch (sliderType)
+            {
+                case SliderType.Volume:
+                    if (skin.VolumeAnimation != null && skin.VolumeAnimation.Length > 0)
+                        sprites = new List<Sprite>(skin.VolumeAnimation);
+                    
+                    if (slider != null && slider.targetGraphic is Image volKnob)
+                    {
+                        if (skin.VolumeKnobNormal != null) volKnob.sprite = skin.VolumeKnobNormal;
+                        SpriteState ss = slider.spriteState;
+                        if (skin.VolumeKnobPressed != null) ss.pressedSprite = skin.VolumeKnobPressed;
+                        slider.spriteState = ss;
+                    }
+                    break;
+
+                case SliderType.Balance:
+                    if (skin.BalanceAnimation != null && skin.BalanceAnimation.Length > 0)
+                        sprites = new List<Sprite>(skin.BalanceAnimation);
+                    
+                    if (slider != null && slider.targetGraphic is Image balKnob)
+                    {
+                        if (skin.BalanceKnobNormal != null) balKnob.sprite = skin.BalanceKnobNormal;
+                        SpriteState ss = slider.spriteState;
+                        if (skin.BalanceKnobPressed != null) ss.pressedSprite = skin.BalanceKnobPressed;
+                        slider.spriteState = ss;
+                    }
+                    break;
+
+                case SliderType.Preamp:
+                case SliderType.EQBand:
+                    if (skin.EqSliderBackgrounds != null && skin.EqSliderBackgrounds.Length > 0)
+                        sprites = new List<Sprite>(skin.EqSliderBackgrounds);
+                    
+                    if (slider != null && slider.targetGraphic is Image eqKnob)
+                    {
+                        if (skin.EqKnobNormal != null) eqKnob.sprite = skin.EqKnobNormal;
+                        SpriteState ss = slider.spriteState;
+                        if (skin.EqKnobPressed != null) ss.pressedSprite = skin.EqKnobPressed;
+                        slider.spriteState = ss;
+                    }
+                    break;
+            }
+
+            // 2. Refresh visuals immediately
+            if (slider != null) UpdateVisuals(slider.value);
         }
 
 #if UNITY_EDITOR

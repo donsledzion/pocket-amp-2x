@@ -89,6 +89,17 @@ namespace SoftAware.Winamp
                 Debug.LogWarning("[Main] spectrumVisualizer reference is NULL during ApplySkin!");
             }
 
+            // Apply to Equalizer Window
+            if (eqWindow != null)
+            {
+                var eqController = eqWindow.GetComponent<EqualizerController>();
+                if (eqController != null)
+                {
+                    Debug.Log("[Main] Propagating skin to EqualizerController");
+                    eqController.ApplySkin(skin);
+                }
+            }
+
             // Apply Font to Text Displays (Bitrate, Samplerate, Song Title)
             if (bitrateDisplay != null) bitrateDisplay.ApplySkin(skin);
             if (sampleRateDisplay != null) sampleRateDisplay.ApplySkin(skin);

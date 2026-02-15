@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace SoftAware
 {
     [RequireComponent(typeof(CanvasRenderer))]
-    public class WinampEqualizerGraph : MaskableGraphic
+    public class WinampEqualizerGraph : MaskableGraphic, IWinampSkinApplicator
     {
         [Header("Assets")]
         [SerializeField] private Sprite colorsSprite;
@@ -155,6 +155,16 @@ namespace SoftAware
             // -20 to +20 dB -> 0 to 18
             float normalized = (gain + 20f) / 40f;
             return Mathf.Clamp(Mathf.RoundToInt(normalized * (GraphHeight - 1)), 0, GraphHeight - 1);
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            if (skin.EqGraphColors != null) colorsSprite = skin.EqGraphColors;
+            if (skin.EqGraphPreampLine != null) preampSprite = skin.EqGraphPreampLine;
+
+            SetAllDirty();
         }
     }
 }

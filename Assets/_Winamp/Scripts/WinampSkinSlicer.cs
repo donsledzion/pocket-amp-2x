@@ -138,6 +138,43 @@ namespace SoftAware
             public static readonly Rect LoadingIndicator = new Rect(39, 0, 3, 9); // Red
         }
 
+        /// <summary>
+        /// Rectangles for EQMAIN.BMP (Equalizer)
+        /// Coordinates converted to Top-Down based on standard 275x315 layout
+        /// </summary>
+        public static class Equalizer
+        {
+            public static readonly Rect Background = new Rect(0, 0, 275, 116);
+            public static readonly Rect TitleBar = new Rect(0, 134, 275, 14);
+            
+            public static readonly Rect CloseNormal = new Rect(0, 116, 9, 9);
+            public static readonly Rect ClosePressed = new Rect(0, 125, 9, 9);
+            
+            public static readonly Rect On_Off_Normal = new Rect(10, 119, 25, 12);
+            public static readonly Rect On_On_Normal = new Rect(69, 119, 25, 12);
+            public static readonly Rect On_Off_Pressed = new Rect(128, 119, 25, 12);
+            public static readonly Rect On_On_Pressed = new Rect(187, 119, 25, 12);
+            
+            public static readonly Rect Auto_Off_Normal = new Rect(35, 119, 33, 12);
+            public static readonly Rect Auto_On_Normal = new Rect(94, 119, 33, 12);
+            public static readonly Rect Auto_Off_Pressed = new Rect(153, 119, 33, 12);
+            public static readonly Rect Auto_On_Pressed = new Rect(212, 119, 33, 12);
+            
+            public static readonly Rect PresetsNormal = new Rect(224, 164, 44, 12);
+            public static readonly Rect PresetsPressed = new Rect(224, 176, 44, 12);
+            
+            public static readonly Rect KnobNormal = new Rect(0, 164, 11, 11);
+            public static readonly Rect KnobPressed = new Rect(0, 176, 11, 11);
+            
+            // Sliders start at X=13, width 14, height 63. There are 28 frames total in vertical rows.
+            // But we will use the dynamic logic in Importer to load all 28 frames.
+            public static readonly Rect SliderFirstFrame = new Rect(13, 164, 14, 63);
+            
+            public static readonly Rect GraphBG = new Rect(0, 294, 113, 19);
+            public static readonly Rect GraphColors = new Rect(115, 294, 1, 19);
+            public static readonly Rect PreampLine = new Rect(0, 314, 164, 1);
+        }
+
         public static class Numbers
         {
             public static readonly int Width = 9;

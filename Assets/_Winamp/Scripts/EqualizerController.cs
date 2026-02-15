@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class EqualizerController : MonoBehaviour
+    public class EqualizerController : MonoBehaviour, IWinampSkinApplicator
     {
         [SerializeField] private Main main;
         [Header("Toggles")]
@@ -18,6 +18,9 @@ namespace SoftAware.Winamp
 
         [Header("Visuals")]
         [SerializeField] private WinampEqualizerGraph graph;
+        [SerializeField] private Image background;
+        [SerializeField] private Image titleBar;
+        [SerializeField] private Image graphBackground;
 
         [Header("Window Controls")]
         [SerializeField] private Button closeButton;
@@ -148,7 +151,6 @@ namespace SoftAware.Winamp
         {
             UpdateGraph();
             OnValuesChanged?.Invoke();
-            // Debug.Log($"Preamp changed: {value}"); // Reduced log spam
 
             if (interactingSlider == preampSlider)
             {
@@ -172,13 +174,9 @@ namespace SoftAware.Winamp
 
         private void UpdateTitleDisplay(float value, string label)
         {
-            Main main = FindObjectOfType<Main>();
             if (main != null && main.SongTitleDisplay != null)
             {
-                // Format: "EQ: PREAMP: +8.6 DB" | "EQ: 60HZ: -2.9 DB"
-                // Value is -20 to +20
-                string sign = (value > 0) ? "+" : ""; // value will handle its own '-' if negative
-                // Using "F1" for one decimal place
+                string sign = (value > 0) ? "+" : "";
                 main.SongTitleDisplay.SetOverrideText($"EQ: {label}: {sign}{value:F1} DB");
             }
         }
@@ -203,6 +201,61 @@ namespace SoftAware.Winamp
             return gains;
         }
 
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            // 1. Backgrounds
+            if (background != null && skin.EqBackground != null) background.sprite = skin.EqBackground;
+            if (titleBar != null && skin.EqTitleBar != null) titleBar.sprite = skin.EqTitleBar;
+            if (graphBackground != null && skin.EqGraphBackground != null) graphBackground.sprite = skin.EqGraphBackground;
+
+            // 2. Buttons
+            if (onButton != null)
+                onButton.SetSprites(skin.EqOn_Off_Normal, skin.EqOn_Off_Pressed, skin.EqOn_On_Normal, skin.EqOn_On_Pressed);
+            
+            if (autoButton != null)
+                autoButton.SetSprites(skin.EqAuto_Off_Normal, skin.EqAuto_Off_Pressed, skin.EqAuto_On_Normal, skin.EqAuto_On_Pressed);
+
+            if (presetsButton != null && skin.EqPresetsNormal != null)
+            {
+                presetsButton.image.sprite = skin.EqPresetsNormal;
+                SpriteState ss = presetsButton.spriteState;
+                if (skin.EqPresetsPressed != null) ss.pressedSprite = skin.EqPresetsPressed;
+                presetsButton.spriteState = ss;
+            }
+
+            if (closeButton != null && skin.EqCloseNormal != null)
+            {
+                closeButton.image.sprite = skin.EqCloseNormal;
+                SpriteState ss = closeButton.spriteState;
+                if (skin.EqClosePressed != null) ss.pressedSprite = skin.EqClosePressed;
+                closeButton.spriteState = ss;
+            }
+
+            // 3. Sliders (Preamp + Bands)
+            if (preampSlider != null)
+            {
+                var visuals = preampSlider.GetComponent<WinampSliderVisuals>();
+                if (visuals != null) visuals.ApplySkin(skin);
+            }
+
+            foreach (var slider in frequencyBands)
+            {
+                if (slider != null)
+                {
+                    var visuals = slider.GetComponent<WinampSliderVisuals>();
+                    if (visuals != null) visuals.ApplySkin(skin);
+                }
+            }
+
+            // 4. Graph
+            if (graph != null)
+            {
+                graph.ApplySkin(skin);
+            }
+        }
+
         public void ResetToDefault()
         {
             if (preampSlider != null) preampSlider.value = defaultGain;
@@ -222,14 +275,13 @@ namespace SoftAware.Winamp
                 if (frequencyBands[i] != null)
                 {
                     frequencyBands[i].value = gains[i];
-                    // Visuals are updated via onValueChanged listener
                 }
             }
             UpdateGraph();
         }
+
         public void CloseWindow()
         {
-            Main main = FindObjectOfType<Main>();
             if (main != null)
             {
                 main.CloseEqualizerWindow();
