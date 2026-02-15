@@ -7,10 +7,12 @@ namespace SoftAware
     /// Displays text using sprites from TextSpriteProvider.
     /// Each character position has its own Image component.
     /// </summary>
-    public class SpriteTextDisplay : MonoBehaviour
+    public class SpriteTextDisplay : MonoBehaviour, IWinampSkinApplicator
     {
         [SerializeField] private Image[] characterImages;
         [SerializeField] private bool hideUnusedCharacters = true;
+        
+        private string currentText = "";
 
         /// <summary>
         /// Sets the displayed text. Characters without sprites will be skipped.
@@ -18,9 +20,17 @@ namespace SoftAware
         /// </summary>
         public void SetText(string text)
         {
+            currentText = text;
             if (characterImages == null || characterImages.Length == 0) return;
+            
+            if (string.IsNullOrEmpty(text))
+            {
+                Clear();
+                return;
+            }
 
             text = text.ToUpper();
+            // ... (rest of the method remains the same)
 
             if (hideUnusedCharacters)
             {
@@ -109,6 +119,12 @@ namespace SoftAware
                 if (img != null && hideUnusedCharacters)
                     img.enabled = false;
             }
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            // Refresh visuals with the current stored text using the new skin/font
+            SetText(currentText);
         }
     }
 }

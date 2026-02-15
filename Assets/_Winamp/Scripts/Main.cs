@@ -88,6 +88,11 @@ namespace SoftAware.Winamp
             {
                 Debug.LogWarning("[Main] spectrumVisualizer reference is NULL during ApplySkin!");
             }
+
+            // Apply Font to Text Displays (Bitrate, Samplerate, Song Title)
+            if (bitrateDisplay != null) bitrateDisplay.ApplySkin(skin);
+            if (sampleRateDisplay != null) sampleRateDisplay.ApplySkin(skin);
+            if (songTitleDisplay != null) songTitleDisplay.ApplySkin(skin);
         }
 
         internal Button PrevButton => mainControls != null ? mainControls.PrevButton : null;

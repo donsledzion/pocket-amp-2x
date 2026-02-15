@@ -154,5 +154,25 @@ namespace SoftAware
                 scrollOffset = (scrollOffset + 1) % bufferLength;
             }
         }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (textDisplay != null)
+            {
+                textDisplay.ApplySkin(skin);
+                
+                // Force immediate refresh of current content to use new font
+                if (!string.IsNullOrEmpty(overrideText))
+                {
+                    textDisplay.SetText(overrideText);
+                }
+                else if (!isScrolling)
+                {
+                    textDisplay.SetText(string.IsNullOrEmpty(fullText) ? defaultText : fullText);
+                }
+                // If scrolling, the Update loop will refresh it naturally on next tick, 
+                // but its textDisplay already knows to use new skin.
+            }
+        }
     }
 }
