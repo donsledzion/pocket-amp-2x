@@ -88,6 +88,10 @@ namespace SoftAware
                 texture.SetPixels32(pixels);
             texture.Apply();
             
+            // Set pixel-perfect settings
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            
             return texture;
         }
         

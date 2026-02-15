@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -188,7 +190,8 @@ namespace SoftAware
                 else
                 {
                     // Use Unity's native loader for PNG/JPG
-                    tex = new Texture2D(2, 2);
+                    // Create texture without mipmaps (false)
+                    tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
                     if (!ImageConversion.LoadImage(tex, fileData))
                     {
                         Debug.LogError($"[WinampSkinImporter] Failed to load non-BMP image: {path}");
@@ -199,6 +202,10 @@ namespace SoftAware
                 
                 if (tex != null)
                 {
+                    // Set pixel-perfect settings
+                    tex.filterMode = FilterMode.Point;
+                    tex.wrapMode = TextureWrapMode.Clamp;
+
                     Log($"Texture loaded successfully: {path} ({tex.width}x{tex.height}), format: {tex.format}");
                     
                     // Remove magenta transparency (standard for Winamp)
@@ -402,6 +409,25 @@ namespace SoftAware
         public void LoadTextBmp(System.Action<Texture2D> onComplete)
         {
             LoadSkinFile(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" }, onComplete);
+        }
+
+        public Task<Texture2D> LoadMainBmpAsync() => LoadSkinFileAsync(new[] { "MAIN.BMP", "main.bmp", "MAIN.PNG", "main.png" });
+        public Task<Texture2D> LoadCButtonsBmpAsync() => LoadSkinFileAsync(new[] { "CBUTTONS.BMP", "cbuttons.bmp", "CBUTTONS.PNG", "cbuttons.png" });
+        public Task<Texture2D> LoadShufRepBmpAsync() => LoadSkinFileAsync(new[] { "SHUFREP.BMP", "shufrep.bmp", "SHUFREP.PNG", "shufrep.png" });
+        public Task<Texture2D> LoadVolumeBmpAsync() => LoadSkinFileAsync(new[] { "VOLUME.BMP", "volume.bmp", "VOLUME.PNG", "volume.png" });
+        public Task<Texture2D> LoadBalanceBmpAsync() => LoadSkinFileAsync(new[] { "BALANCE.BMP", "balance.bmp", "BALANCE.PNG", "balance.png" });
+        public Task<Texture2D> LoadNumbersBmpAsync() => LoadSkinFileAsync(new[] { "NUMBERS.BMP", "numbers.bmp", "Numbers.bmp", "NUMBERS.PNG", "numbers.png", "Numbers.png" });
+        public Task<Texture2D> LoadNumsExBmpAsync() => LoadSkinFileAsync(new[] { "NUMS_EX.BMP", "nums_ex.bmp", "Nums_ex.bmp", "NUMS_EX.PNG", "nums_ex.png", "Nums_ex.png" });
+        public Task<Texture2D> LoadPlayPausBmpAsync() => LoadSkinFileAsync(new[] { "PLAYPAUS.BMP", "playpaus.bmp", "PlayPaus.bmp", "PLAYPAUS.PNG", "playpaus.png", "PlayPaus.png" });
+        public Task<Texture2D> LoadPosbarBmpAsync() => LoadSkinFileAsync(new[] { "POSBAR.BMP", "posbar.bmp", "Posbar.bmp", "POSBAR.PNG", "posbar.png" });
+        public Task<Texture2D> LoadMonoSterBmpAsync() => LoadSkinFileAsync(new[] { "MONOSTER.BMP", "MONOSTER.PNG" });
+        public Task<Texture2D> LoadTextBmpAsync() => LoadSkinFileAsync(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" });
+
+        private Task<Texture2D> LoadSkinFileAsync(string[] candidates)
+        {
+            var tcs = new TaskCompletionSource<Texture2D>();
+            LoadSkinFile(candidates, (tex) => tcs.SetResult(tex));
+            return tcs.Task;
         }
 
         private void LoadSkinFile(string[] candidates, System.Action<Texture2D> onComplete)

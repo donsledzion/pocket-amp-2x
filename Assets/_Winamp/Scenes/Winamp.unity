@@ -5703,6 +5703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0a21b14495e01b4da7fa62ef97ad0af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampSkinManager
+  loadOnStart: 1
   testSkinPath: C:\Users\choja\Downloads\Matrix_Code0110101.wsz
   mainController: {fileID: 996247208}
   currentSkin:
@@ -5710,6 +5711,14 @@ MonoBehaviour:
     MainBackground: {fileID: 0}
     TitleBar: {fileID: 0}
     ClutterBar: {fileID: 0}
+    Status_Play: {fileID: 0}
+    Status_Pause: {fileID: 0}
+    Status_Stop: {fileID: 0}
+    Status_Indicator_Play: {fileID: 0}
+    Status_Indicator_Load: {fileID: 0}
+    TimeDigits: []
+    TimeMinus: {fileID: 0}
+    TextSprites: []
     MinimizeBtn_Normal: {fileID: 0}
     MinimizeBtn_Pressed: {fileID: 0}
     CloseBtn_Normal: {fileID: 0}
@@ -5744,6 +5753,18 @@ MonoBehaviour:
     PL_Off_Pressed: {fileID: 0}
     PL_On_Normal: {fileID: 0}
     PL_On_Pressed: {fileID: 0}
+    Stereo_Active: {fileID: 0}
+    Stereo_Inactive: {fileID: 0}
+    Mono_Active: {fileID: 0}
+    Mono_Inactive: {fileID: 0}
+    VolumeKnobNormal: {fileID: 0}
+    VolumeKnobPressed: {fileID: 0}
+    VolumeAnimation: []
+    BalanceKnobNormal: {fileID: 0}
+    BalanceKnobPressed: {fileID: 0}
+    BalanceAnimation: []
+    PosKnobNormal: {fileID: 0}
+    PosKnobPressed: {fileID: 0}
 --- !u!4 &865236109
 Transform:
   m_ObjectHideFlags: 0
@@ -7629,9 +7650,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e75d9ff4ff46d40bd414830263ccd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Main
-  mainBackgroundImage: {fileID: 996247205}
   mainTitleBar: {fileID: 1918298643}
   mainControls: {fileID: 1599805111}
+  mainBackgroundImage: {fileID: 996247205}
   progressSlider: {fileID: 671774734}
   volumeController: {fileID: 1509705978}
   balanceController: {fileID: 1802301961}
