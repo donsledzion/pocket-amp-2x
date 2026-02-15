@@ -68,15 +68,15 @@ namespace SoftAware
             public static readonly Rect Play = new Rect(23, 0, 23, 18);
             public static readonly Rect Pause = new Rect(46, 0, 23, 18);
             public static readonly Rect Stop = new Rect(69, 0, 23, 18);
-            public static readonly Rect Next = new Rect(92, 0, 22, 18);
+            public static readonly Rect Next = new Rect(91, 0, 23, 18);
             public static readonly Rect Eject = new Rect(114, 0, 22, 16);
             
             public static readonly Rect PreviousPressed = new Rect(0, 18, 23, 18);
             public static readonly Rect PlayPressed = new Rect(23, 18, 23, 18);
             public static readonly Rect PausePressed = new Rect(46, 18, 23, 18);
             public static readonly Rect StopPressed = new Rect(69, 18, 23, 18);
-            public static readonly Rect NextPressed = new Rect(92, 18, 22, 18);
-            public static readonly Rect EjectPressed = new Rect(114, 18, 22, 16);
+            public static readonly Rect NextPressed = new Rect(91, 18, 23, 18);
+            public static readonly Rect EjectPressed = new Rect(114, 16, 22, 16);
         }
 
         /// <summary>
