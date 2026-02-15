@@ -350,7 +350,8 @@ namespace SoftAware.Winamp
 
             if (!audioPlayer.IsPlaying && !audioPlayer.IsPaused)
             {
-                currentTrackTimeText.Clear();
+                // Don't clear! Let the duration from UpdateTimeCounter stay visible, 
+                // so the user can see the skin change even when stopped.
                 return;
             }
 
@@ -430,6 +431,10 @@ namespace SoftAware.Winamp
 
             // Propagate to tracks
             RefreshColors();
+
+            // Force refresh text displays to pick up new sprites immediately
+            UpdateTimeCounter();
+            UpdateCurrentTrackTime();
         }
 
         private void ApplyFixedSize(Image img, Sprite sprite, bool fixWidth = true, bool fixHeight = true)

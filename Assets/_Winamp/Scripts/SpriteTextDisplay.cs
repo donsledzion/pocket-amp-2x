@@ -107,6 +107,11 @@ namespace SoftAware
             SetText(text);
         }
 
+        public void Refresh()
+        {
+            SetText(currentText);
+        }
+
         /// <summary>
         /// Clears all character displays.
         /// </summary>
