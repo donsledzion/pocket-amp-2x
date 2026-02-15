@@ -16,6 +16,14 @@ namespace SoftAware
         public Sprite TitleBar;
         public Sprite ClutterBar; // The bar with O I A V scroll buttons etc.
         
+        [Header("Title Bar Buttons")]
+        public Sprite MinimizeBtn_Normal;
+        public Sprite MinimizeBtn_Pressed;
+        public Sprite CloseBtn_Normal;
+        public Sprite CloseBtn_Pressed;
+        public Sprite ShadeBtn_Normal; // Optional but good to have prepared
+        public Sprite ShadeBtn_Pressed;
+
         [Header("Transport Buttons")]
         public Sprite PlayBtn_Normal;
         public Sprite PlayBtn_Pressed;
@@ -29,6 +37,17 @@ namespace SoftAware
         public Sprite NextBtn_Pressed;
         public Sprite EjectBtn_Normal;
         public Sprite EjectBtn_Pressed;
+
+        [Header("Toggles (Shuffle/Repeat)")]
+        public Sprite Shuffle_Off_Normal;
+        public Sprite Shuffle_Off_Pressed;
+        public Sprite Shuffle_On_Normal;
+        public Sprite Shuffle_On_Pressed;
+        
+        public Sprite Repeat_Off_Normal;
+        public Sprite Repeat_Off_Pressed;
+        public Sprite Repeat_On_Normal;
+        public Sprite Repeat_On_Pressed;
         
         // Add more fields as we implement more components
     }

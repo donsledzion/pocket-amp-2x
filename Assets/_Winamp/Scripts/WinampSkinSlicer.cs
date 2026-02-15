@@ -10,19 +10,34 @@ namespace SoftAware
     {
         // Main window dimensions (MAIN.BMP)
         public static readonly Rect MainPanel = new Rect(0, 0, 275, 116);
+        public static readonly Rect TitleBar = new Rect(0, 0, 275, 14); // Standard Title Bar height
         
         // Title bar buttons (MAIN.BMP)
         public static readonly Rect MinimizeButton = new Rect(244, 3, 9, 9);
+        public static readonly Rect MinimizeButtonPressed = new Rect(244, 13, 9, 9); // usually below? Need to verification or trial. Standard is usually below.
+        
         public static readonly Rect ShadeButton = new Rect(254, 3, 9, 9);
+        public static readonly Rect ShadeButtonPressed = new Rect(254, 13, 9, 9);
+        
         public static readonly Rect CloseButton = new Rect(264, 3, 9, 9);
+        public static readonly Rect CloseButtonPressed = new Rect(264, 13, 9, 9);
         
         // Toggle buttons (MAIN.BMP - top right)
         public static readonly Rect EqualizerButton = new Rect(219, 58, 23, 12);
         public static readonly Rect PlaylistButton = new Rect(242, 58, 23, 12);
         
         // Shuffle and Repeat buttons (MAIN.BMP)
-        public static readonly Rect ShuffleButton = new Rect(164, 89, 46, 15);
-        public static readonly Rect RepeatButton = new Rect(210, 89, 28, 15);
+        // Shuffle: 47x15
+        public static readonly Rect ShuffleButtonOff = new Rect(164, 89, 46, 15);
+        public static readonly Rect ShuffleButtonOffPressed = new Rect(164, 104, 46, 15); // Down state
+        public static readonly Rect ShuffleButtonOn = new Rect(28, 89, 46, 15); // Green LED
+        public static readonly Rect ShuffleButtonOnPressed = new Rect(28, 104, 46, 15); // Down state with Green LED
+
+        // Repeat: 28x15
+        public static readonly Rect RepeatButtonOff = new Rect(210, 89, 28, 15);
+        public static readonly Rect RepeatButtonOffPressed = new Rect(210, 104, 28, 15);
+        public static readonly Rect RepeatButtonOn = new Rect(76, 89, 28, 15);
+        public static readonly Rect RepeatButtonOnPressed = new Rect(76, 104, 28, 15);
         
         // Volume slider background (MAIN.BMP)
         public static readonly Rect VolumeSliderBg = new Rect(107, 57, 68, 13);

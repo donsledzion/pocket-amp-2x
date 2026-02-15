@@ -5852,6 +5852,12 @@ MonoBehaviour:
     MainBackground: {fileID: 0}
     TitleBar: {fileID: 0}
     ClutterBar: {fileID: 0}
+    MinimizeBtn_Normal: {fileID: 0}
+    MinimizeBtn_Pressed: {fileID: 0}
+    CloseBtn_Normal: {fileID: 0}
+    CloseBtn_Pressed: {fileID: 0}
+    ShadeBtn_Normal: {fileID: 0}
+    ShadeBtn_Pressed: {fileID: 0}
     PlayBtn_Normal: {fileID: 0}
     PlayBtn_Pressed: {fileID: 0}
     PauseBtn_Normal: {fileID: 0}
@@ -7752,6 +7758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Main
   mainBackgroundImage: {fileID: 996247205}
+  mainTitleBar: {fileID: 1918298643}
   prevButton: {fileID: 769275748}
   playButton: {fileID: 1928372321}
   pauseButton: {fileID: 1712270223}
@@ -16242,6 +16249,7 @@ GameObject:
   - component: {fileID: 1918298640}
   - component: {fileID: 1918298642}
   - component: {fileID: 1918298641}
+  - component: {fileID: 1918298643}
   m_Layer: 5
   m_Name: Titlebar
   m_TagString: Untagged
@@ -16308,6 +16316,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1918298639}
   m_CullTransparentMesh: 1
+--- !u!114 &1918298643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918298639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6979b97ca4420e64381a12b790fceb63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Winamp.MainTitleBar
+  background: {fileID: 1918298641}
+  closeButton: {fileID: 621779307}
+  minimizeButton: {fileID: 1735573638}
 --- !u!1 &1928372319
 GameObject:
   m_ObjectHideFlags: 0

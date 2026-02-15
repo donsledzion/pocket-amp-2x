@@ -57,5 +57,13 @@ namespace SoftAware
             spriteState.pressedSprite = isOn ? onPressed : offPressed;
             button.spriteState = spriteState;
         }
+        public void SetSprites(Sprite offN, Sprite offP, Sprite onN, Sprite onP)
+        {
+            this.offNormal = offN;
+            this.offPressed = offP;
+            this.onNormal = onN;
+            this.onPressed = onP;
+            UpdateVisuals();
+        }
     }
 }

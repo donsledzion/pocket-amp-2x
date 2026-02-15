@@ -8,34 +8,38 @@ namespace SoftAware.Winamp
     {
         [Header("Skinning")]
         [SerializeField] private Image mainBackgroundImage;
+        [SerializeField] private MainTitleBar mainTitleBar;
+        [SerializeField] private MainControls mainControls;
 
         public void ApplySkin(WinampSkin skin)
         {
             if (skin == null) return;
             
             // Apply Main Window Background
-            if (mainBackgroundImage && skin.MainBackground)
+            if (mainBackgroundImage != null && skin.MainBackground != null)
             {
                 mainBackgroundImage.sprite = skin.MainBackground;
             }
 
-            // Future: Apply buttons skin here
+            // Apply Title Bar (via component)
+            if (mainTitleBar != null)
+            {
+                mainTitleBar.ApplySkin(skin);
+            }
+
+            // Apply Controls (Buttons & Toggles)
+            if (mainControls != null)
+            {
+                mainControls.ApplySkin(skin);
+            }
         }
 
-        [Header("Controls Buttons")]
-        [SerializeField] private Button prevButton;
-        [SerializeField] private Button playButton;
-        [SerializeField] private Button pauseButton;
-        [SerializeField] private Button stopButton;
-        [SerializeField] private Button nextButton;
-        [SerializeField] private Button ejectButton;
-
-        internal Button PrevButton => prevButton;
-        internal Button PlayButton => playButton;
-        internal Button PauseButton => pauseButton;
-        internal Button StopButton => stopButton;
-        internal Button NextButton => nextButton;
-        internal Button EjectButton => ejectButton;
+        internal Button PrevButton => mainControls != null ? mainControls.PrevButton : null;
+        internal Button PlayButton => mainControls != null ? mainControls.PlayButton : null;
+        internal Button PauseButton => mainControls != null ? mainControls.PauseButton : null;
+        internal Button StopButton => mainControls != null ? mainControls.StopButton : null;
+        internal Button NextButton => mainControls != null ? mainControls.NextButton : null;
+        internal Button EjectButton => mainControls != null ? mainControls.EjectButton : null;
 
         [Header("Progress")]
         [SerializeField] private Slider progressSlider;
@@ -53,13 +57,19 @@ namespace SoftAware.Winamp
         [SerializeField] private ChannelsDisplay channelsDisplay;
         internal ChannelsDisplay ChannelsDisplay => channelsDisplay;
 
-        [Header("Toggles")]
-        [SerializeField] private ToggleButton shuffleButton;
-        [SerializeField] private ToggleButton repeatButton;
+        // Toggles redirected to MainControls
+        internal ToggleButton ShuffleButton => mainControls != null ? mainControls.ShuffleButton : null;
+        internal ToggleButton RepeatButton => mainControls != null ? mainControls.RepeatButton : null;
+        
+        // These toggle buttons (EQ/Playlist) are separate from MainControls (they are layout toggles/windows toggles, often separate in skin)
+        // But in default skin they are also buttons. If you want them in MainControls, we can move them too.
+        // For now, let's keep EQ/Playlist separate as they might be handled differently or just added to MainControls later if requested.
+        // Wait, user said: "buttons controls: play, next, prev, pause, stop eject, shuffle, repeat". It didn't list EQ/PL.
+        // So I will keep EQ/PL as is for now.
+        
+        [Header("Layout Toggles")]
         [SerializeField] private ToggleButton eqButton;
         [SerializeField] private ToggleButton playlistButton;
-        internal ToggleButton ShuffleButton => shuffleButton;
-        internal ToggleButton RepeatButton => repeatButton;
         internal ToggleButton EqButton => eqButton;
         internal ToggleButton PlaylistButton => playlistButton;
 
@@ -97,8 +107,10 @@ namespace SoftAware.Winamp
             {
                 if (eqButton != null) eqButton.SetState(SettingsManager.Instance.ShowEQ);
                 if (playlistButton != null) playlistButton.SetState(SettingsManager.Instance.ShowPlaylist);
-                if (shuffleButton != null) shuffleButton.SetState(SettingsManager.Instance.Shuffle);
-                if (repeatButton != null) repeatButton.SetState(SettingsManager.Instance.Repeat);
+                
+                // Shuffle/Repeat via MainControls
+                if (ShuffleButton != null) ShuffleButton.SetState(SettingsManager.Instance.Shuffle);
+                if (RepeatButton != null) RepeatButton.SetState(SettingsManager.Instance.Repeat);
                 
                 if (volumeController != null && volumeController.Slider != null)
                     volumeController.Slider.value = SettingsManager.Instance.Volume;
@@ -131,16 +143,16 @@ namespace SoftAware.Winamp
                 SetWindowVisibility(playlistWindow, playlistButton.IsOn);
             }
 
-            if (shuffleButton != null)
+            if (ShuffleButton != null)
             {
-                shuffleButton.OnValueChanged.AddListener((isOn) => {
+                ShuffleButton.OnValueChanged.AddListener((isOn) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.Shuffle = isOn;
                 });
             }
 
-            if (repeatButton != null)
+            if (RepeatButton != null)
             {
-                repeatButton.OnValueChanged.AddListener((isOn) => {
+                RepeatButton.OnValueChanged.AddListener((isOn) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.Repeat = isOn;
                 });
             }
@@ -183,6 +195,13 @@ namespace SoftAware.Winamp
 
             if (closeButton != null) closeButton.onClick.AddListener(CloseApplication);
             if (minimizeButton != null) minimizeButton.onClick.AddListener(MinimizeApplication);
+            
+            // Bind Title Bar buttons if available through new component
+            if (mainTitleBar != null)
+            {
+                if (mainTitleBar.CloseButton != null) mainTitleBar.CloseButton.onClick.AddListener(CloseApplication);
+                if (mainTitleBar.MinimizeButton != null) mainTitleBar.MinimizeButton.onClick.AddListener(MinimizeApplication);
+            }
         }
 
         private void SetWindowVisibility(GameObject window, bool visible)
