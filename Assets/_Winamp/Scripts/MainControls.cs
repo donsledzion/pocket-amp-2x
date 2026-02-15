@@ -16,6 +16,8 @@ namespace SoftAware.Winamp
         [Header("Toggle Buttons")]
         [SerializeField] private ToggleButton shuffleButton;
         [SerializeField] private ToggleButton repeatButton;
+        [SerializeField] private ToggleButton eqButton;
+        [SerializeField] private ToggleButton playlistButton;
         
         // Internal accessors for Main.cs
         internal Button PrevButton => prevButton;
@@ -27,6 +29,8 @@ namespace SoftAware.Winamp
         
         internal ToggleButton ShuffleButton => shuffleButton;
         internal ToggleButton RepeatButton => repeatButton;
+        internal ToggleButton EqButton => eqButton;
+        internal ToggleButton PlaylistButton => playlistButton;
 
         public void ApplySkin(WinampSkin skin)
         {
@@ -48,6 +52,15 @@ namespace SoftAware.Winamp
             ApplyToggleStyle(repeatButton,
                 skin.Repeat_Off_Normal, skin.Repeat_Off_Pressed,
                 skin.Repeat_On_Normal, skin.Repeat_On_Pressed);
+                
+            // Apply Toggle Buttons (EQ/Playlist)
+            ApplyToggleStyle(eqButton,
+                skin.EQ_Off_Normal, skin.EQ_Off_Pressed,
+                skin.EQ_On_Normal, skin.EQ_On_Pressed);
+                
+            ApplyToggleStyle(playlistButton,
+                skin.PL_Off_Normal, skin.PL_Off_Pressed,
+                skin.PL_On_Normal, skin.PL_On_Pressed);
         }
 
         private void ApplyButtonStyle(Button btn, Sprite normal, Sprite pressed)

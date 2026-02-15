@@ -48,6 +48,17 @@ namespace SoftAware
         public Sprite Repeat_Off_Pressed;
         public Sprite Repeat_On_Normal;
         public Sprite Repeat_On_Pressed;
+
+        [Header("Toggles (EQ/Playlist)")]
+        public Sprite EQ_Off_Normal;
+        public Sprite EQ_Off_Pressed;
+        public Sprite EQ_On_Normal;
+        public Sprite EQ_On_Pressed;
+        
+        public Sprite PL_Off_Normal;
+        public Sprite PL_Off_Pressed;
+        public Sprite PL_On_Normal;
+        public Sprite PL_On_Pressed;
         
         // Add more fields as we implement more components
     }

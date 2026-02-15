@@ -68,10 +68,11 @@ namespace SoftAware.Winamp
         // So I will keep EQ/PL as is for now.
         
         [Header("Layout Toggles")]
-        [SerializeField] private ToggleButton eqButton;
-        [SerializeField] private ToggleButton playlistButton;
-        internal ToggleButton EqButton => eqButton;
-        internal ToggleButton PlaylistButton => playlistButton;
+        // [SerializeField] private ToggleButton eqButton; // Moved to MainControls
+        // [SerializeField] private ToggleButton playlistButton; // Moved to MainControls
+        
+        internal ToggleButton EqButton => mainControls != null ? mainControls.EqButton : null;
+        internal ToggleButton PlaylistButton => mainControls != null ? mainControls.PlaylistButton : null;
 
         [Header("Windows")]
         [SerializeField] private GameObject eqWindow;
@@ -105,8 +106,8 @@ namespace SoftAware.Winamp
             // Load and Apply Settings
             if (SettingsManager.Instance != null)
             {
-                if (eqButton != null) eqButton.SetState(SettingsManager.Instance.ShowEQ);
-                if (playlistButton != null) playlistButton.SetState(SettingsManager.Instance.ShowPlaylist);
+                if (EqButton != null) EqButton.SetState(SettingsManager.Instance.ShowEQ);
+                if (PlaylistButton != null) PlaylistButton.SetState(SettingsManager.Instance.ShowPlaylist);
                 
                 // Shuffle/Repeat via MainControls
                 if (ShuffleButton != null) ShuffleButton.SetState(SettingsManager.Instance.Shuffle);
@@ -125,22 +126,22 @@ namespace SoftAware.Winamp
                     timeDisplay.SetMode(SettingsManager.Instance.IsRemainingMode);
             }
 
-            if (eqButton != null)
+            if (EqButton != null)
             {
-                eqButton.OnValueChanged.AddListener((isOn) => {
+                EqButton.OnValueChanged.AddListener((isOn) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.ShowEQ = isOn;
                     SetWindowVisibility(eqWindow, isOn);
                 });
-                SetWindowVisibility(eqWindow, eqButton.IsOn);
+                SetWindowVisibility(eqWindow, EqButton.IsOn);
             }
 
-            if (playlistButton != null)
+            if (PlaylistButton != null)
             {
-                playlistButton.OnValueChanged.AddListener((isOn) => {
+                PlaylistButton.OnValueChanged.AddListener((isOn) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.ShowPlaylist = isOn;
                     SetWindowVisibility(playlistWindow, isOn);
                 });
-                SetWindowVisibility(playlistWindow, playlistButton.IsOn);
+                SetWindowVisibility(playlistWindow, PlaylistButton.IsOn);
             }
 
             if (ShuffleButton != null)
@@ -285,17 +286,17 @@ namespace SoftAware.Winamp
 
         public void CloseEqualizerWindow()
         {
-            if (eqButton != null && eqButton.IsOn)
+            if (EqButton != null && EqButton.IsOn)
             {
-                eqButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
+                EqButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
             }
         }
 
         public void ClosePlaylistWindow()
         {
-            if (playlistButton != null && playlistButton.IsOn)
+            if (PlaylistButton != null && PlaylistButton.IsOn)
             {
-                playlistButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
+                PlaylistButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
             }
         }
 

@@ -29,6 +29,7 @@ namespace SoftAware
         // Keep track of specific textures
         private Texture2D mainTexture = null;
         private Texture2D cbuttonsTexture = null;
+        private Texture2D shufrepTexture = null;
         
         public static WinampSkinImporter Instance { get; private set; }
         
@@ -273,12 +274,51 @@ namespace SoftAware
                 return;
             }
             
-            string bmpPath = Path.Combine(lastUnpackedSkinPath, "cbuttons.bmp");
+            string bmpPath = Path.Combine(lastUnpackedSkinPath, "CBUTTONS.BMP");
+            if (!File.Exists(bmpPath)) bmpPath = Path.Combine(lastUnpackedSkinPath, "cbuttons.bmp");
+            
             LoadTexture(bmpPath, (tex) => {
                 if (tex != null) cbuttonsTexture = tex;
                 lastLoadedTexture = tex;
                 onComplete?.Invoke(tex);
             });
+        }
+
+        public void LoadShufRepBmp(System.Action<Texture2D> onComplete)
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath))
+            {
+                Debug.LogWarning("No skin has been unpacked yet.");
+                onComplete?.Invoke(null);
+                return;
+            }
+
+            // Try explicit SHUFREP.BMP / shufrep.bmp / SHUFREP.PNG / shufrep.png
+            string[] candidates = { "SHUFREP.BMP", "shufrep.bmp", "SHUFREP.PNG", "shufrep.png" };
+            string foundPath = null;
+            
+            foreach (var cand in candidates)
+            {
+                string p = Path.Combine(lastUnpackedSkinPath, cand);
+                if (File.Exists(p))
+                {
+                    foundPath = p;
+                    break;
+                }
+            }
+            
+            if (foundPath != null)
+            {
+                LoadTexture(foundPath, (tex) => {
+                    if (tex != null) shufrepTexture = tex;
+                    onComplete?.Invoke(tex);
+                });
+            }
+            else
+            {
+                Debug.LogWarning("[WinampSkinImporter] SHUFREP.BMP not found.");
+                onComplete?.Invoke(null);
+            }
         }
         
         #endregion

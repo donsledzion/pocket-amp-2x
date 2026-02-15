@@ -5870,6 +5870,22 @@ MonoBehaviour:
     NextBtn_Pressed: {fileID: 0}
     EjectBtn_Normal: {fileID: 0}
     EjectBtn_Pressed: {fileID: 0}
+    Shuffle_Off_Normal: {fileID: 0}
+    Shuffle_Off_Pressed: {fileID: 0}
+    Shuffle_On_Normal: {fileID: 0}
+    Shuffle_On_Pressed: {fileID: 0}
+    Repeat_Off_Normal: {fileID: 0}
+    Repeat_Off_Pressed: {fileID: 0}
+    Repeat_On_Normal: {fileID: 0}
+    Repeat_On_Pressed: {fileID: 0}
+    EQ_Off_Normal: {fileID: 0}
+    EQ_Off_Pressed: {fileID: 0}
+    EQ_On_Normal: {fileID: 0}
+    EQ_On_Pressed: {fileID: 0}
+    PL_Off_Normal: {fileID: 0}
+    PL_Off_Pressed: {fileID: 0}
+    PL_On_Normal: {fileID: 0}
+    PL_On_Pressed: {fileID: 0}
 --- !u!4 &865236109
 Transform:
   m_ObjectHideFlags: 0
@@ -7699,7 +7715,6 @@ RectTransform:
   - {fileID: 1023889094}
   - {fileID: 929997138}
   - {fileID: 1398348553}
-  - {fileID: 1060122440}
   m_Father: {fileID: 1893449500}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -7759,20 +7774,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Main
   mainBackgroundImage: {fileID: 996247205}
   mainTitleBar: {fileID: 1918298643}
-  prevButton: {fileID: 769275748}
-  playButton: {fileID: 1928372321}
-  pauseButton: {fileID: 1712270223}
-  stopButton: {fileID: 1739377558}
-  nextButton: {fileID: 1051875649}
-  ejectButton: {fileID: 892622457}
+  mainControls: {fileID: 1599805111}
   progressSlider: {fileID: 671774734}
   volumeController: {fileID: 1509705978}
   balanceController: {fileID: 1802301961}
   channelsDisplay: {fileID: 2098605184}
-  shuffleButton: {fileID: 1127448538}
-  repeatButton: {fileID: 1347582004}
-  eqButton: {fileID: 257304246}
-  playlistButton: {fileID: 1395137659}
   eqWindow: {fileID: 693281830}
   playlistWindow: {fileID: 132724954}
   visWindow: {fileID: 1777476128}
@@ -8559,81 +8565,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051875647}
   m_CullTransparentMesh: 1
---- !u!1 &1060122437
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1060122440}
-  - component: {fileID: 1060122439}
-  - component: {fileID: 1060122438}
-  m_Layer: 5
-  m_Name: TestImage
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1060122438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1060122437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1060122439
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1060122437}
-  m_CullTransparentMesh: 1
---- !u!224 &1060122440
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1060122437}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 996247204}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.5597229, y: -258.0668}
-  m_SizeDelta: {x: 23, y: 18}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1069107340
 GameObject:
   m_ObjectHideFlags: 0
@@ -10614,7 +10545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampSkinImporter
   verboseLogging: 1
   testWszPath: 
-  testImage: {fileID: 1060122438}
+  testImage: {fileID: 0}
   setNativeSizeOnApply: 0
 --- !u!4 &1339184355
 Transform:
@@ -13266,6 +13197,7 @@ GameObject:
   - component: {fileID: 1599805109}
   - component: {fileID: 1599805108}
   - component: {fileID: 1599805110}
+  - component: {fileID: 1599805111}
   m_Layer: 5
   m_Name: Control Buttons
   m_TagString: Untagged
@@ -13366,6 +13298,28 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1599805111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599805106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5a000cc4835d842b89193eb81afea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Winamp.MainControls
+  prevButton: {fileID: 769275748}
+  playButton: {fileID: 1928372321}
+  pauseButton: {fileID: 1712270223}
+  stopButton: {fileID: 1739377558}
+  nextButton: {fileID: 1051875649}
+  ejectButton: {fileID: 892622457}
+  shuffleButton: {fileID: 1127448538}
+  repeatButton: {fileID: 1347582004}
+  eqButton: {fileID: 257304246}
+  playlistButton: {fileID: 1395137659}
 --- !u!1 &1600893985
 GameObject:
   m_ObjectHideFlags: 0

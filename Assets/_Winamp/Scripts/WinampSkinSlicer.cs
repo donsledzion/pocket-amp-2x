@@ -70,7 +70,54 @@ namespace SoftAware
             public static readonly Rect NextPressed = new Rect(92, 18, 22, 18);
             public static readonly Rect EjectPressed = new Rect(114, 18, 22, 16);
         }
-        
+
+        /// <summary>
+        /// Rectangles for SHUFREP.BMP (Shuffle/Repeat/Eq/Playlist Buttons)
+        /// Based on analyzed meta file structure (Vertical layout)
+        /// </summary>
+        public static class ShufRep
+        {
+            // Shuffle (47x15)
+            // Y coordinates from Top (assuming standard height or relative to top if sliced manually)
+            // Meta Y (from bottom): 70, 55, 40, 25. Diff is 15.
+            // Let's assume height is enough. Since we slice from Texture, we need Top-Down Y for our SliceSprite method (which flips internally).
+            // Wait, SliceSprite expects "rect.y" as Top-Down Y? 
+            // NO. SliceSprite implementation: "texture.height - rect.y - rect.height".
+            // So SliceSprite expects `rect.y` to be Top-Down Y coordinate.
+            // If Meta says Y=70 (bottom-up), and height=15.
+            // If texture height is e.g. 85.
+            // 70 + 15 = 85. So Y=70 is at the very top (0 in Top-Down).
+            // So:
+            // Off Normal (Meta Y=70) -> Top-Down Y = 0
+            // Off Pressed (Meta Y=55) -> Top-Down Y = 15
+            // On Normal (Meta Y=40) -> Top-Down Y = 30
+            // On Pressed (Meta Y=25) -> Top-Down Y = 45
+            
+            public static readonly Rect ShuffleOffNormal = new Rect(28, 0, 47, 15);
+            public static readonly Rect ShuffleOffPressed = new Rect(28, 15, 47, 15);
+            public static readonly Rect ShuffleOnNormal = new Rect(28, 30, 47, 15);
+            public static readonly Rect ShuffleOnPressed = new Rect(28, 45, 47, 15);
+
+            // Repeat (28x15)
+            public static readonly Rect RepeatOffNormal = new Rect(0, 0, 28, 15);
+            public static readonly Rect RepeatOffPressed = new Rect(0, 15, 28, 15);
+            public static readonly Rect RepeatOnNormal = new Rect(0, 30, 28, 15);
+            public static readonly Rect RepeatOnPressed = new Rect(0, 45, 28, 15);
+            
+            // Equalizer (23x12)
+            // Assumed Texture Height = 85 (based on Shuffle at Y=0)
+            public static readonly Rect EqOffNormal = new Rect(0, 61, 23, 12);
+            public static readonly Rect EqOnNormal = new Rect(0, 73, 23, 12);
+            public static readonly Rect EqOffPressed = new Rect(46, 61, 23, 12);
+            public static readonly Rect EqOnPressed = new Rect(46, 73, 23, 12);
+            
+            // Playlist (23x12)
+            public static readonly Rect PlOffNormal = new Rect(23, 61, 23, 12);
+            public static readonly Rect PlOnNormal = new Rect(23, 73, 23, 12);
+            public static readonly Rect PlOffPressed = new Rect(69, 61, 23, 12);
+            public static readonly Rect PlOnPressed = new Rect(69, 73, 23, 12);
+        }
+
         /// <summary>
         /// Creates a sprite from a texture using the specified rectangle
         /// </summary>
