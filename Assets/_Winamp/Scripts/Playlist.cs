@@ -46,7 +46,6 @@ namespace SoftAware.Winamp
 
         [SerializeField] private Main main;
         [SerializeField] private List<SongInfo> songs = new ();
-        [SerializeField] private TextMeshProUGUI debugText;
         [SerializeField] private AddContextMenu addContextMenu;
         private static Playlist instance;
         
@@ -104,14 +103,13 @@ namespace SoftAware.Winamp
             var demoFileName = "demo.mp3";
             var targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
             var playlistPath = GetPlaylistSavePath();
-            bool isFirstRun = SettingsManager.Instance != null && SettingsManager.Instance.IsFirstRun;
-            bool playlistExists = File.Exists(playlistPath);
+            var isFirstRun = SettingsManager.Instance && SettingsManager.Instance.IsFirstRun;
+            var playlistExists = File.Exists(playlistPath);
 
             // Copy from StreamingAssets if it doesn't exist in persistentDataPath
             if (!File.Exists(targetPath))
             {
-                LogDebug("Demo track not found in persistent path. Copying from StreamingAssets...");
-                string sourcePath = Path.Combine(Application.streamingAssetsPath, demoFileName);
+                var sourcePath = Path.Combine(Application.streamingAssetsPath, demoFileName);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
                 using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
@@ -120,18 +118,16 @@ namespace SoftAware.Winamp
                     if (www.result == UnityWebRequest.Result.Success)
                     {
                         File.WriteAllBytes(targetPath, www.downloadHandler.data);
-                        LogDebug("Successfully copied demo track to persistent path.");
                     }
                     else
                     {
-                        LogDebug($"ERROR copying demo track: {www.error}");
+                        Debug.LogError($"ERROR copying demo track: {www.error}");
                     }
                 }
 #else
                 if (File.Exists(sourcePath))
                 {
                     File.Copy(sourcePath, targetPath, true);
-                    LogDebug("Successfully copied demo track to persistent path.");
                 }
 #endif
             }
@@ -185,80 +181,42 @@ namespace SoftAware.Winamp
         private IEnumerator CheckPermissionsCoroutine()
         {
             #if UNITY_ANDROID
-            LogDebug("Requesting permissions...");
 
-            string audioPerm = "android.permission.READ_MEDIA_AUDIO";
-            string storagePerm = Permission.ExternalStorageRead;
-            string micPerm = "android.permission.RECORD_AUDIO";
+            var audioPerm = "android.permission.READ_MEDIA_AUDIO";
+            var storagePerm = Permission.ExternalStorageRead;
+            var micPerm = "android.permission.RECORD_AUDIO";
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                // Request permissions if they are not granted
-                if (!Permission.HasUserAuthorizedPermission(audioPerm))
-                {
-                    LogDebug("Requesting MediaAudio...");
-                    Permission.RequestUserPermission(audioPerm);
-                }
+            if (Application.platform != RuntimePlatform.Android) yield break;
+            // Request permissions if they are not granted
+            if (!Permission.HasUserAuthorizedPermission(audioPerm))
+                Permission.RequestUserPermission(audioPerm);
 
-                if (!Permission.HasUserAuthorizedPermission(storagePerm))
-                {
-                    LogDebug("Requesting StorageRead...");
-                    Permission.RequestUserPermission(storagePerm);
-                }
+            if (!Permission.HasUserAuthorizedPermission(storagePerm))
+                Permission.RequestUserPermission(storagePerm);
                 
-                if (!Permission.HasUserAuthorizedPermission(micPerm))
-                {
-                    LogDebug("Requesting RecordAudio (for visualizer)...");
-                    Permission.RequestUserPermission(micPerm);
-                }
+            if (!Permission.HasUserAuthorizedPermission(micPerm))
+                Permission.RequestUserPermission(micPerm);
 
-                // Poll for permission status (up to 10 seconds)
-                float timer = 0;
-                while (timer < 10f)
-                {
-                    bool hasAudio = Permission.HasUserAuthorizedPermission(audioPerm);
-                    bool hasStorage = Permission.HasUserAuthorizedPermission(storagePerm);
+            // Poll for permission status (up to 10 seconds)
+            float timer = 0;
+            while (timer < 10f)
+            {
+                var hasAudio = Permission.HasUserAuthorizedPermission(audioPerm);
+                var hasStorage = Permission.HasUserAuthorizedPermission(storagePerm);
                     
-                    if (hasAudio || hasStorage) 
-                    {
-                        LogDebug($"Status: Audio={hasAudio}, Storage={hasStorage}");
-                        break; 
-                    }
+                if (hasAudio || hasStorage) break;
 
-                    yield return new WaitForSeconds(0.5f);
-                    timer += 0.5f;
-                }
-
-                LogDebug($"Final Check: Audio={Permission.HasUserAuthorizedPermission(audioPerm)}, Storage={Permission.HasUserAuthorizedPermission(storagePerm)}");
+                yield return new WaitForSeconds(0.5f);
+                timer += 0.5f;
             }
-            #endif
+#endif
             yield break;
         }
 
-        public static void Log(string message)
+        private void AddDirectory(string directoryPath)
         {
-            if (instance) instance.LogDebug(message);
-            else Debug.Log("[PlaylistStatic] " + message);
-        }
-
-        private void LogDebug(string message, bool append = true)
-        {
-            if (!debugText) return;
-            // Clean older logs if it gets too long
-            if (debugText.text.Length > 2000) debugText.text = "... (too many logs)\n";
-            
-            if (append) debugText.text += message + "\n";
-            else debugText.text = message + "\n";
-            Debug.Log("[PlaylistDebug] " + message);
-        }
-
-        public void AddDirectory(string directoryPath)
-        {
-            LogDebug($"SCANNING: {directoryPath}", false);
-
             if (!FileBrowserHelpers.DirectoryExists(directoryPath))
             {
-                LogDebug($"ERROR: Directory not found according to FileBrowserHelpers");
                 return;
             }
 
@@ -267,16 +225,14 @@ namespace SoftAware.Winamp
 
         private IEnumerator LoadDirectoryCoroutine(string rootPath)
         {
-            LogDebug("Scanning folders recursively...", false);
             int validAudioFound = 0;
             
-            Stack<string> directoriesToScan = new Stack<string>();
+            var directoriesToScan = new Stack<string>();
             directoriesToScan.Push(rootPath);
 
             while (directoriesToScan.Count > 0)
             {
-                string currentPath = directoriesToScan.Pop();
-                LogDebug($"Scanning: {Path.GetFileName(currentPath)}");
+                var currentPath = directoriesToScan.Pop();
 
                 FileSystemEntry[] entries = null;
                 try 
@@ -285,13 +241,12 @@ namespace SoftAware.Winamp
                 }
                 catch (System.Exception e)
                 {
-                    LogDebug($"EXCEPTION in {currentPath}: {e.Message}");
                     continue;
                 }
                 
                 if (entries == null) continue;
 
-                foreach (FileSystemEntry entry in entries)
+                foreach (var entry in entries)
                 {
                     if (entry.IsDirectory)
                     {
@@ -299,29 +254,26 @@ namespace SoftAware.Winamp
                     }
                     else
                     {
-                        string entryName = entry.Name.ToLower();
-                        if (entryName.EndsWith(".mp3") || entryName.EndsWith(".wav") || entryName.EndsWith(".ogg"))
-                        {
-                            validAudioFound++;
+                        var entryName = entry.Name.ToLower();
+                        if (!entryName.EndsWith(".mp3") && !entryName.EndsWith(".wav") &&
+                            !entryName.EndsWith(".ogg")) continue;
+                        validAudioFound++;
                             
-                            // Unified Fast Path for ALL platforms
-                            songs.Add(new SongInfo 
-                            { 
-                                Title = GetCleanFileName(entry.Path), 
-                                Clip = null, 
-                                FilePath = entry.Path,
-                                Duration = 0,
-                                MetadataLoaded = false
-                            });
-                        }
+                        // Unified Fast Path for ALL platforms
+                        songs.Add(new SongInfo 
+                        { 
+                            Title = GetCleanFileName(entry.Path), 
+                            Clip = null, 
+                            FilePath = entry.Path,
+                            Duration = 0,
+                            MetadataLoaded = false
+                        });
                     }
                 }
                 
                 // Yield occasionally to prevent long hitches with many folders
                 yield return null;
             }
-
-            LogDebug($"FINISHED! Songs in playlist: {songs.Count}");
             
             if (currentIndex == -1 && songs.Count > 0)
             {
@@ -348,7 +300,7 @@ namespace SoftAware.Winamp
 
         public void PickSaveList()
         {
-            string folderPath = GetPlaylistsFolder();
+            var folderPath = GetPlaylistsFolder();
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
             FileBrowser.ShowSaveDialog((paths) => {
@@ -358,46 +310,43 @@ namespace SoftAware.Winamp
 
         public void PickLoadList()
         {
-            string folderPath = GetPlaylistsFolder();
+            var folderPath = GetPlaylistsFolder();
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
             FileBrowser.ShowLoadDialog((paths) => {
-                if (paths != null && paths.Length > 0) LoadPlaylist(paths[0]);
+                if (paths is { Length: > 0 }) LoadPlaylist(paths[0]);
             }, null, FileBrowser.PickMode.Files, false, folderPath, null, "Load Playlist", "Load");
         }
 
-        public void SavePlaylist(string path = null)
+        private void SavePlaylist(string path = null)
         {
-            bool isExplicitPath = !string.IsNullOrEmpty(path);
+            var isExplicitPath = !string.IsNullOrEmpty(path);
             if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
             
             // Ensure directory exists for custom paths too
-            string dir = Path.GetDirectoryName(path);
+            var dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-            PlaylistData data = new PlaylistData();
+            var data = new PlaylistData();
             foreach (var song in songs)
             {
-                if (!string.IsNullOrEmpty(song.FilePath))
+                if (string.IsNullOrEmpty(song.FilePath)) continue;
+                // Add to both for maximum compatibility/visibility
+                data.paths.Add(song.FilePath);
+                data.songs.Add(new SongInfo
                 {
-                    // Add to both for maximum compatibility/visibility
-                    data.paths.Add(song.FilePath);
-                    data.songs.Add(new SongInfo
-                    {
-                        Title = song.Title,
-                        Artist = song.Artist,
-                        FilePath = song.FilePath,
-                        Duration = song.Duration,
-                        MetadataLoaded = song.MetadataLoaded
-                    });
-                }
+                    Title = song.Title,
+                    Artist = song.Artist,
+                    FilePath = song.FilePath,
+                    Duration = song.Duration,
+                    MetadataLoaded = song.MetadataLoaded
+                });
             }
 
             try
             {
-                string json = JsonUtility.ToJson(data);
+                var json = JsonUtility.ToJson(data);
                 File.WriteAllText(path, json);
-                LogDebug($"Playlist SAVED to: {path}");
 
                 // If we saved an explicit external path, also update our master playlist
                 if (isExplicitPath && path != GetPlaylistSavePath())
@@ -407,86 +356,81 @@ namespace SoftAware.Winamp
             }
             catch (Exception e)
             {
-                LogDebug($"SAVE ERROR: {e.Message}");
+                Debug.LogError($"SAVE ERROR: {e.Message}");
             }
         }
 
-        public void LoadPlaylist(string path = null)
+        private void LoadPlaylist(string path = null)
         {
-            bool isMaster = string.IsNullOrEmpty(path);
+            var isMaster = string.IsNullOrEmpty(path);
             if (string.IsNullOrEmpty(path)) path = GetPlaylistSavePath();
             if (!File.Exists(path)) return;
 
             try
             {
-                string json = File.ReadAllText(path);
-                PlaylistData data = JsonUtility.FromJson<PlaylistData>(json);
-                
-                if (data != null)
+                var json = File.ReadAllText(path);
+                var data = JsonUtility.FromJson<PlaylistData>(json);
+
+                if (data == null) return;
+                songs.Clear(); 
+                selectedIndices.Clear();
+                currentIndex = -1;
+
+                // Support for Rich metadata (new format)
+                if (data.songs != null && data.songs.Count > 0)
                 {
-                    songs.Clear(); 
-                    selectedIndices.Clear();
-                    currentIndex = -1;
-
-                    // Support for Rich metadata (new format)
-                    if (data.songs != null && data.songs.Count > 0)
+                    foreach (var song in data.songs)
                     {
-                        foreach (var song in data.songs)
+                        songs.Add(new SongInfo
                         {
-                            songs.Add(new SongInfo
-                            {
-                                Title = song.Title,
-                                Artist = song.Artist,
-                                FilePath = song.FilePath,
-                                Duration = song.Duration,
-                                MetadataLoaded = song.MetadataLoaded
-                            });
-                        }
+                            Title = song.Title,
+                            Artist = song.Artist,
+                            FilePath = song.FilePath,
+                            Duration = song.Duration,
+                            MetadataLoaded = song.MetadataLoaded
+                        });
                     }
-                    // Support for Backward compatibility (old format)
-                    else if (data.paths != null && data.paths.Count > 0)
+                }
+                // Support for Backward compatibility (old format)
+                else if (data.paths != null && data.paths.Count > 0)
+                {
+                    foreach (string filePath in data.paths)
                     {
-                        foreach (string filePath in data.paths)
+                        songs.Add(new SongInfo
                         {
-                            songs.Add(new SongInfo
-                            {
-                                Title = GetCleanFileName(filePath),
-                                FilePath = filePath,
-                                MetadataLoaded = false
-                            });
-                        }
+                            Title = GetCleanFileName(filePath),
+                            FilePath = filePath,
+                            MetadataLoaded = false
+                        });
                     }
+                }
                     
-                    if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
-                    metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+                if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
+                metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
                     
-                    OnPlaylistChanged?.Invoke();
-                    OnCurrentIndexChanged?.Invoke(currentIndex);
-                    LogDebug($"Playlist LOADED from: {path}");
+                OnPlaylistChanged?.Invoke();
+                OnCurrentIndexChanged?.Invoke(currentIndex);
 
-                    if (isMaster) 
-                    {
-                        // If we loaded default, try to restore settings index
-                        if (SettingsManager.Instance != null)
-                        {
-                             int lastIndex = SettingsManager.Instance.LastPlaylistIndex;
-                             if (lastIndex >= 0 && lastIndex < songs.Count) SetCurrentClip(lastIndex);
-                             else if (songs.Count > 0) SetCurrentClip(0);
-                        }
-                    }
-                    else
-                    {
-                        // If we loaded EXTERNAL list, we should save it immediately as our master list
-                        SavePlaylist(null);
+                if (isMaster)
+                {
+                    // If we loaded default, try to restore settings index
+                    if (!SettingsManager.Instance) return;
+                    var lastIndex = SettingsManager.Instance.LastPlaylistIndex;
+                    if (lastIndex >= 0 && lastIndex < songs.Count) SetCurrentClip(lastIndex);
+                    else if (songs.Count > 0) SetCurrentClip(0);
+                }
+                else
+                {
+                    // If we loaded EXTERNAL list, we should save it immediately as our master list
+                    SavePlaylist(null);
                         
-                        // Always set first track as current for explicit external load
-                        if (songs.Count > 0) SetCurrentClip(0);
-                    }
+                    // Always set first track as current for explicit external load
+                    if (songs.Count > 0) SetCurrentClip(0);
                 }
             }
             catch (Exception e)
             {
-                LogDebug($"LOAD ERROR: {e.Message}");
+                Debug.LogError($"LOAD ERROR: {e.Message}");
             }
         }
 
@@ -557,12 +501,10 @@ namespace SoftAware.Winamp
 
         public IEnumerator LoadSongClip(SongInfo song)
         {
-            if (song == null || song.Clip != null) yield break;
+            if (song == null || song.Clip) yield break;
 
-            LogDebug($"> Loading: {song.Title}");
-
-            AudioType type = AudioType.UNKNOWN;
-            string ext = song.Title.ToLower();
+            var type = AudioType.UNKNOWN;
+            var ext = song.Title.ToLower();
             if (ext.EndsWith(".mp3")) type = AudioType.MPEG;
             else if (ext.EndsWith(".wav")) type = AudioType.WAV;
             else if (ext.EndsWith(".ogg")) type = AudioType.OGGVORBIS;
@@ -579,7 +521,6 @@ namespace SoftAware.Winamp
                 }
                 else
                 {
-                    LogDebug($"> <color=red>File not found: {song.FilePath}</color>");
                     yield break;
                 }
             }
@@ -605,12 +546,10 @@ namespace SoftAware.Winamp
                         song.Duration = clip.length;
                         OnSongMetadataUpdated?.Invoke(songs.IndexOf(song), song);
                     }
-
-                    LogDebug($"<color=green>LOADED: {clip.name} (Duration: {song.Duration:F2}s)</color>");
                 }
                 else
                 {
-                    LogDebug($"<color=red>LOAD ERROR: {www.error}</color>");
+                    Debug.LogError($"<color=red>LOAD ERROR: {www.error}</color>");
                 }
             }
         }
@@ -619,14 +558,12 @@ namespace SoftAware.Winamp
         {
             if (songs.Count == 0) return;
             if (index < 0 || index >= songs.Count) return;
-            bool changed = (currentIndex != index);
+            var changed = (currentIndex != index);
             currentIndex = index;
-            if (changed)
-            {
-                OnCurrentIndexChanged?.Invoke(currentIndex);
-                if (SettingsManager.Instance != null)
-                    SettingsManager.Instance.LastPlaylistIndex = currentIndex;
-            }
+            if (!changed) return;
+            OnCurrentIndexChanged?.Invoke(currentIndex);
+            if (SettingsManager.Instance)
+                SettingsManager.Instance.LastPlaylistIndex = currentIndex;
         }
 
         // Thread-safe random for background threads
@@ -700,7 +637,6 @@ namespace SoftAware.Winamp
         public void ToggleShuffle()
         {
             shuffleEnabled = !shuffleEnabled;
-            LogDebug($"Shuffle: {(shuffleEnabled ? "ON" : "OFF")}");
         }
 
         public void SetShuffle(bool enabled)

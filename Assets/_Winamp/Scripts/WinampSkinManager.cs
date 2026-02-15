@@ -13,6 +13,7 @@ namespace SoftAware
         
         [Header("Hierarchy References")]
         [SerializeField] private Main mainController;
+        [SerializeField] private WinampPlaylistUI playlistUI;
         
         [Header("Runtime Data")]
         [SerializeField] private WinampSkin currentSkin;
@@ -216,46 +217,56 @@ namespace SoftAware
                 currentSkin.TimeMinus = WinampSkinSlicer.SliceSprite(numsExTex, WinampSkinSlicer.NumsEx.MinusSign);
             }
 
-            // 11. Load Font
-            Texture2D textTex = await WinampSkinImporter.Instance.LoadTextBmpAsync();
-            if (textTex != null)
+            try
             {
-                Debug.Log("[WinampSkinManager] Slicing Font");
-                string allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\"@0123456789.:()-'!_+\\/[]^&%,=$#?* ";
-                var fontSprites = new System.Collections.Generic.List<Sprite>();
-                foreach (char c in allChars)
+                // 11. Load Font
+                Texture2D textTex = await WinampSkinImporter.Instance.LoadTextBmpAsync();
+                if (textTex != null)
                 {
-                    Rect r = WinampSkinSlicer.Font.GetCharRect(c);
-                    if (r != Rect.zero)
+                    Debug.Log("[WinampSkinManager] Slicing Font");
+                    string allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\"@0123456789.:()-'!_+\\/[]^&%,=$#?* ";
+                    var fontSprites = new System.Collections.Generic.List<Sprite>();
+                    foreach (char c in allChars)
                     {
-                        Sprite s = WinampSkinSlicer.SliceSprite(textTex, r);
-                        if (s != null)
+                        Rect r = WinampSkinSlicer.Font.GetCharRect(c);
+                        if (r != Rect.zero)
                         {
-                            s.name = WinampSkinSlicer.Font.GetSpriteName(c);
-                            fontSprites.Add(s);
+                            Sprite s = WinampSkinSlicer.SliceSprite(textTex, r);
+                            if (s != null)
+                            {
+                                s.name = WinampSkinSlicer.Font.GetSpriteName(c);
+                                fontSprites.Add(s);
+                            }
                         }
                     }
+                    currentSkin.TextSprites = fontSprites.ToArray();
                 }
-                currentSkin.TextSprites = fontSprites.ToArray();
+
+                // 12. Load EqMain (EQMAIN.BMP)
+                Debug.Log("[WinampSkinManager] Step 12: Loading Equalizer skin...");
+                await WinampSkinImporter.Instance.LoadEqMainAsync(currentSkin);
+                Debug.Log("[WinampSkinManager] Step 12: Done.");
+
+                // 13. Load VisColors (VISCOLOR.TXT)
+                Debug.Log("[WinampSkinManager] Step 13: Loading VisColors...");
+                currentSkin.VisColors = await WinampSkinImporter.Instance.LoadVisColorAsync();
+                Debug.Log($"[WinampSkinManager] Step 13: Done. Colors: {(currentSkin.VisColors != null ? currentSkin.VisColors.Length.ToString() : "NULL")}");
+
+                // 14. Load Playlist skin (PLEDIT)
+                Debug.Log("[WinampSkinManager] Step 14: Loading Playlist skin...");
+                await WinampSkinImporter.Instance.LoadPlEditAsync(currentSkin);
+                await WinampSkinImporter.Instance.LoadPlEditTxtAsync(currentSkin);
+                Debug.Log("[WinampSkinManager] Step 14: Done.");
             }
-
-            // 11. Load EqMain (EQMAIN.BMP)
-            Debug.Log("[WinampSkinManager] Step 11: Loading Equalizer skin...");
-            await WinampSkinImporter.Instance.LoadEqMainAsync(currentSkin);
-
-            // 12. Load VisColors (VISCOLOR.TXT)
-            Debug.Log("[WinampSkinManager] Step 12: Loading VisColors...");
-            currentSkin.VisColors = await WinampSkinImporter.Instance.LoadVisColorAsync();
-            if (currentSkin.VisColors != null)
+            catch (System.Exception ex)
             {
-                Debug.Log($"[WinampSkinManager] Loaded {currentSkin.VisColors.Length} visualizer colors");
+                Debug.LogError($"[WinampSkinManager] CRITICAL ERROR during skin loading: {ex.Message}\n{ex.StackTrace}");
             }
-            else
+            finally
             {
-                Debug.LogWarning("[WinampSkinManager] No VisColors loaded (LoadVisColorAsync returned NULL)");
+                Debug.Log("[WinampSkinManager] Finishing skin loading sequence.");
+                ApplySkinToHierarchy();
             }
-
-            ApplySkinToHierarchy();
         }
 
         private void ApplySkinToHierarchy()
@@ -275,9 +286,9 @@ namespace SoftAware
             {
                 mainController.ApplySkin(currentSkin);
             }
-            else
+            if (playlistUI != null)
             {
-                Debug.LogWarning("[WinampSkinManager] MainController reference is missing!");
+                playlistUI.ApplySkin(currentSkin);
             }
         }
     }

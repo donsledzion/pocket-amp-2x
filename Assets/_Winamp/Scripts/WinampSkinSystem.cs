@@ -121,6 +121,50 @@ namespace SoftAware
         public Sprite EqGraphColors;
         public Sprite EqGraphPreampLine;
 
+        [Header("Playlist (PLEDIT.BMP / PLEDIT.TXT)")]
+        // Background & Borders
+        public Sprite PlTopLeft;
+        public Sprite PlTopTitle;
+        public Sprite PlTopStretch; // This will be used as the "center" or "main" stretch
+        public Sprite PlTopLeftStretch; // New: Stretch on the left of title
+        public Sprite PlTopRightStretch; // New: Stretch on the right of title
+        public Sprite PlTopRight;
+        public Sprite PlBottomLeft;
+        public Sprite PlBottomRight;
+        public Sprite PlBottomStretch;
+        public Sprite PlLeftEdge;
+        public Sprite PlRightEdge;
+        public Sprite PlBackground;
+
+        // Buttons
+        public Sprite PlAddUrlNormal, PlAddUrlPressed;
+        public Sprite PlAddDirNormal, PlAddDirPressed;
+        public Sprite PlAddFileNormal, PlAddFilePressed;
+        public Sprite PlRemoveAllNormal, PlRemoveAllPressed;
+        public Sprite PlRemoveSelNormal, PlRemoveSelPressed;
+        public Sprite PlRemoveCropNormal, PlRemoveCropPressed;
+        public Sprite PlRemoveOptNormal, PlRemoveOptPressed;
+        public Sprite PlSelectAllNormal, PlSelectAllPressed;
+        public Sprite PlSelectNoneNormal, PlSelectNonePressed;
+        public Sprite PlSelectInvNormal, PlSelectInvPressed;
+        public Sprite PlSortNormal, PlSortPressed;
+        public Sprite PlFileInfoNormal, PlFileInfoPressed;
+        public Sprite PlMiscNormal, PlMiscPressed;
+        public Sprite PlNewListNormal, PlNewListPressed;
+        public Sprite PlSaveListNormal, PlSaveListPressed;
+        public Sprite PlLoadListNormal, PlLoadListPressed;
+
+        // Scrollbar
+        public Sprite PlScrollHandleNormal, PlScrollHandlePressed;
+
+        // Colors (from PLEDIT.TXT)
+        public Color PlNormalColor = Color.green;
+        public Color PlCurrentColor = Color.white;
+        public Color PlNormalBGColor = Color.black;
+        public Color PlSelectedBGColor = Color.blue;
+        public Color PlMbFGColor = Color.green;
+        public Color PlMbBGColor = Color.black;
+
         [Header("Visualizer (VISCOLOR.TXT)")]
         public Color[] VisColors;
         

@@ -150,7 +150,7 @@ namespace SoftAware.Winamp
             }
             catch (System.Exception e)
             {
-                Playlist.Log($"[Vis] Update ERR: {e.Message}");
+                Debug.LogError($"[Vis] Update ERR: {e.Message}");
             }
         }
 
@@ -330,12 +330,12 @@ namespace SoftAware.Winamp
         public void OnPointerClick(PointerEventData eventData)
         {
             float timeSinceLastClick = Time.time - _lastClickTime;
-            Playlist.Log($"[Vis] Click! Delta: {timeSinceLastClick:F3}s");
+            Debug.Log($"[Vis] Click! Delta: {timeSinceLastClick:F3}s");
 
             if (timeSinceLastClick < DOUBLE_CLICK_TIME)
             {
                 // Double click detected manually
-                Playlist.Log("[Vis] Double Click Detected (Manual)!");
+                Debug.Log("[Vis] Double Click Detected (Manual)!");
                 OnDoubleClick?.Invoke();
                 _lastClickTime = 0; // Reset to avoid triple click triggering second double click
             }
@@ -349,7 +349,7 @@ namespace SoftAware.Winamp
                 else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
                 else currentMode = VisMode.Spectrum;
 
-                Playlist.Log($"[Vis] Mode Cycle: {currentMode}");
+                Debug.Log($"[Vis] Mode Cycle: {currentMode}");
                 OnModeChanged?.Invoke(currentMode);
             }
         }

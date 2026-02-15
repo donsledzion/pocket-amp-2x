@@ -1305,7 +1305,6 @@ MonoBehaviour:
     FilePath: 
     Duration: 0
     MetadataLoaded: 0
-  debugText: {fileID: 0}
   addContextMenu: {fileID: 1483184873}
 --- !u!4 &204421521
 Transform:
@@ -1341,6 +1340,7 @@ MonoBehaviour:
   contentContainer: {fileID: 1854049880}
   scrollRect: {fileID: 792801600}
   scrollbar: {fileID: 1754141645}
+  addContextMenu: {fileID: 1483184873}
   selectContextMenu: {fileID: 820814888}
   removeContextMenu: {fileID: 1779691830}
   miscContextMenu: {fileID: 5062310}
@@ -1348,6 +1348,18 @@ MonoBehaviour:
   closeButton: {fileID: 1415876162}
   timeCounterText: {fileID: 2013761225}
   currentTrackTimeText: {fileID: 157758182}
+  plTopLeft: {fileID: 60576272}
+  plTopLeftStretch: {fileID: 1608137771}
+  plTopTitle: {fileID: 960412397}
+  plTopRightStretch: {fileID: 1822013715}
+  plTopRight: {fileID: 1822013715}
+  plBottomLeft: {fileID: 1245829484}
+  plBottomRight: {fileID: 947945062}
+  plBottomStretch: {fileID: 1005569307}
+  plLeftEdge: {fileID: 1357096698}
+  plRightEdge: {fileID: 1630285993}
+  plBackground: {fileID: 1606781381}
+  scrollHandleImage: {fileID: 394268137}
 --- !u!1 &208121405
 GameObject:
   m_ObjectHideFlags: 0
@@ -5425,6 +5437,7 @@ MonoBehaviour:
   loadOnStart: 1
   testSkinPath: C:\Users\choja\Downloads\WhOaH.wsz
   mainController: {fileID: 996247208}
+  playlistUI: {fileID: 204421522}
   currentSkin:
     SkinName: 
     MainBackground: {fileID: 0}
@@ -5504,6 +5517,58 @@ MonoBehaviour:
     EqGraphBackground: {fileID: 0}
     EqGraphColors: {fileID: 0}
     EqGraphPreampLine: {fileID: 0}
+    PlTopLeft: {fileID: 0}
+    PlTopTitle: {fileID: 0}
+    PlTopStretch: {fileID: 0}
+    PlTopLeftStretch: {fileID: 0}
+    PlTopRightStretch: {fileID: 0}
+    PlTopRight: {fileID: 0}
+    PlBottomLeft: {fileID: 0}
+    PlBottomRight: {fileID: 0}
+    PlBottomStretch: {fileID: 0}
+    PlLeftEdge: {fileID: 0}
+    PlRightEdge: {fileID: 0}
+    PlBackground: {fileID: 0}
+    PlAddUrlNormal: {fileID: 0}
+    PlAddUrlPressed: {fileID: 0}
+    PlAddDirNormal: {fileID: 0}
+    PlAddDirPressed: {fileID: 0}
+    PlAddFileNormal: {fileID: 0}
+    PlAddFilePressed: {fileID: 0}
+    PlRemoveAllNormal: {fileID: 0}
+    PlRemoveAllPressed: {fileID: 0}
+    PlRemoveSelNormal: {fileID: 0}
+    PlRemoveSelPressed: {fileID: 0}
+    PlRemoveCropNormal: {fileID: 0}
+    PlRemoveCropPressed: {fileID: 0}
+    PlRemoveOptNormal: {fileID: 0}
+    PlRemoveOptPressed: {fileID: 0}
+    PlSelectAllNormal: {fileID: 0}
+    PlSelectAllPressed: {fileID: 0}
+    PlSelectNoneNormal: {fileID: 0}
+    PlSelectNonePressed: {fileID: 0}
+    PlSelectInvNormal: {fileID: 0}
+    PlSelectInvPressed: {fileID: 0}
+    PlSortNormal: {fileID: 0}
+    PlSortPressed: {fileID: 0}
+    PlFileInfoNormal: {fileID: 0}
+    PlFileInfoPressed: {fileID: 0}
+    PlMiscNormal: {fileID: 0}
+    PlMiscPressed: {fileID: 0}
+    PlNewListNormal: {fileID: 0}
+    PlNewListPressed: {fileID: 0}
+    PlSaveListNormal: {fileID: 0}
+    PlSaveListPressed: {fileID: 0}
+    PlLoadListNormal: {fileID: 0}
+    PlLoadListPressed: {fileID: 0}
+    PlScrollHandleNormal: {fileID: 0}
+    PlScrollHandlePressed: {fileID: 0}
+    PlNormalColor: {r: 0, g: 1, b: 0, a: 1}
+    PlCurrentColor: {r: 1, g: 1, b: 1, a: 1}
+    PlNormalBGColor: {r: 0, g: 0, b: 0, a: 1}
+    PlSelectedBGColor: {r: 0, g: 0, b: 1, a: 1}
+    PlMbFGColor: {r: 0, g: 1, b: 0, a: 1}
+    PlMbBGColor: {r: 0, g: 0, b: 0, a: 1}
     VisColors: []
 --- !u!4 &865236109
 Transform:

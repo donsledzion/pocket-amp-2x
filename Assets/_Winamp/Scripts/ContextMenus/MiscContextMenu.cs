@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class MiscContextMenu : ContextMenuButton
+    public class MiscContextMenu : ContextMenuButton, IWinampSkinApplicator
     {
         internal Button SortListButton => MenuButtons[0];
         internal Button FileInfoButton => MenuButtons[1];
@@ -31,5 +31,31 @@ namespace SoftAware.Winamp
         private void FileInfo() => OnFileInfoButtonClicked?.Invoke();
 
         private void MiscOptions() => OnMiscOptionsButtonClicked.Invoke();
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            if (SortListButton)
+            {
+                SortListButton.image.sprite = skin.PlSortNormal;
+                var ss = SortListButton.spriteState;
+                ss.pressedSprite = skin.PlSortPressed;
+                SortListButton.spriteState = ss;
+            }
+            if (FileInfoButton)
+            {
+                FileInfoButton.image.sprite = skin.PlFileInfoNormal;
+                var ss = FileInfoButton.spriteState;
+                ss.pressedSprite = skin.PlFileInfoPressed;
+                FileInfoButton.spriteState = ss;
+            }
+            if (MiscOptionsButton)
+            {
+                MiscOptionsButton.image.sprite = skin.PlMiscNormal;
+                var ss = MiscOptionsButton.spriteState;
+                ss.pressedSprite = skin.PlMiscPressed;
+                MiscOptionsButton.spriteState = ss;
+            }
+        }
     }
 }

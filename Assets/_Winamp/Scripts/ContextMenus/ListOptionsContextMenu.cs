@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class ListOptionsContextMenu : ContextMenuButton
+    public class ListOptionsContextMenu : ContextMenuButton, IWinampSkinApplicator
     {
         internal Button NewListButton => MenuButtons[0];
         internal Button SaveListButton => MenuButtons[1];
@@ -31,5 +31,31 @@ namespace SoftAware.Winamp
         private void SaveList() => OnSaveListRequested?.Invoke();
 
         private void LoadList() => OnLoadListRequested?.Invoke();
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            if (NewListButton)
+            {
+                NewListButton.image.sprite = skin.PlNewListNormal;
+                var ss = NewListButton.spriteState;
+                ss.pressedSprite = skin.PlNewListPressed;
+                NewListButton.spriteState = ss;
+            }
+            if (SaveListButton)
+            {
+                SaveListButton.image.sprite = skin.PlSaveListNormal;
+                var ss = SaveListButton.spriteState;
+                ss.pressedSprite = skin.PlSaveListPressed;
+                SaveListButton.spriteState = ss;
+            }
+            if (LoadListButton)
+            {
+                LoadListButton.image.sprite = skin.PlLoadListNormal;
+                var ss = LoadListButton.spriteState;
+                ss.pressedSprite = skin.PlLoadListPressed;
+                LoadListButton.spriteState = ss;
+            }
+        }
     }
 }

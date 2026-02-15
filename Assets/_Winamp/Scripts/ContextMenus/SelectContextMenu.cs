@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class SelectContextMenu : ContextMenuButton
+    public class SelectContextMenu : ContextMenuButton, IWinampSkinApplicator
     {
         internal Button InvertSelectionButton => MenuButtons[0];
         internal Button SelectZeroButton => MenuButtons[1];
@@ -30,5 +30,31 @@ namespace SoftAware.Winamp
         private void SelectZero() => OnSelectNoneRequested?.Invoke();
 
         private void SelectAll() => OnSelectAllRequested?.Invoke();
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            if (InvertSelectionButton)
+            {
+                InvertSelectionButton.image.sprite = skin.PlSelectInvNormal;
+                var ss = InvertSelectionButton.spriteState;
+                ss.pressedSprite = skin.PlSelectInvPressed;
+                InvertSelectionButton.spriteState = ss;
+            }
+            if (SelectZeroButton)
+            {
+                SelectZeroButton.image.sprite = skin.PlSelectNoneNormal;
+                var ss = SelectZeroButton.spriteState;
+                ss.pressedSprite = skin.PlSelectNonePressed;
+                SelectZeroButton.spriteState = ss;
+            }
+            if (SelectAllButton)
+            {
+                SelectAllButton.image.sprite = skin.PlSelectAllNormal;
+                var ss = SelectAllButton.spriteState;
+                ss.pressedSprite = skin.PlSelectAllPressed;
+                SelectAllButton.spriteState = ss;
+            }
+        }
     }
 }

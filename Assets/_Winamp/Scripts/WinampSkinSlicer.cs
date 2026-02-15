@@ -175,6 +175,73 @@ namespace SoftAware
             public static readonly Rect PreampLine = new Rect(0, 314, 113, 1);
         }
 
+        public static class Playlist
+        {
+            // Height = 186
+            public static readonly Rect TopLeft = new Rect(0, 0, 25, 20);
+            public static readonly Rect TopTitle = new Rect(26, 0, 100, 20);
+            public static readonly Rect TopStretch = new Rect(127, 0, 25, 20);
+            public static readonly Rect TopRight = new Rect(153, 0, 25, 20);
+
+            public static readonly Rect BottomLeft = new Rect(0, 72, 125, 38);
+            public static readonly Rect BottomRight = new Rect(126, 72, 150, 38);
+            public static readonly Rect BottomStretch = new Rect(179, 0, 25, 38); 
+
+            public static readonly Rect LeftEdge = new Rect(0, 42, 25, 29);
+            public static readonly Rect RightEdge = new Rect(26, 42, 25, 29);
+            public static readonly Rect Background = new Rect(11, 42, 14, 29);
+
+            // Buttons Add
+            public static readonly Rect AddUrlNormal = new Rect(0, 111, 22, 18);
+            public static readonly Rect AddUrlPressed = new Rect(23, 111, 22, 18);
+            public static readonly Rect AddDirNormal = new Rect(0, 130, 22, 18);
+            public static readonly Rect AddDirPressed = new Rect(23, 130, 22, 18);
+            public static readonly Rect AddFileNormal = new Rect(0, 149, 22, 18);
+            public static readonly Rect AddFilePressed = new Rect(23, 149, 22, 18);
+
+            // Buttons Remove
+            public static readonly Rect RemAllNormal = new Rect(51, 111, 22, 18); // Map manually if not in meta
+            public static readonly Rect RemAllPressed = new Rect(74, 111, 22, 18);
+            public static readonly Rect RemSelNormal = new Rect(51, 130, 22, 18);
+            public static readonly Rect RemSelPressed = new Rect(74, 130, 22, 18);
+            public static readonly Rect RemCropNormal = new Rect(51, 149, 22, 18);
+            public static readonly Rect RemCropPressed = new Rect(74, 149, 22, 18);
+            public static readonly Rect RemMiscNormal = new Rect(51, 168, 22, 18);
+            public static readonly Rect RemMiscPressed = new Rect(74, 168, 22, 18);
+
+            // Buttons Select
+            public static readonly Rect SelAllNormal = new Rect(104, 149, 22, 18);
+            public static readonly Rect SelAllPressed = new Rect(127, 149, 22, 18);
+            public static readonly Rect SelNoneNormal = new Rect(104, 130, 22, 18);
+            public static readonly Rect SelNonePressed = new Rect(127, 130, 22, 18);
+            public static readonly Rect SelInvNormal = new Rect(104, 111, 22, 18);
+            public static readonly Rect SelInvPressed = new Rect(127, 111, 22, 18);
+
+            // Buttons Sort/Misc
+            public static readonly Rect SortNormal = new Rect(154, 111, 22, 18);
+            public static readonly Rect SortPressed = new Rect(177, 111, 22, 18);
+            public static readonly Rect FileInfoNormal = new Rect(154, 130, 22, 18);
+            public static readonly Rect FileInfoPressed = new Rect(177, 130, 22, 18);
+            public static readonly Rect MiscNormal = new Rect(154, 149, 22, 18);
+            public static readonly Rect MiscPressed = new Rect(177, 149, 22, 18);
+
+            // Buttons List (New/Save/Load)
+            public static readonly Rect NewListNormal = new Rect(204, 111, 22, 18);
+            public static readonly Rect NewListPressed = new Rect(227, 111, 22, 18);
+            public static readonly Rect SaveListNormal = new Rect(204, 130, 22, 18);
+            public static readonly Rect SaveListPressed = new Rect(227, 130, 22, 18);
+            public static readonly Rect LoadListNormal = new Rect(204, 149, 22, 18);
+            public static readonly Rect LoadListPressed = new Rect(227, 149, 22, 18);
+
+            // Handle
+            public static readonly Rect SliderHandleNormal = new Rect(52, 53, 8, 18);
+            public static readonly Rect SliderHandlePressed = new Rect(61, 53, 8, 18);
+            
+            // Close
+            public static readonly Rect CloseNormal = new Rect(168, 4, 7, 7);
+            public static readonly Rect ClosePressed = new Rect(159, 4, 7, 7);
+        }
+
         public static class Numbers
         {
             public static readonly int Width = 9;

@@ -172,7 +172,7 @@ namespace SoftAware.Winamp
             if (spectrumVisualizer == null)
             {
                 spectrumVisualizer = FindFirstObjectByType<SpectrumVisualizer>();
-                if (spectrumVisualizer != null) Playlist.Log("[Main] Found SpectrumVisualizer via Fallback.");
+                if (spectrumVisualizer != null) Debug.Log("[Main] Found SpectrumVisualizer via Fallback.");
             }
 
             // Load and Apply Settings
@@ -246,7 +246,7 @@ namespace SoftAware.Winamp
 
             if (spectrumVisualizer != null)
             {
-                Playlist.Log("[Main] Subscribing to SpectrumVisualizer DoubleClick.");
+                Debug.Log("[Main] Subscribing to SpectrumVisualizer DoubleClick.");
                 spectrumVisualizer.OnModeChanged += (mode) => {
                     if (SettingsManager.Instance != null) SettingsManager.Instance.VisualizerMode = mode;
                 };
@@ -256,7 +256,7 @@ namespace SoftAware.Winamp
             }
             else
             {
-                Playlist.Log("[Main] ERR: SpectrumVisualizer NOT FOUND!");
+                Debug.Log("[Main] ERR: SpectrumVisualizer NOT FOUND!");
             }
 
             if (timeDisplay != null)
@@ -372,11 +372,11 @@ namespace SoftAware.Winamp
             }
         }
 
-        public void ToggleVisWindow()
+        private void ToggleVisWindow()
         {
             isVisWindowOpen = !isVisWindowOpen;
             SetWindowVisibility(visWindow, isVisWindowOpen);
-            Playlist.Log($"[Main] Visualizer Window Toggled: {isVisWindowOpen}");
+            Debug.Log($"[Main] Visualizer Window Toggled: {isVisWindowOpen}");
         }
 
         private void OnDestroy()

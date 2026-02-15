@@ -6,7 +6,7 @@ using TMPro;
 
 namespace SoftAware.Winamp
 {
-    public class WinampPlaylistUI : MonoBehaviour
+    public class WinampPlaylistUI : MonoBehaviour, IWinampSkinApplicator
     {
         [Header("References")]
         [SerializeField] private Main main;
@@ -17,6 +17,7 @@ namespace SoftAware.Winamp
 
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private Scrollbar scrollbar;
+        [SerializeField] private AddContextMenu addContextMenu;
         [SerializeField] private SelectContextMenu selectContextMenu;
         [SerializeField] private RemoveContextMenu removeContextMenu;
         [SerializeField] private MiscContextMenu miscContextMenu;
@@ -27,11 +28,28 @@ namespace SoftAware.Winamp
         [SerializeField] private TextMeshProUGUI timeCounterText;
         [SerializeField] private TextMeshProUGUI currentTrackTimeText;
 
+        [Header("Skinning Elements")]
+        [SerializeField] private Image plTopLeft;
+        [SerializeField] private Image plTopLeftStretch;
+        [SerializeField] private Image plTopTitle;
+        [SerializeField] private Image plTopRightStretch;
+        [SerializeField] private Image plTopRight;
+        [SerializeField] private Image plBottomLeft;
+        [SerializeField] private Image plBottomRight;
+        [SerializeField] private Image plBottomStretch;
+        [SerializeField] private Image plLeftEdge;
+        [SerializeField] private Image plRightEdge;
+        [SerializeField] private Image plBackground;
+        
+        [Header("Button Skinning")]
+        [SerializeField] private Image scrollHandleImage;
+
 
         private readonly List<WinampPlaylistTrack> trackUIItems = new ();
         private bool isUpdatingScroll = false;
         private bool isRemainingMode = false;
         private float lastUpdateTime = 0f;
+        private WinampSkin currentSkin;
 
         private void Start()
         {
@@ -200,14 +218,9 @@ namespace SoftAware.Winamp
                 var go = Instantiate(trackPrefab, contentContainer);
                 var trackUI = go.GetComponent<WinampPlaylistTrack>();
                 if (!trackUI) continue;
-                if (WinampSkinLoader.Instance)
+                if (currentSkin != null)
                 {
-                    trackUI.SetColors(
-                        WinampSkinLoader.Instance.PlaylistNormalColor,
-                        WinampSkinLoader.Instance.PlaylistCurrentColor,
-                        WinampSkinLoader.Instance.PlaylistNormalBGColor,
-                        WinampSkinLoader.Instance.PlaylistSelectedBGColor
-                    );
+                    trackUI.ApplySkin(currentSkin);
                 }
                 trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
                 trackUIItems.Add(trackUI);
@@ -271,17 +284,12 @@ namespace SoftAware.Winamp
 
         public void RefreshColors()
         {
-            if (WinampSkinLoader.Instance == null) return;
+            if (currentSkin == null) return;
 
             foreach (var track in trackUIItems)
             {
                 if (track == null) continue;
-                track.SetColors(
-                    WinampSkinLoader.Instance.PlaylistNormalColor,
-                    WinampSkinLoader.Instance.PlaylistCurrentColor,
-                    WinampSkinLoader.Instance.PlaylistNormalBGColor,
-                    WinampSkinLoader.Instance.PlaylistSelectedBGColor
-                );
+                track.ApplySkin(currentSkin);
                 track.SetPlaying(playlist.CurrentIndex == trackUIItems.IndexOf(track));
             }
         }
@@ -335,6 +343,42 @@ namespace SoftAware.Winamp
         {
             isRemainingMode = remaining;
             UpdateCurrentTrackTime();
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            currentSkin = skin;
+
+            // Apply Border Sprites
+            if (plTopLeft) plTopLeft.sprite = skin.PlTopLeft;
+            if (plTopLeftStretch) plTopLeftStretch.sprite = skin.PlTopLeftStretch;
+            if (plTopTitle) plTopTitle.sprite = skin.PlTopTitle;
+            if (plTopRightStretch) plTopRightStretch.sprite = skin.PlTopRightStretch;
+            if (plTopRight) plTopRight.sprite = skin.PlTopRight;
+            if (plBottomLeft) plBottomLeft.sprite = skin.PlBottomLeft;
+            if (plBottomRight) plBottomRight.sprite = skin.PlBottomRight;
+            if (plBottomStretch) plBottomStretch.sprite = skin.PlBottomStretch;
+            if (plLeftEdge) plLeftEdge.sprite = skin.PlLeftEdge;
+            if (plRightEdge) plRightEdge.sprite = skin.PlRightEdge;
+            if (plBackground) 
+            {
+                plBackground.sprite = skin.PlBackground;
+                plBackground.type = Image.Type.Tiled;
+            }
+
+            if (scrollHandleImage) scrollHandleImage.sprite = skin.PlScrollHandleNormal;
+
+            // Apply Text Colors to Bottom Labels
+            // Propagate skin to Context Menus
+            if (addContextMenu) addContextMenu.ApplySkin(skin);
+            if (selectContextMenu) selectContextMenu.ApplySkin(skin);
+            if (removeContextMenu) removeContextMenu.ApplySkin(skin);
+            if (miscContextMenu) miscContextMenu.ApplySkin(skin);
+            if (listOptionsContextMenu) listOptionsContextMenu.ApplySkin(skin);
+
+            // Propagate to tracks
+            RefreshColors();
         }
 
         private void CloseWindow() => main.ClosePlaylistWindow();

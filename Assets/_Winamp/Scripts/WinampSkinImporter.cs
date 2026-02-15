@@ -524,6 +524,139 @@ namespace SoftAware
             }
         }
 
+        public async Task LoadPlEditAsync(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            Texture2D plEditTex = await LoadSkinFileAsync(new[] { "PLEDIT.BMP", "pledit.bmp", "PLEDIT.PNG", "pledit.png" });
+
+            if (plEditTex != null)
+            {
+                Log($"Slicing Playlist components from {plEditTex.name} ({plEditTex.width}x{plEditTex.height})");
+                
+                // Borders & Title
+                skin.PlTopLeft = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopLeft);
+                skin.PlTopTitle = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopTitle);
+                skin.PlTopStretch = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopStretch);
+                skin.PlTopRight = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopRight);
+                
+                skin.PlBottomLeft = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.BottomLeft);
+                skin.PlBottomRight = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.BottomRight);
+                skin.PlBottomStretch = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.BottomStretch);
+                
+                skin.PlLeftEdge = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.LeftEdge);
+                skin.PlRightEdge = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RightEdge);
+                skin.PlBackground = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.Background);
+
+                // Buttons Add
+                skin.PlAddUrlNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddUrlNormal);
+                skin.PlAddUrlPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddUrlPressed);
+                skin.PlAddDirNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddDirNormal);
+                skin.PlAddDirPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddDirPressed);
+                skin.PlAddFileNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddFileNormal);
+                skin.PlAddFilePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddFilePressed);
+
+                // Buttons Remove
+                skin.PlRemoveAllNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemAllNormal);
+                skin.PlRemoveAllPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemAllPressed);
+                skin.PlRemoveSelNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemSelNormal);
+                skin.PlRemoveSelPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemSelPressed);
+                skin.PlRemoveCropNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemCropNormal);
+                skin.PlRemoveCropPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemCropPressed);
+                skin.PlRemoveOptNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemMiscNormal);
+                skin.PlRemoveOptPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemMiscPressed);
+
+                // Buttons Select
+                skin.PlSelectAllNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelAllNormal);
+                skin.PlSelectAllPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelAllPressed);
+                skin.PlSelectNoneNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelNoneNormal);
+                skin.PlSelectNonePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelNonePressed);
+                skin.PlSelectInvNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelInvNormal);
+                skin.PlSelectInvPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelInvPressed);
+
+                // Buttons Sort/Misc
+                skin.PlSortNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SortNormal);
+                skin.PlSortPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SortPressed);
+                skin.PlFileInfoNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.FileInfoNormal);
+                skin.PlFileInfoPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.FileInfoPressed);
+                skin.PlMiscNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.MiscNormal);
+                skin.PlMiscPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.MiscPressed);
+
+                // Buttons List
+                skin.PlNewListNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.NewListNormal);
+                skin.PlNewListPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.NewListPressed);
+                skin.PlSaveListNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SaveListNormal);
+                skin.PlSaveListPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SaveListPressed);
+                skin.PlLoadListNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.LoadListNormal);
+                skin.PlLoadListPressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.LoadListPressed);
+
+                // Scrollbar
+                skin.PlScrollHandleNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SliderHandleNormal);
+                skin.PlScrollHandlePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SliderHandlePressed);
+            }
+        }
+
+        public async Task LoadPlEditTxtAsync(WinampSkin skin)
+        {
+            if (skin == null || string.IsNullOrEmpty(lastUnpackedSkinPath)) return;
+
+            // Search for PLEDIT.TXT (recursive)
+            string foundPath = null;
+            try
+            {
+                string[] files = Directory.GetFiles(lastUnpackedSkinPath, "PLEDIT.TXT", SearchOption.AllDirectories);
+                if (files.Length == 0) files = Directory.GetFiles(lastUnpackedSkinPath, "pledit.txt", SearchOption.AllDirectories);
+                if (files.Length > 0) foundPath = files[0];
+            }
+            catch { }
+
+            if (foundPath == null) return;
+
+            try
+            {
+                string text = await File.ReadAllTextAsync(foundPath);
+                string[] lines = text.Split(new[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var line in lines)
+                {
+                    string trimmed = line.Trim();
+                    if (trimmed.Contains('='))
+                    {
+                        string[] parts = trimmed.Split('=');
+                        if (parts.Length == 2)
+                        {
+                            string key = parts[0].Trim().ToLower();
+                            string val = parts[1].Trim();
+                            
+                            // Remove comments after value (e.g. #FFFFFF ; white)
+                            if (val.Contains(';')) val = val.Split(';')[0].Trim();
+                            if (val.Contains("//")) val = val.Split(new[] { "//" }, System.StringSplitOptions.None)[0].Trim();
+
+                            if (!val.StartsWith("#")) val = "#" + val;
+
+                            if (ColorUtility.TryParseHtmlString(val, out Color col))
+                            {
+                                switch (key)
+                                {
+                                    case "normal": skin.PlNormalColor = col; break;
+                                    case "current": skin.PlCurrentColor = col; break;
+                                    case "normalbg": skin.PlNormalBGColor = col; break;
+                                    case "selectedbg": skin.PlSelectedBGColor = col; break;
+                                    case "mbfg": skin.PlMbFGColor = col; break;
+                                    case "mbbg": skin.PlMbBGColor = col; break;
+                                }
+                            }
+                        }
+                    }
+                }
+                Log($"Parsed PLEDIT.TXT and updated skin colors.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[WinampSkinImporter] Failed to read PLEDIT.TXT: {ex.Message}");
+            }
+        }
+
         private Color[] ParseVisColor(string text)
         {
             if (string.IsNullOrEmpty(text)) return null;

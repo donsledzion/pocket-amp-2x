@@ -4,10 +4,11 @@ using TMPro;
 using System;
 using System.Collections;
 using UnityEngine.EventSystems;
+using SoftAware.Winamp;
 
 namespace SoftAware
 {
-    public class WinampPlaylistTrack : MonoBehaviour, IPointerClickHandler
+    public class WinampPlaylistTrack : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
     {
         [Header("References")]
         [SerializeField] private TextMeshProUGUI indexText;
@@ -163,6 +164,12 @@ namespace SoftAware
         {
             background.enabled = isSelected;
             background.color = selectedBgColor;
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            SetColors(skin.PlNormalColor, skin.PlCurrentColor, skin.PlNormalBGColor, skin.PlSelectedBGColor);
         }
 
         public void OnPointerClick(PointerEventData eventData)

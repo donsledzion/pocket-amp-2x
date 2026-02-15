@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.Winamp
 {
-    public class RemoveContextMenu : ContextMenuButton
+    public class RemoveContextMenu : ContextMenuButton, IWinampSkinApplicator
     {
         internal Button RemoveMiscButton => MenuButtons[0];
         internal Button RemoveAllButton => MenuButtons[1];
@@ -36,5 +36,38 @@ namespace SoftAware.Winamp
         private void Crop() => OnCropRequested?.Invoke();
 
         private void RemoveSelected() => OnRemoveSelectedRequested?.Invoke();
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            if (RemoveMiscButton)
+            {
+                RemoveMiscButton.image.sprite = skin.PlRemoveOptNormal;
+                var ss = RemoveMiscButton.spriteState;
+                ss.pressedSprite = skin.PlRemoveOptPressed;
+                RemoveMiscButton.spriteState = ss;
+            }
+            if (RemoveAllButton)
+            {
+                RemoveAllButton.image.sprite = skin.PlRemoveAllNormal;
+                var ss = RemoveAllButton.spriteState;
+                ss.pressedSprite = skin.PlRemoveAllPressed;
+                RemoveAllButton.spriteState = ss;
+            }
+            if (CropButton)
+            {
+                CropButton.image.sprite = skin.PlRemoveCropNormal;
+                var ss = CropButton.spriteState;
+                ss.pressedSprite = skin.PlRemoveCropPressed;
+                CropButton.spriteState = ss;
+            }
+            if (RemoveSelectedButton)
+            {
+                RemoveSelectedButton.image.sprite = skin.PlRemoveSelNormal;
+                var ss = RemoveSelectedButton.spriteState;
+                ss.pressedSprite = skin.PlRemoveSelPressed;
+                RemoveSelectedButton.spriteState = ss;
+            }
+        }
     }
 }
