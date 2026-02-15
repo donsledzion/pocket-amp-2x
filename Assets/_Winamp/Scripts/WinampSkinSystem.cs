@@ -26,6 +26,9 @@ namespace SoftAware
         public Sprite[] TimeDigits; // Numbers 0-9
         public Sprite TimeMinus;   // Minus sign
 
+        [Header("Font (TEXT.BMP)")]
+        public Sprite[] TextSprites;
+
         // Song Title Display (optional font/bg)]
         [Header("Title Bar Buttons")]
         public Sprite MinimizeBtn_Normal;

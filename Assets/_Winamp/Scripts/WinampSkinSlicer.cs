@@ -209,6 +209,83 @@ namespace SoftAware
         }
 
         /// <summary>
+        /// Rectangles for TEXT.BMP Font
+        /// Character size is mostly 5x6
+        /// </summary>
+        public static class Font
+        {
+            public const int CharHeight = 6;
+            
+            // Layout based on standard Winamp TEXT.BMP and provided meta
+            // Row 1 (Top, y=0 in Top-Down)
+            public static readonly string Row1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\"";
+            // Row 2 (Middle, y=6)
+            public static readonly string Row2 = "0123456789"; 
+
+            public static Rect GetCharRect(char c)
+            {
+                c = char.ToUpper(c);
+                
+                // Top Row: A-Z (0-125), " (130)
+                int row1Index = Row1.IndexOf(c);
+                if (row1Index >= 0)
+                {
+                    return new Rect(row1Index * 5, 0, 5, CharHeight);
+                }
+
+                if (c == '@') return new Rect(135, 0, 8, CharHeight);
+
+                // Middle Row: 0-9 (0-45)
+                int row2Index = Row2.IndexOf(c);
+                if (row2Index >= 0)
+                {
+                    return new Rect(row2Index * 5, 6, 5, CharHeight);
+                }
+
+                // Special characters in Row 2
+                if (c == '.') return new Rect(49, 6, 3, CharHeight);
+                if (c == ':') return new Rect(60, 6, 5, CharHeight);
+                if (c == '(') return new Rect(65, 6, 5, CharHeight);
+                if (c == ')') return new Rect(70, 6, 5, CharHeight);
+                if (c == '-') return new Rect(75, 6, 5, CharHeight);
+                if (c == '\'') return new Rect(80, 6, 5, CharHeight);
+                if (c == '!') return new Rect(85, 6, 5, CharHeight);
+                if (c == '_') return new Rect(90, 6, 5, CharHeight);
+                if (c == '+') return new Rect(95, 6, 5, CharHeight);
+                if (c == '\\') return new Rect(100, 6, 5, CharHeight);
+                if (c == '/') return new Rect(105, 6, 5, CharHeight);
+                if (c == '[') return new Rect(110, 6, 5, CharHeight);
+                if (c == ']') return new Rect(115, 6, 5, CharHeight);
+                if (c == '^') return new Rect(120, 6, 5, CharHeight);
+                if (c == '&') return new Rect(125, 6, 5, CharHeight);
+                if (c == '%') return new Rect(130, 6, 5, CharHeight);
+                if (c == ',') return new Rect(135, 6, 5, CharHeight);
+                if (c == '=') return new Rect(140, 6, 5, CharHeight);
+                if (c == '$') return new Rect(145, 6, 5, CharHeight);
+                if (c == '#') return new Rect(150, 6, 5, CharHeight);
+
+                // Bottom Row (y=12)
+                if (c == '?') return new Rect(15, 12, 5, CharHeight);
+                if (c == '*') return new Rect(20, 12, 5, CharHeight);
+                if (c == ' ') return new Rect(25, 12, 5, CharHeight);
+
+                return Rect.zero;
+            }
+
+            public static string GetSpriteName(char c)
+            {
+                if (c == '"') return "Text_''";
+                if (c == ':') return "Text_Colon";
+                if (c == '(') return "Text_LBracket";
+                if (c == ')') return "Text_RBracket";
+                if (c == '*') return "Text_Shuriken";
+                if (c == ' ') return "Text_Space";
+                if (c == '?') return "Text_Question";
+                return $"Text_{c}";
+            }
+        }
+
+        /// <summary>
         /// Creates a sprite from a texture using the specified rectangle
         /// </summary>
         /// <param name="texture">Source texture (e.g., main.bmp or cbuttons.bmp)</param>

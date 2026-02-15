@@ -13,18 +13,18 @@ namespace SoftAware
         private static bool debugMissingCharacters;
         [SerializeField] private Sprite[] textSprites;
         
-        private static TextSpriteProvider instance;
+        public static TextSpriteProvider Instance { get; private set; }
         private Dictionary<char, Sprite> spriteCache = new Dictionary<char, Sprite>();
         private bool isInitialized = false;
 
         private void Awake()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
                 Initialize();
             }
-            else if (instance != this)
+            else if (Instance != this)
             {
                 Destroy(gameObject);
             }
@@ -73,7 +73,7 @@ namespace SoftAware
         /// </summary>
         public static Sprite GetSprite(char c)
         {
-            if (!instance || !instance.isInitialized)
+            if (!Instance || !Instance.isInitialized)
             {
                 Debug.LogWarning("[TextSpriteProvider] Not initialized!");
                 return null;
@@ -82,7 +82,7 @@ namespace SoftAware
             // Convert to uppercase for consistency
             c = char.ToUpper(c);
 
-            if (instance.spriteCache.TryGetValue(c, out Sprite sprite))
+            if (Instance.spriteCache.TryGetValue(c, out Sprite sprite))
             {
                 return sprite;
             }
@@ -96,8 +96,20 @@ namespace SoftAware
         /// </summary>
         public static bool HasSprite(char c)
         {
-            if (instance == null || !instance.isInitialized) return false;
-            return instance.spriteCache.ContainsKey(char.ToUpper(c));
+            if (Instance == null || !Instance.isInitialized) return false;
+            return Instance.spriteCache.ContainsKey(char.ToUpper(c));
+        }
+
+        public void ApplySkin(Sprite[] sprites)
+        {
+            if (sprites == null || sprites.Length == 0) return;
+            
+            textSprites = sprites;
+            spriteCache.Clear();
+            isInitialized = false;
+            Initialize();
+            
+            Debug.Log($"[TextSpriteProvider] Applied new skin with {sprites.Length} sprites. Cache size: {spriteCache.Count}");
         }
 
 #if UNITY_EDITOR

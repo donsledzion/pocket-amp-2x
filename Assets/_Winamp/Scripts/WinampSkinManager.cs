@@ -297,7 +297,31 @@ namespace SoftAware
                                                         else
                                                             Debug.Log($"[WinampSkinManager] TimeDigits final count: {currentSkin.TimeDigits.Length}");
 
-                                                        ApplySkinToHierarchy();
+                                                        // Load Text Font
+                                                        WinampSkinImporter.Instance.LoadTextBmp((textTex) => {
+                                                            if (textTex != null)
+                                                            {
+                                                                Debug.Log($"[WinampSkinManager] Slicing Font from {textTex.name}");
+                                                                string allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ\"@0123456789.:()-'!_+\\/[]^&%,=$#?* ";
+                                                                var fontSprites = new System.Collections.Generic.List<Sprite>();
+                                                                foreach (char c in allChars)
+                                                                {
+                                                                    Rect r = WinampSkinSlicer.Font.GetCharRect(c);
+                                                                    if (r != Rect.zero)
+                                                                    {
+                                                                        Sprite s = WinampSkinSlicer.SliceSprite(textTex, r);
+                                                                        if (s != null)
+                                                                        {
+                                                                            s.name = WinampSkinSlicer.Font.GetSpriteName(c);
+                                                                            fontSprites.Add(s);
+                                                                        }
+                                                                    }
+                                                                }
+                                                                currentSkin.TextSprites = fontSprites.ToArray();
+                                                            }
+
+                                                            ApplySkinToHierarchy();
+                                                        });
                                                     });
                                                 });
                                             });
@@ -318,6 +342,12 @@ namespace SoftAware
             if (currentSkin == null) return;
             
             Debug.Log("[WinampSkinManager] Applying skin to hierarchy...");
+
+            // Update Global Font
+            if (TextSpriteProvider.Instance != null && currentSkin.TextSprites != null)
+            {
+                TextSpriteProvider.Instance.ApplySkin(currentSkin.TextSprites);
+            }
 
             // Distribute to known applicators
             if (mainController != null) 

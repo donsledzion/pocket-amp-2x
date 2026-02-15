@@ -399,6 +399,11 @@ namespace SoftAware
             LoadSkinFile(new[] { "POSBAR.BMP", "posbar.bmp", "Posbar.bmp", "POSBAR.PNG", "posbar.png" }, onComplete);
         }
 
+        public void LoadTextBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" }, onComplete);
+        }
+
         private void LoadSkinFile(string[] candidates, System.Action<Texture2D> onComplete)
         {
             if (string.IsNullOrEmpty(lastUnpackedSkinPath))
