@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace SoftAware.Winamp
 {
-    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler
+    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
     {
         public enum VisMode { Spectrum, Waveform, None }
 
@@ -351,6 +351,43 @@ namespace SoftAware.Winamp
 
                 Playlist.Log($"[Vis] Mode Cycle: {currentMode}");
                 OnModeChanged?.Invoke(currentMode);
+            }
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            
+            if (skin.VisColors == null || skin.VisColors.Length == 0)
+            {
+                Debug.Log("[SpectrumVisualizer] Skin has no VisColors defined.");
+                return;
+            }
+
+            Debug.Log($"[SpectrumVisualizer] Applying skin colors ({skin.VisColors.Length} colors)");
+
+            // Winamp VISCOLOR.TXT mapping to our palette
+            // Line 1: Background (Index 0)
+            // Line 2: Dots (Index 1)
+            // Line 3-18: Spectrum bars (Index 2-17)
+            // Line 19-23: Oscilloscope (Index 18-22)
+            // Line 24: Peak dots (Index 23)
+
+            for (int i = 0; i < skin.VisColors.Length && i < palette.Length; i++)
+            {
+                // We keep alpha transparency for background (Index 0) if it was already transparent,
+                // or we use the skin's color if it's meant to be solid.
+                // Standard Winamp has solid background, but we like our transparency.
+                // Let's use the skin color but keep it slightly transparent or just solid if the skin says so.
+                palette[i] = skin.VisColors[i];
+            }
+
+            colorTransparent = palette[0];
+            
+            if (visualizerTexture != null)
+            {
+                ClearTexture();
+                visualizerTexture.Apply();
             }
         }
     }

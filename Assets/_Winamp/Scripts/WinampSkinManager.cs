@@ -239,6 +239,18 @@ namespace SoftAware
                 currentSkin.TextSprites = fontSprites.ToArray();
             }
 
+            // 12. Load VisColors (VISCOLOR.TXT)
+            Debug.Log("[WinampSkinManager] Step 12: Loading VisColors...");
+            currentSkin.VisColors = await WinampSkinImporter.Instance.LoadVisColorAsync();
+            if (currentSkin.VisColors != null)
+            {
+                Debug.Log($"[WinampSkinManager] Loaded {currentSkin.VisColors.Length} visualizer colors");
+            }
+            else
+            {
+                Debug.LogWarning("[WinampSkinManager] No VisColors loaded (LoadVisColorAsync returned NULL)");
+            }
+
             ApplySkinToHierarchy();
         }
 

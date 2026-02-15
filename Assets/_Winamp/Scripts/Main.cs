@@ -77,6 +77,17 @@ namespace SoftAware.Winamp
             {
                 timeDisplay.ApplySkin(skin);
             }
+
+            // Apply Visualizer Colors (VISCOLOR.TXT)
+            if (spectrumVisualizer != null)
+            {
+                Debug.Log($"[Main] Propagating skin to SpectrumVisualizer. Colors: {(skin.VisColors != null ? skin.VisColors.Length.ToString() : "NULL")}");
+                spectrumVisualizer.ApplySkin(skin);
+            }
+            else
+            {
+                Debug.LogWarning("[Main] spectrumVisualizer reference is NULL during ApplySkin!");
+            }
         }
 
         internal Button PrevButton => mainControls != null ? mainControls.PrevButton : null;

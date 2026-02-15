@@ -92,6 +92,9 @@ namespace SoftAware
         [Header("Position Bar")]
         public Sprite PosKnobNormal;
         public Sprite PosKnobPressed;
+
+        [Header("Visualizer (VISCOLOR.TXT)")]
+        public Color[] VisColors;
         
         // Add more fields as we implement more components
     }

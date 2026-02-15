@@ -423,6 +423,95 @@ namespace SoftAware
         public Task<Texture2D> LoadMonoSterBmpAsync() => LoadSkinFileAsync(new[] { "MONOSTER.BMP", "MONOSTER.PNG" });
         public Task<Texture2D> LoadTextBmpAsync() => LoadSkinFileAsync(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" });
 
+        public async Task<Color[]> LoadVisColorAsync()
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath)) return null;
+
+            string foundPath = null;
+            // Try root first
+            string directPath = Path.Combine(lastUnpackedSkinPath, "VISCOLOR.TXT");
+            if (File.Exists(directPath)) foundPath = directPath;
+            else
+            {
+                // Recursive search
+                try
+                {
+                    string[] files = Directory.GetFiles(lastUnpackedSkinPath, "VISCOLOR.TXT", SearchOption.AllDirectories);
+                    if (files != null && files.Length > 0) foundPath = files[0];
+                }
+                catch { }
+            }
+
+            if (foundPath == null) 
+            {
+                Log("VISCOLOR.TXT not found (even recursively)");
+                return null;
+            }
+
+            try
+            {
+                Log($"Reading VISCOLOR.TXT from: {foundPath}");
+                string text = await File.ReadAllTextAsync(foundPath);
+                var colors = ParseVisColor(text);
+                Log(colors != null ? $"Successfully parsed {colors.Length} colors" : "Failed to parse any colors from VISCOLOR.TXT");
+                return colors;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[WinampSkinImporter] Failed to read VISCOLOR.TXT: {ex.Message}");
+                return null;
+            }
+        }
+
+        private Color[] ParseVisColor(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            // Remove Byte Order Mark (BOM) if present
+            text = text.Trim('\uFEFF', '\u200B');
+            
+            var colors = new List<Color>();
+            string[] lines = text.Split(new[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+            
+            Log($"Parsing VISCOLOR.TXT: {lines.Length} raw lines found");
+            if (lines.Length > 0) Log($"First line preview: [{lines[0].Trim()}]");
+
+            foreach (string line in lines)
+            {
+                string trimmed = line.Trim();
+                if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("//") || trimmed.StartsWith(";") || trimmed.StartsWith("#")) continue;
+
+                // Expected format: R,G,B or R G B
+                string[] parts = trimmed.Split(new[] { ',', ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 3)
+                {
+                    if (int.TryParse(parts[0], out int r) && 
+                        int.TryParse(parts[1], out int g) && 
+                        int.TryParse(parts[2], out int b))
+                    {
+                        colors.Add(new Color(r / 255f, g / 255f, b / 255f, 1f));
+                    }
+                    else
+                    {
+                        Log($"Failed to parse RGB values from line: {trimmed}");
+                    }
+                }
+                else
+                {
+                    // Skip lines that don't look like color data (e.g. headers or comments I missed)
+                    if (trimmed.Length > 0 && !char.IsDigit(trimmed[0]))
+                    {
+                        Log($"Skipping non-digit line: {trimmed}");
+                    }
+                }
+
+                if (colors.Count >= 24) break; 
+            }
+
+            Log($"Final palette size: {colors.Count} colors");
+            return colors.Count > 0 ? colors.ToArray() : null;
+        }
+
         private Task<Texture2D> LoadSkinFileAsync(string[] candidates)
         {
             var tcs = new TaskCompletionSource<Texture2D>();
