@@ -34,8 +34,7 @@ namespace SoftAware
 
             Debug.Log($"[WinampSkinManager] Starting skin load from: {testSkinPath}");
 
-            // 1. Unpack (or just use path if already unpacked folder? Importer handles logic)
-            // Let's assume Importer is already set up to Unpack
+            // 1. Unpack
             WinampSkinImporter.Instance.UnpackWsz(testSkinPath);
             
             // 2. Load Textures & Create Skin Data
@@ -101,19 +100,8 @@ namespace SoftAware
                             currentSkin.Repeat_On_Pressed = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.RepeatButtonOnPressed);
 
                             // Fallback EQ/PL from MAIN.BMP
-                            // Note: Classic Winamp Main.bmp only has "Off" and "On" states visually represented as simple toggles or specific regions?
-                            // WinampSkinSlicer defines EqualizerButton (219, 58) 23x12.
-                            // In standard skin, these might not have 4 distinct states available in Main.bmp easily accessible exactly like ShufRep.
-                            // But usually they just toggle. Let's use the basic rects we have or reuse them.
-                            // For now, let's use the defined EqualizerButton for Normal state, and maybe offset for Pressed if standard exists?
-                            // Actually, standard Winamp 2.x Main.bmp has EQ/PL buttons at (219,58) and (242,58).
-                            // They are simple toggles. 
-                            // Let's just map them simply for fallback.
                             currentSkin.EQ_Off_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.EqualizerButton); 
-                            currentSkin.EQ_On_Normal = currentSkin.EQ_Off_Normal; // Reuse or find correct on state?
-                            // Actually properly implementing fallback for EQ/PL requires more research on Main.bmp states. 
-                            // Usually they just light up.
-                            // For safety, let's map what we have.
+                            currentSkin.EQ_On_Normal = currentSkin.EQ_Off_Normal; 
                             currentSkin.PL_Off_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.PlaylistButton);
                             currentSkin.PL_On_Normal = currentSkin.PL_Off_Normal;
                         }
@@ -142,104 +130,114 @@ namespace SoftAware
                                  currentSkin.EjectBtn_Pressed = WinampSkinSlicer.SliceSprite(cbuttonsTex, WinampSkinSlicer.CButtons.EjectPressed);
                             }
                             
-                            // Done loading main, shufrep, and cbuttons? Now MONOSTER
-                            WinampSkinImporter.Instance.LoadMonoSterBmp((monosterTex) => 
+                            // Slice Position Bar Knobs
+                            // Try loading Posbar.bmp first
+                            WinampSkinImporter.Instance.LoadPosbarBmp((posbarTex) => 
                             {
-                                if (monosterTex != null)
+                                Texture2D sourceTex = posbarTex;
+                                bool usePosbar = (sourceTex != null);
+                                
+                                if (!usePosbar && mainTex != null)
                                 {
-                                    Debug.Log("[WinampSkinManager] Slicing Mono/Stereo from MONOSTER.BMP");
-                                    currentSkin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOn);
-                                    currentSkin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOff);
-                                    currentSkin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOff);
+                                    sourceTex = mainTex;
+                                }
+
+                                if (sourceTex != null)
+                                {
+                                    // POSBAR_normal:  x:248, y:0, w:29, h:10 (y:0 in meta is Bottom)
+                                    // POSBAR_pressed: x:278, y:0, w:29, h:10
+                                    
+                                    // If using Posbar.bmp, user confirms content is at the same position (Top-Left) as in POSBAR.png.
+                                    // POSBAR.png is 10px high, so content is at Y=0 (Top and Bottom).
+                                    // Skin texture is taller, but content is at Top.
+                                    // SliceSprite takes Y from Top.
+                                    
+                                    currentSkin.PosKnobNormal = WinampSkinSlicer.SliceSprite(sourceTex, new Rect(248, 0, 29, 10));
+                                    currentSkin.PosKnobPressed = WinampSkinSlicer.SliceSprite(sourceTex, new Rect(278, 0, 29, 10));
                                 }
                                 
-                                // Load Volume
-                                WinampSkinImporter.Instance.LoadVolumeBmp((volumeTex) => {
-                                    if (volumeTex != null)
+                                // Done loading main, shufrep, cbuttons, and posbar? Now MONOSTER
+                                WinampSkinImporter.Instance.LoadMonoSterBmp((monosterTex) => 
+                                {
+                                    if (monosterTex != null)
                                     {
-                                        Debug.Log("[WinampSkinManager] Slicing Volume from VOLUME.BMP");
-                                        // Knobs at bottom (Y=0 in meta, so Y=Height-11 in slicer logic?)
-                                        // Wait, SliceSprite expects Y from Top.
-                                        // If VolumeTex provided, calculate Y.
-                                        // Meta: Knob Y=0 (bottom).
-                                        // Rect.y (top) = H - 0 - 11.
-                                        float h = volumeTex.height;
-                                        
-                                        currentSkin.VolumeKnobNormal = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
-                                            WinampSkinSlicer.Volume.KnobNormal.x, 
-                                            h - WinampSkinSlicer.Volume.KnobNormal.y - WinampSkinSlicer.Volume.KnobNormal.height,
-                                            WinampSkinSlicer.Volume.KnobNormal.width,
-                                            WinampSkinSlicer.Volume.KnobNormal.height));
-
-                                        currentSkin.VolumeKnobPressed = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
-                                            WinampSkinSlicer.Volume.KnobPressed.x, 
-                                            h - WinampSkinSlicer.Volume.KnobPressed.y - WinampSkinSlicer.Volume.KnobPressed.height,
-                                            WinampSkinSlicer.Volume.KnobPressed.width,
-                                            WinampSkinSlicer.Volume.KnobPressed.height));
-
-                                        // Animation Frames
-                                        // Meta: Frame 0 at Y=420. H=13. 
-                                        // Top of Frame 0 = H - 420 - 13.
-                                        // Meta: Frame 27 at Y=15.
-                                        // Stride is 15.
-                                        // Assuming Frame 0 is at offset 0 from "Top of Animation Block".
-                                        // Let's assume the texture layout is standard.
-                                        // Frame 0 Y (bottom) = 420.
-                                        // Loop 0 to 27.
-                                        currentSkin.VolumeAnimation = new Sprite[WinampSkinSlicer.Volume.FrameCount];
-                                        for (int i = 0; i < WinampSkinSlicer.Volume.FrameCount; i++)
-                                        {
-                                            // Y from bottom for current frame: 420 - (i * 15) ?
-                                            // Frame 0: 420. Frame 1: 405. ... Frame 27: 15. Correct.
-                                            float yBottom = 420 - (i * WinampSkinSlicer.Volume.FrameStride);
-                                            // Convert to Top-Down Y for SliceSprite
-                                            float yTop = h - yBottom - WinampSkinSlicer.Volume.FrameHeight;
-                                            
-                                            currentSkin.VolumeAnimation[i] = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
-                                                0, // Frame X is always 0
-                                                yTop,
-                                                WinampSkinSlicer.Volume.FrameWidth,
-                                                WinampSkinSlicer.Volume.FrameHeight
-                                            ));
-                                        }
+                                        Debug.Log("[WinampSkinManager] Slicing Mono/Stereo from MONOSTER.BMP");
+                                        currentSkin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOn);
+                                        currentSkin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOff);
+                                        currentSkin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOff);
                                     }
                                     
-                                    // Load Balance
-                                    WinampSkinImporter.Instance.LoadBalanceBmp((balanceTex) => {
-                                        if (balanceTex != null)
+                                    // Load Volume
+                                    WinampSkinImporter.Instance.LoadVolumeBmp((volumeTex) => {
+                                        if (volumeTex != null)
                                         {
-                                            Debug.Log("[WinampSkinManager] Slicing Balance from BALANCE.BMP");
-                                            float h = balanceTex.height;
+                                            Debug.Log("[WinampSkinManager] Slicing Volume from VOLUME.BMP");
+                                            float h = volumeTex.height;
                                             
-                                            currentSkin.BalanceKnobNormal = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
-                                                WinampSkinSlicer.Balance.KnobNormal.x,
-                                                h - WinampSkinSlicer.Balance.KnobNormal.y - WinampSkinSlicer.Balance.KnobNormal.height,
-                                                WinampSkinSlicer.Balance.KnobNormal.width,
-                                                WinampSkinSlicer.Balance.KnobNormal.height));
+                                            currentSkin.VolumeKnobNormal = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                                WinampSkinSlicer.Volume.KnobNormal.x, 
+                                                h - WinampSkinSlicer.Volume.KnobNormal.y - WinampSkinSlicer.Volume.KnobNormal.height,
+                                                WinampSkinSlicer.Volume.KnobNormal.width,
+                                                WinampSkinSlicer.Volume.KnobNormal.height));
 
-                                            currentSkin.BalanceKnobPressed = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
-                                                WinampSkinSlicer.Balance.KnobPressed.x,
-                                                h - WinampSkinSlicer.Balance.KnobPressed.y - WinampSkinSlicer.Balance.KnobPressed.height,
-                                                WinampSkinSlicer.Balance.KnobPressed.width,
-                                                WinampSkinSlicer.Balance.KnobPressed.height));
+                                            currentSkin.VolumeKnobPressed = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                                WinampSkinSlicer.Volume.KnobPressed.x, 
+                                                h - WinampSkinSlicer.Volume.KnobPressed.y - WinampSkinSlicer.Volume.KnobPressed.height,
+                                                WinampSkinSlicer.Volume.KnobPressed.width,
+                                                WinampSkinSlicer.Volume.KnobPressed.height));
 
-                                            currentSkin.BalanceAnimation = new Sprite[WinampSkinSlicer.Balance.FrameCount];
-                                            for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+                                            currentSkin.VolumeAnimation = new Sprite[WinampSkinSlicer.Volume.FrameCount];
+                                            for (int i = 0; i < WinampSkinSlicer.Volume.FrameCount; i++)
                                             {
-                                                float yBottom = 420 - (i * WinampSkinSlicer.Balance.FrameStride);
-                                                float yTop = h - yBottom - WinampSkinSlicer.Balance.FrameHeight;
+                                                float yBottom = 420 - (i * WinampSkinSlicer.Volume.FrameStride);
+                                                float yTop = h - yBottom - WinampSkinSlicer.Volume.FrameHeight;
                                                 
-                                                currentSkin.BalanceAnimation[i] = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
-                                                    9, // Frame X is 9 (meta says x=9 for BG sprites)
+                                                currentSkin.VolumeAnimation[i] = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                                    0, 
                                                     yTop,
-                                                    WinampSkinSlicer.Balance.FrameWidth,
-                                                    WinampSkinSlicer.Balance.FrameHeight
+                                                    WinampSkinSlicer.Volume.FrameWidth,
+                                                    WinampSkinSlicer.Volume.FrameHeight
                                                 ));
                                             }
                                         }
                                         
-                                        // Finally apply!
-                                        ApplySkinToHierarchy();
+                                        // Load Balance
+                                        WinampSkinImporter.Instance.LoadBalanceBmp((balanceTex) => {
+                                            if (balanceTex != null)
+                                            {
+                                                Debug.Log("[WinampSkinManager] Slicing Balance from BALANCE.BMP");
+                                                float h = balanceTex.height;
+                                                
+                                                currentSkin.BalanceKnobNormal = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                    WinampSkinSlicer.Balance.KnobNormal.x,
+                                                    h - WinampSkinSlicer.Balance.KnobNormal.y - WinampSkinSlicer.Balance.KnobNormal.height,
+                                                    WinampSkinSlicer.Balance.KnobNormal.width,
+                                                    WinampSkinSlicer.Balance.KnobNormal.height));
+
+                                                currentSkin.BalanceKnobPressed = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                    WinampSkinSlicer.Balance.KnobPressed.x,
+                                                    h - WinampSkinSlicer.Balance.KnobPressed.y - WinampSkinSlicer.Balance.KnobPressed.height,
+                                                    WinampSkinSlicer.Balance.KnobPressed.width,
+                                                    WinampSkinSlicer.Balance.KnobPressed.height));
+
+                                                currentSkin.BalanceAnimation = new Sprite[WinampSkinSlicer.Balance.FrameCount];
+                                                for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+                                                {
+                                                    float yBottom = 420 - (i * WinampSkinSlicer.Balance.FrameStride);
+                                                    float yTop = h - yBottom - WinampSkinSlicer.Balance.FrameHeight;
+                                                    
+                                                    currentSkin.BalanceAnimation[i] = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                        9, 
+                                                        yTop,
+                                                        WinampSkinSlicer.Balance.FrameWidth,
+                                                        WinampSkinSlicer.Balance.FrameHeight
+                                                    ));
+                                                }
+                                            }
+                                            
+                                            // Finally apply!
+                                            ApplySkinToHierarchy();
+                                        });
                                     });
                                 });
                             });

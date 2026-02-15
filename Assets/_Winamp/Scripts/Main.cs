@@ -51,6 +51,22 @@ namespace SoftAware.Winamp
             {
                 balanceController.ApplySkin(skin);
             }
+            
+            // Apply Position Bar (Progress Slider)
+            if (progressSlider != null && progressSlider.targetGraphic is Image posHandle)
+            {
+                if (skin.PosKnobNormal != null)
+                {
+                    posHandle.sprite = skin.PosKnobNormal;
+                }
+                
+                SpriteState ss = progressSlider.spriteState;
+                if (skin.PosKnobPressed != null)
+                {
+                    ss.pressedSprite = skin.PosKnobPressed;
+                }
+                progressSlider.spriteState = ss;
+            }
         }
 
         internal Button PrevButton => mainControls != null ? mainControls.PrevButton : null;

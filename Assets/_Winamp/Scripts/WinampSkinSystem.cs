@@ -75,6 +75,10 @@ namespace SoftAware
         public Sprite BalanceKnobPressed;
         public Sprite[] BalanceAnimation; // 28 frames
         
+        [Header("Position Bar")]
+        public Sprite PosKnobNormal;
+        public Sprite PosKnobPressed;
+        
         // Add more fields as we implement more components
     }
 

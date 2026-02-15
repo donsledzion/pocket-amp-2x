@@ -47,6 +47,14 @@ namespace SoftAware
         
         // Position bar background (MAIN.BMP)
         public static readonly Rect PositionBarBg = new Rect(16, 72, 248, 10);
+        
+        // Position bar knob (MAIN.BMP)
+        // Normal: 246, 29 (29x10) - Adjusted to fit 275px width (246+29=275)
+        public static readonly Rect PositionBarKnobNormal = new Rect(246, 29, 29, 10);
+        // Pressed: 246, 39? 
+        // Let's assume standard Y spacing.
+        // Based on visually inspecting skins, pressed is often immediately below.
+        public static readonly Rect PositionBarKnobPressed = new Rect(246, 39, 29, 10);
 
         /// <summary>
         /// Rectangles for CBUTTONS.BMP (Transport Buttons)
