@@ -150,21 +150,98 @@ namespace SoftAware
                                     Debug.Log("[WinampSkinManager] Slicing Mono/Stereo from MONOSTER.BMP");
                                     currentSkin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOn);
                                     currentSkin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOff);
-                                    currentSkin.Mono_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOn);
                                     currentSkin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOff);
                                 }
-                                else
-                                {
-                                    // Fallback? 
-                                    // Classic skins have these baked in Main.bmp at (212,41) and (239,41).
-                                    // But they are usually "Active" indicators.
-                                    // The "Inactive" state is often just the unlit background.
-                                    // We could define rects for Main.bmp fallback if we wanted perfect emulation,
-                                    // but for now let's just leave them null (MainIndicators will hide images).
-                                }
                                 
-                                // Finally apply!
-                                ApplySkinToHierarchy();
+                                // Load Volume
+                                WinampSkinImporter.Instance.LoadVolumeBmp((volumeTex) => {
+                                    if (volumeTex != null)
+                                    {
+                                        Debug.Log("[WinampSkinManager] Slicing Volume from VOLUME.BMP");
+                                        // Knobs at bottom (Y=0 in meta, so Y=Height-11 in slicer logic?)
+                                        // Wait, SliceSprite expects Y from Top.
+                                        // If VolumeTex provided, calculate Y.
+                                        // Meta: Knob Y=0 (bottom).
+                                        // Rect.y (top) = H - 0 - 11.
+                                        float h = volumeTex.height;
+                                        
+                                        currentSkin.VolumeKnobNormal = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                            WinampSkinSlicer.Volume.KnobNormal.x, 
+                                            h - WinampSkinSlicer.Volume.KnobNormal.y - WinampSkinSlicer.Volume.KnobNormal.height,
+                                            WinampSkinSlicer.Volume.KnobNormal.width,
+                                            WinampSkinSlicer.Volume.KnobNormal.height));
+
+                                        currentSkin.VolumeKnobPressed = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                            WinampSkinSlicer.Volume.KnobPressed.x, 
+                                            h - WinampSkinSlicer.Volume.KnobPressed.y - WinampSkinSlicer.Volume.KnobPressed.height,
+                                            WinampSkinSlicer.Volume.KnobPressed.width,
+                                            WinampSkinSlicer.Volume.KnobPressed.height));
+
+                                        // Animation Frames
+                                        // Meta: Frame 0 at Y=420. H=13. 
+                                        // Top of Frame 0 = H - 420 - 13.
+                                        // Meta: Frame 27 at Y=15.
+                                        // Stride is 15.
+                                        // Assuming Frame 0 is at offset 0 from "Top of Animation Block".
+                                        // Let's assume the texture layout is standard.
+                                        // Frame 0 Y (bottom) = 420.
+                                        // Loop 0 to 27.
+                                        currentSkin.VolumeAnimation = new Sprite[WinampSkinSlicer.Volume.FrameCount];
+                                        for (int i = 0; i < WinampSkinSlicer.Volume.FrameCount; i++)
+                                        {
+                                            // Y from bottom for current frame: 420 - (i * 15) ?
+                                            // Frame 0: 420. Frame 1: 405. ... Frame 27: 15. Correct.
+                                            float yBottom = 420 - (i * WinampSkinSlicer.Volume.FrameStride);
+                                            // Convert to Top-Down Y for SliceSprite
+                                            float yTop = h - yBottom - WinampSkinSlicer.Volume.FrameHeight;
+                                            
+                                            currentSkin.VolumeAnimation[i] = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(
+                                                0, // Frame X is always 0
+                                                yTop,
+                                                WinampSkinSlicer.Volume.FrameWidth,
+                                                WinampSkinSlicer.Volume.FrameHeight
+                                            ));
+                                        }
+                                    }
+                                    
+                                    // Load Balance
+                                    WinampSkinImporter.Instance.LoadBalanceBmp((balanceTex) => {
+                                        if (balanceTex != null)
+                                        {
+                                            Debug.Log("[WinampSkinManager] Slicing Balance from BALANCE.BMP");
+                                            float h = balanceTex.height;
+                                            
+                                            currentSkin.BalanceKnobNormal = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                WinampSkinSlicer.Balance.KnobNormal.x,
+                                                h - WinampSkinSlicer.Balance.KnobNormal.y - WinampSkinSlicer.Balance.KnobNormal.height,
+                                                WinampSkinSlicer.Balance.KnobNormal.width,
+                                                WinampSkinSlicer.Balance.KnobNormal.height));
+
+                                            currentSkin.BalanceKnobPressed = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                WinampSkinSlicer.Balance.KnobPressed.x,
+                                                h - WinampSkinSlicer.Balance.KnobPressed.y - WinampSkinSlicer.Balance.KnobPressed.height,
+                                                WinampSkinSlicer.Balance.KnobPressed.width,
+                                                WinampSkinSlicer.Balance.KnobPressed.height));
+
+                                            currentSkin.BalanceAnimation = new Sprite[WinampSkinSlicer.Balance.FrameCount];
+                                            for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+                                            {
+                                                float yBottom = 420 - (i * WinampSkinSlicer.Balance.FrameStride);
+                                                float yTop = h - yBottom - WinampSkinSlicer.Balance.FrameHeight;
+                                                
+                                                currentSkin.BalanceAnimation[i] = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(
+                                                    9, // Frame X is 9 (meta says x=9 for BG sprites)
+                                                    yTop,
+                                                    WinampSkinSlicer.Balance.FrameWidth,
+                                                    WinampSkinSlicer.Balance.FrameHeight
+                                                ));
+                                            }
+                                        }
+                                        
+                                        // Finally apply!
+                                        ApplySkinToHierarchy();
+                                    });
+                                });
                             });
                         });
                     });

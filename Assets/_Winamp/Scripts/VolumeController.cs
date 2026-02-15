@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace SoftAware.Winamp
 {
-    public class VolumeController : MonoBehaviour
+    public class VolumeController : MonoBehaviour, IWinampSkinApplicator
     {
         [Header("References")]
         [SerializeField] private Slider slider;
@@ -25,6 +25,40 @@ namespace SoftAware.Winamp
         public Slider Slider => slider;
 
         private bool isInteracting;
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            // Apply Animation Sprites
+            if (skin.VolumeAnimation != null && skin.VolumeAnimation.Length > 0)
+            {
+                sprites = new List<Sprite>(skin.VolumeAnimation);
+                // Refresh display
+                if (slider != null) OnVolumeChanged(slider.value);
+            }
+
+            // Apply Knob
+            if (slider != null && slider.targetGraphic is Image handleImage)
+            {
+                 if (skin.VolumeKnobNormal != null)
+                 {
+                     handleImage.sprite = skin.VolumeKnobNormal;
+                     // SetNativeSize REMOVED as per strict user instruction
+                 }
+            }
+            
+            // Apply Pressed State to Slider
+            if (slider != null)
+            {
+                SpriteState ss = slider.spriteState;
+                if (skin.VolumeKnobPressed != null)
+                {
+                    ss.pressedSprite = skin.VolumeKnobPressed;
+                }
+                slider.spriteState = ss;
+            }
+        }
 
         private void Start()
         {

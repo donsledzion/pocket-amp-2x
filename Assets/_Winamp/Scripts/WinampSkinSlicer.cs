@@ -137,6 +137,45 @@ namespace SoftAware
             public static readonly Rect MonoOff = new Rect(29, 12, 29, 12);
         }
 
+        public static class Volume
+        {
+            // Knobs (14x11)
+            // Meta: Normal X=15, Y=0. Pressed X=0, Y=0.
+            // Assuming texture height ~420+ (BG starts at 15..420).
+            // Actually, let's look at the meta again.
+            // Y=0 is bottom.
+            // If we use SliceSprite which expects Top-Down Y, we need to know Texture Height.
+            // Or we can just pass Rect with Y from bottom if we change SliceSprite?
+            // No, SliceSprite logic is: flippedRect.y = texture.height - rect.y - rect.height.
+            // So rect.y MUST be top-down Y.
+            
+            // Standard Volume.bmp height is usually 422? (28*15 + 2??)
+            // Let's assume dynamic slicing based on texture height in Manager?
+            // Or define relative to bottom?
+            // "Standard" Main.bmp is fixed size. Secondary bmps might vary?
+            // But let's define the X/W/H here. Y will be calculated dynamically or assumed.
+            
+            public static readonly Rect KnobNormal = new Rect(15, 0, 14, 11); // Y will need adjustment if not 0-at-top
+            public static readonly Rect KnobPressed = new Rect(0, 0, 14, 11);
+            
+            // Frame constants
+            public const int FrameCount = 28;
+            public const int FrameWidth = 65;
+            public const int FrameHeight = 13;
+            public const int FrameStride = 15; // Distance between frame starts
+        }
+        
+        public static class Balance
+        {
+            public static readonly Rect KnobNormal = new Rect(15, 0, 14, 11);
+            public static readonly Rect KnobPressed = new Rect(0, 0, 14, 11);
+            
+            public const int FrameCount = 28;
+            public const int FrameWidth = 38;
+            public const int FrameHeight = 13;
+            public const int FrameStride = 15;
+        }
+
         /// <summary>
         /// Creates a sprite from a texture using the specified rectangle
         /// </summary>

@@ -66,6 +66,15 @@ namespace SoftAware
         public Sprite Mono_Active;
         public Sprite Mono_Inactive;
         
+        [Header("Sliders (Volume/Balance)")]
+        public Sprite VolumeKnobNormal;
+        public Sprite VolumeKnobPressed;
+        public Sprite[] VolumeAnimation; // 28 frames
+        
+        public Sprite BalanceKnobNormal;
+        public Sprite BalanceKnobPressed;
+        public Sprite[] BalanceAnimation; // 28 frames
+        
         // Add more fields as we implement more components
     }
 

@@ -351,6 +351,45 @@ namespace SoftAware
                 onComplete?.Invoke(null);
             }
         }
+
+        public void LoadVolumeBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "VOLUME.BMP", "volume.bmp", "VOLUME.PNG", "volume.png" }, onComplete);
+        }
+
+        public void LoadBalanceBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "BALANCE.BMP", "balance.bmp", "BALANCE.PNG", "balance.png" }, onComplete);
+        }
+
+        private void LoadSkinFile(string[] candidates, System.Action<Texture2D> onComplete)
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath))
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
+
+            string foundPath = null;
+            foreach (var cand in candidates)
+            {
+                string p = Path.Combine(lastUnpackedSkinPath, cand);
+                if (File.Exists(p))
+                {
+                    foundPath = p;
+                    break;
+                }
+            }
+
+            if (foundPath != null)
+            {
+                LoadTexture(foundPath, onComplete);
+            }
+            else
+            {
+                onComplete?.Invoke(null);
+            }
+        }
         
         #endregion
         

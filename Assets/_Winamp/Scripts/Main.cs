@@ -41,6 +41,16 @@ namespace SoftAware.Winamp
             {
                 channelsDisplay.ApplySkin(skin);
             }
+            
+            // Apply Volume & Balance
+            if (volumeController != null)
+            {
+                volumeController.ApplySkin(skin);
+            }
+            if (balanceController != null)
+            {
+                balanceController.ApplySkin(skin);
+            }
         }
 
         internal Button PrevButton => mainControls != null ? mainControls.PrevButton : null;

@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace SoftAware.Winamp
 {
-    public class BalanceController : MonoBehaviour
+    public class BalanceController : MonoBehaviour, IWinampSkinApplicator
     {
         [Header("References")]
         [SerializeField] private Slider slider;
@@ -26,6 +26,40 @@ namespace SoftAware.Winamp
 
         private bool isInteracting;
 
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            // Apply Animation Sprites
+            if (skin.BalanceAnimation != null && skin.BalanceAnimation.Length > 0)
+            {
+                sprites = new List<Sprite>(skin.BalanceAnimation);
+                // Refresh display
+                if (slider != null) OnValueChanged(slider.value);
+            }
+
+            // Apply Knob
+            if (slider != null && slider.targetGraphic is Image handleImage)
+            {
+                 if (skin.BalanceKnobNormal != null)
+                 {
+                     handleImage.sprite = skin.BalanceKnobNormal;
+                     // handleImage.SetNativeSize(); REMOVED
+                 }
+            }
+            
+            // Apply Pressed State
+            if (slider != null)
+            {
+                SpriteState ss = slider.spriteState;
+                if (skin.BalanceKnobPressed != null)
+                {
+                    ss.pressedSprite = skin.BalanceKnobPressed;
+                }
+                slider.spriteState = ss;
+            }
+        }
+        
         private void Start()
         {
             if (slider != null)
