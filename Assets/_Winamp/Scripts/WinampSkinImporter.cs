@@ -538,6 +538,8 @@ namespace SoftAware
                 skin.PlTopLeft = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopLeft);
                 skin.PlTopTitle = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopTitle);
                 skin.PlTopStretch = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopStretch);
+                skin.PlTopLeftStretch = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopLeftStretch);
+                skin.PlTopRightStretch = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopRightStretch);
                 skin.PlTopRight = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.TopRight);
                 
                 skin.PlBottomLeft = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.BottomLeft);
@@ -593,6 +595,10 @@ namespace SoftAware
                 // Scrollbar
                 skin.PlScrollHandleNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SliderHandleNormal);
                 skin.PlScrollHandlePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SliderHandlePressed);
+
+                // Close Button
+                skin.PlCloseNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.CloseNormal);
+                skin.PlClosePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.ClosePressed);
             }
         }
 

@@ -1352,7 +1352,7 @@ MonoBehaviour:
   plTopLeftStretch: {fileID: 1608137771}
   plTopTitle: {fileID: 960412397}
   plTopRightStretch: {fileID: 1822013715}
-  plTopRight: {fileID: 1822013715}
+  plTopRight: {fileID: 252445695}
   plBottomLeft: {fileID: 1245829484}
   plBottomRight: {fileID: 947945062}
   plBottomStretch: {fileID: 1005569307}

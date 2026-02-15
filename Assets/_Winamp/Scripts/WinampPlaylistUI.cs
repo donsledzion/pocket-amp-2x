@@ -350,17 +350,23 @@ namespace SoftAware.Winamp
             if (skin == null) return;
             currentSkin = skin;
 
-            // Apply Border Sprites
-            if (plTopLeft) plTopLeft.sprite = skin.PlTopLeft;
-            if (plTopLeftStretch) plTopLeftStretch.sprite = skin.PlTopLeftStretch;
-            if (plTopTitle) plTopTitle.sprite = skin.PlTopTitle;
-            if (plTopRightStretch) plTopRightStretch.sprite = skin.PlTopRightStretch;
-            if (plTopRight) plTopRight.sprite = skin.PlTopRight;
-            if (plBottomLeft) plBottomLeft.sprite = skin.PlBottomLeft;
-            if (plBottomRight) plBottomRight.sprite = skin.PlBottomRight;
-            if (plBottomStretch) plBottomStretch.sprite = skin.PlBottomStretch;
-            if (plLeftEdge) plLeftEdge.sprite = skin.PlLeftEdge;
-            if (plRightEdge) plRightEdge.sprite = skin.PlRightEdge;
+            // Apply Border Sprites with LayoutElement enforcement (No SetNativeSize!)
+            ApplyFixedSize(plTopLeft, skin.PlTopLeft);
+            ApplyFixedSize(plTopTitle, skin.PlTopTitle);
+            ApplyFixedSize(plTopRight, skin.PlTopRight);
+            
+            ApplyFixedSize(plBottomLeft, skin.PlBottomLeft);
+            ApplyFixedSize(plBottomRight, skin.PlBottomRight);
+
+            // Stretchable elements - fix height only to match corners
+            ApplyFixedSize(plTopLeftStretch, skin.PlTopLeftStretch, false, true);
+            ApplyFixedSize(plTopRightStretch, skin.PlTopRightStretch, false, true);
+            ApplyFixedSize(plBottomStretch, skin.PlBottomStretch, false, true);
+            
+            // Edges - fix width only
+            ApplyFixedSize(plLeftEdge, skin.PlLeftEdge, true, false);
+            ApplyFixedSize(plRightEdge, skin.PlRightEdge, true, false);
+
             if (plBackground) 
             {
                 plBackground.sprite = skin.PlBackground;
@@ -369,7 +375,17 @@ namespace SoftAware.Winamp
 
             if (scrollHandleImage) scrollHandleImage.sprite = skin.PlScrollHandleNormal;
 
-            // Apply Text Colors to Bottom Labels
+            // Apply Close Button Skin
+            if (closeButton != null)
+            {
+                var btnImg = closeButton.GetComponent<Image>();
+                if (btnImg != null) ApplyFixedSize(btnImg, skin.PlCloseNormal);
+                
+                SpriteState state = closeButton.spriteState;
+                state.pressedSprite = skin.PlClosePressed;
+                closeButton.spriteState = state;
+            }
+
             // Propagate skin to Context Menus
             if (addContextMenu) addContextMenu.ApplySkin(skin);
             if (selectContextMenu) selectContextMenu.ApplySkin(skin);
@@ -379,6 +395,34 @@ namespace SoftAware.Winamp
 
             // Propagate to tracks
             RefreshColors();
+        }
+
+        private void ApplyFixedSize(Image img, Sprite sprite, bool fixWidth = true, bool fixHeight = true)
+        {
+            if (img == null || sprite == null) return;
+            img.sprite = sprite;
+            img.preserveAspect = false; 
+            
+            float w = sprite.rect.width;
+            float h = sprite.rect.height;
+
+            var rt = img.rectTransform;
+
+            if (fixWidth) rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, w);
+            if (fixHeight) rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, h);
+
+            // Force LayoutElement properties to override any Layout Groups (Vertical/Horizontal)
+            var layout = img.GetComponent<LayoutElement>();
+            if (layout == null) layout = img.gameObject.AddComponent<LayoutElement>();
+            
+            if (fixWidth) {
+                layout.minWidth = w;
+                layout.preferredWidth = w;
+            }
+            if (fixHeight) {
+                layout.minHeight = h;
+                layout.preferredHeight = h;
+            }
         }
 
         private void CloseWindow() => main.ClosePlaylistWindow();

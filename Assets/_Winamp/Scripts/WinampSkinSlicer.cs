@@ -181,7 +181,12 @@ namespace SoftAware
             public static readonly Rect TopLeft = new Rect(0, 0, 25, 20);
             public static readonly Rect TopTitle = new Rect(26, 0, 100, 20);
             public static readonly Rect TopStretch = new Rect(127, 0, 25, 20);
+            public static readonly Rect TopLeftStretch = new Rect(127, 0, 25, 20);
+            public static readonly Rect TopRightStretch = new Rect(127, 0, 25, 20);
             public static readonly Rect TopRight = new Rect(153, 0, 25, 20);
+
+            public static readonly Rect CloseNormal = new Rect(168, 4, 7, 7);
+            public static readonly Rect ClosePressed = new Rect(52, 42, 9, 9);
 
             public static readonly Rect BottomLeft = new Rect(0, 72, 125, 38);
             public static readonly Rect BottomRight = new Rect(126, 72, 150, 38);
@@ -236,10 +241,6 @@ namespace SoftAware
             // Handle
             public static readonly Rect SliderHandleNormal = new Rect(52, 53, 8, 18);
             public static readonly Rect SliderHandlePressed = new Rect(61, 53, 8, 18);
-            
-            // Close
-            public static readonly Rect CloseNormal = new Rect(168, 4, 7, 7);
-            public static readonly Rect ClosePressed = new Rect(159, 4, 7, 7);
         }
 
         public static class Numbers

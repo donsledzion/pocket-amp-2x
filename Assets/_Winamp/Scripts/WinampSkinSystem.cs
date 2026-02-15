@@ -157,6 +157,9 @@ namespace SoftAware
         // Scrollbar
         public Sprite PlScrollHandleNormal, PlScrollHandlePressed;
 
+        // Close Button
+        public Sprite PlCloseNormal, PlClosePressed;
+
         // Colors (from PLEDIT.TXT)
         public Color PlNormalColor = Color.green;
         public Color PlCurrentColor = Color.white;
