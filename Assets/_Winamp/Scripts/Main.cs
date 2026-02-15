@@ -6,10 +6,13 @@ namespace SoftAware.Winamp
 {
     public class Main : MonoBehaviour, IWinampSkinApplicator
     {
-        [Header("Skinning")]
-        [SerializeField] private Image mainBackgroundImage;
+        [Header("Component References")]
         [SerializeField] private MainTitleBar mainTitleBar;
         [SerializeField] private MainControls mainControls;
+        // [SerializeField] private MainIndicators mainIndicators; // Replaced by ChannelsDisplay
+        
+        [Header("Main Window Elements (Legacy/Direct)")]
+        [SerializeField] private Image mainBackgroundImage;
 
         public void ApplySkin(WinampSkin skin)
         {
@@ -27,10 +30,16 @@ namespace SoftAware.Winamp
                 mainTitleBar.ApplySkin(skin);
             }
 
-            // Apply Controls (Buttons & Toggles)
+            // Apply Control Buttons & Toggles
             if (mainControls != null)
             {
                 mainControls.ApplySkin(skin);
+            }
+            
+            // Apply Indicators (Mono/Stereo via ChannelsDisplay)
+            if (channelsDisplay != null)
+            {
+                channelsDisplay.ApplySkin(skin);
             }
         }
 

@@ -142,8 +142,30 @@ namespace SoftAware
                                  currentSkin.EjectBtn_Pressed = WinampSkinSlicer.SliceSprite(cbuttonsTex, WinampSkinSlicer.CButtons.EjectPressed);
                             }
                             
-                            // Done loading main, shufrep, and cbuttons? Now apply!
-                            ApplySkinToHierarchy();
+                            // Done loading main, shufrep, and cbuttons? Now MONOSTER
+                            WinampSkinImporter.Instance.LoadMonoSterBmp((monosterTex) => 
+                            {
+                                if (monosterTex != null)
+                                {
+                                    Debug.Log("[WinampSkinManager] Slicing Mono/Stereo from MONOSTER.BMP");
+                                    currentSkin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOn);
+                                    currentSkin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOff);
+                                    currentSkin.Mono_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOn);
+                                    currentSkin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOff);
+                                }
+                                else
+                                {
+                                    // Fallback? 
+                                    // Classic skins have these baked in Main.bmp at (212,41) and (239,41).
+                                    // But they are usually "Active" indicators.
+                                    // The "Inactive" state is often just the unlit background.
+                                    // We could define rects for Main.bmp fallback if we wanted perfect emulation,
+                                    // but for now let's just leave them null (MainIndicators will hide images).
+                                }
+                                
+                                // Finally apply!
+                                ApplySkinToHierarchy();
+                            });
                         });
                     });
                 }

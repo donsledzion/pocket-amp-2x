@@ -119,6 +119,25 @@ namespace SoftAware
         }
 
         /// <summary>
+        /// Rectangles for MONOSTER.BMP (Mono/Stereo Indicators)
+        /// Texture Size: 58x24
+        /// </summary>
+        public static class MonoSter
+        {
+            // Stereo (29x12) - Left half
+            // Meta: ON (Y=12) -> Top Y=0
+            // Meta: OFF (Y=0) -> Top Y=12
+            public static readonly Rect StereoOn = new Rect(0, 0, 29, 12);
+            public static readonly Rect StereoOff = new Rect(0, 12, 29, 12);
+            
+            // Mono (29x12) - Right half
+            // Meta: ON (Y=12) -> Top Y=0
+            // Meta: OFF (Y=0) -> Top Y=12
+            public static readonly Rect MonoOn = new Rect(29, 0, 29, 12);
+            public static readonly Rect MonoOff = new Rect(29, 12, 29, 12);
+        }
+
+        /// <summary>
         /// Creates a sprite from a texture using the specified rectangle
         /// </summary>
         /// <param name="texture">Source texture (e.g., main.bmp or cbuttons.bmp)</param>

@@ -321,6 +321,37 @@ namespace SoftAware
             }
         }
         
+        public void LoadMonoSterBmp(System.Action<Texture2D> onComplete)
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath))
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
+
+            string[] candidates = { "MONOSTER.BMP", "monoster.bmp", "MONOSTER.PNG", "monoster.png" };
+            string foundPath = null;
+            
+            foreach (var cand in candidates)
+            {
+                string p = Path.Combine(lastUnpackedSkinPath, cand);
+                if (File.Exists(p))
+                {
+                    foundPath = p;
+                    break;
+                }
+            }
+            
+            if (foundPath != null)
+            {
+                LoadTexture(foundPath, onComplete);
+            }
+            else
+            {
+                onComplete?.Invoke(null);
+            }
+        }
+        
         #endregion
         
         #region Debug Methods

@@ -60,6 +60,12 @@ namespace SoftAware
         public Sprite PL_On_Normal;
         public Sprite PL_On_Pressed;
         
+        [Header("Indicators (Mono/Stereo)")]
+        public Sprite Stereo_Active;
+        public Sprite Stereo_Inactive;
+        public Sprite Mono_Active;
+        public Sprite Mono_Inactive;
+        
         // Add more fields as we implement more components
     }
 
