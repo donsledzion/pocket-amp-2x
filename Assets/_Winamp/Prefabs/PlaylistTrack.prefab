@@ -533,9 +533,9 @@ MonoBehaviour:
   titleText: {fileID: 5496459958398526591}
   durationText: {fileID: 1192391293004216811}
   background: {fileID: 1709364351988490651}
-  normalTextColor: {r: 0, g: 0, b: 0, a: 1}
-  playingTextColor: {r: 0, g: 0, b: 0, a: 1}
-  selectedBgColor: {r: 0, g: 0, b: 0, a: 1}
+  normalTextColor: {r: 0.50980395, g: 0.9098039, b: 0.21176471, a: 1}
+  playingTextColor: {r: 1, g: 1, b: 1, a: 1}
+  selectedBgColor: {r: 0, g: 0, b: 0.78039217, a: 1}
 --- !u!222 &927166076985907496
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -25,8 +25,8 @@ namespace SoftAware.Winamp
 
         [Header("Window Controls")]
         [SerializeField] private Button closeButton;
-        [SerializeField] private TextMeshProUGUI timeCounterText;
-        [SerializeField] private TextMeshProUGUI currentTrackTimeText;
+        [SerializeField] private SpriteTextDisplay timeCounterText;
+        [SerializeField] private SpriteTextDisplay currentTrackTimeText;
 
         [Header("Skinning Elements")]
         [SerializeField] private Image plTopLeft;
@@ -296,25 +296,52 @@ namespace SoftAware.Winamp
 
         private void UpdateTimeCounter()
         {
-            if (timeCounterText == null || playlist == null) return;
+            if (playlist == null) return;
 
-            float totalDuration = 0;
-            float selectedDuration = 0;
-            var songs = playlist.AllSongs;
+            // 1. Total / Selection Counter (18 chars)
+            var totalDuration = playlist.TotalDuration;
+            var selectionDuration = playlist.SelectionDuration;
 
-            for (int i = 0; i < songs.Count; i++)
+            string totalStr = FormatSeconds(totalDuration, true);
+            string selStr = FormatSeconds(selectionDuration, true);
+            
+            if (timeCounterText != null)
             {
-                totalDuration += songs[i].Duration;
-                if (playlist.IsSelected(i))
-                {
-                    selectedDuration += songs[i].Duration;
-                }
+                // Format: "MM:SS/MM:SS" (no spaces!)
+                string combined = $"{selStr}/{totalStr}"; 
+                timeCounterText.SetText(combined);
             }
 
-            string totalStr = AudioMetadataUtils.FormatTime(totalDuration);
-            string selectedStr = AudioMetadataUtils.FormatTime(selectedDuration);
+            // 2. Current Track Counter (6 chars, colon is baked)
+            if (currentTrackTimeText != null)
+            {
+                var playingIndex = playlist.CurrentIndex;
+                if (playingIndex >= 0 && playingIndex < playlist.AllSongs.Count)
+                {
+                    var duration = playlist.AllSongs[playingIndex].Duration;
+                    string durStr = FormatSeconds(duration, false);
+                    currentTrackTimeText.SetText(durStr);
+                }
+                else
+                {
+                    currentTrackTimeText.Clear();
+                }
+            }
+        }
 
-            timeCounterText.text = $"{selectedStr}/{totalStr}";
+        private string FormatSeconds(float seconds, bool includeColon = true)
+        {
+            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(seconds));
+            int m = totalSeconds / 60;
+            int s = totalSeconds % 60;
+            
+            m = Mathf.Min(999, m); 
+            
+            // "One leading zero" rule: 00:XX, 01:XX, 12:XX, 123:XX
+            string minuteStr = m < 10 ? $"0{m}" : m.ToString();
+            string secondStr = s.ToString("D2");
+            
+            return includeColon ? $"{minuteStr}:{secondStr}" : $"{minuteStr}{secondStr}";
         }
 
         private void UpdateCurrentTrackTime()
@@ -323,7 +350,7 @@ namespace SoftAware.Winamp
 
             if (!audioPlayer.IsPlaying && !audioPlayer.IsPaused)
             {
-                currentTrackTimeText.text = "";
+                currentTrackTimeText.Clear();
                 return;
             }
 
@@ -331,12 +358,11 @@ namespace SoftAware.Winamp
             float totalTime = audioPlayer.Duration;
             float displayTime = isRemainingMode ? (totalTime - currentTime) : currentTime;
 
-            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(displayTime));
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-
-            string timeStr = isRemainingMode ? $"-{minutes}  {seconds:D2}" : $"{minutes}  {seconds:D2}";
-            currentTrackTimeText.text = timeStr;
+            // Format: "MMSS" or "MMMSS" + Sign (-) if needed
+            string sign = isRemainingMode ? "-" : "";
+            string timeStr = sign + FormatSeconds(displayTime, false);
+            
+            currentTrackTimeText.SetText(timeStr);
         }
 
         private void HandleTimeModeChanged(bool remaining)
@@ -373,7 +399,16 @@ namespace SoftAware.Winamp
                 plBackground.type = Image.Type.Tiled;
             }
 
-            if (scrollHandleImage) scrollHandleImage.sprite = skin.PlScrollHandleNormal;
+            if (scrollHandleImage != null && skin.PlScrollHandleNormal != null)
+                scrollHandleImage.sprite = skin.PlScrollHandleNormal;
+
+            if (scrollbar != null)
+            {
+                scrollbar.transition = Selectable.Transition.SpriteSwap;
+                SpriteState state = scrollbar.spriteState;
+                state.pressedSprite = skin.PlScrollHandlePressed;
+                scrollbar.spriteState = state;
+            }
 
             // Apply Close Button Skin
             if (closeButton != null)

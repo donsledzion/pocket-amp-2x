@@ -1235,7 +1235,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_51
+      name: Text_backslash
       rect:
         serializedVersion: 2
         x: 100
@@ -1257,7 +1257,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Text_52
+      name: Text_slash
       rect:
         serializedVersion: 2
         x: 105
@@ -2197,8 +2197,6 @@ TextureImporter:
       Text_4: 269967503
       Text_42: -884595596
       Text_5: 1838055545
-      Text_51: -1971399738
-      Text_52: -703609360
       Text_6: -1700958250
       Text_62: 1718452218
       Text_63: 1039069721
@@ -2267,6 +2265,8 @@ TextureImporter:
       'Text_]': -896862472
       Text_^: 1613988692
       Text__: 581336692
+      Text_backslash: -1971399738
+      Text_slash: -703609360
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

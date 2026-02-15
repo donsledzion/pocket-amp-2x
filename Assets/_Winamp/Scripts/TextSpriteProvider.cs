@@ -61,6 +61,8 @@ namespace SoftAware
                         else if (upperSuffix == "''") spriteCache['"'] = sprite;
                         else if (upperSuffix == "=") spriteCache['='] = sprite;
                         else if (upperSuffix == "COLON") spriteCache[':'] = sprite;
+                        else if (upperSuffix == "SLASH") spriteCache['/'] = sprite;
+                        else if (upperSuffix == "BACKSLASH") spriteCache['\\'] = sprite;
                     }
                 }
             }

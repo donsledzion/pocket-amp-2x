@@ -69,15 +69,15 @@ namespace SoftAware
 
                 for (int i = 0; i < characterImages.Length; i++)
                 {
-                    if (characterImages[i] == null) continue;
+                    if (!characterImages[i]) continue;
 
-                    bool spriteSet = false;
+                    var spriteSet = false;
                     if (textIndex < text.Length)
                     {
-                        char c = text[textIndex];
-                        Sprite sprite = TextSpriteProvider.GetSprite(c);
+                        var c = text[textIndex];
+                        var sprite = TextSpriteProvider.GetSprite(c);
 
-                        if (sprite != null)
+                        if (sprite)
                         {
                             characterImages[i].sprite = sprite;
                             characterImages[i].enabled = true;
@@ -99,7 +99,7 @@ namespace SoftAware
         /// </summary>
         public void SetNumber(int value, int minDigits = 0)
         {
-            string text = value.ToString();
+            var text = value.ToString();
             if (minDigits > 0)
             {
                 text = text.PadLeft(minDigits, ' ');
@@ -116,7 +116,7 @@ namespace SoftAware
 
             foreach (var img in characterImages)
             {
-                if (img != null && hideUnusedCharacters)
+                if (img && hideUnusedCharacters)
                     img.enabled = false;
             }
         }

@@ -63,6 +63,9 @@ namespace SoftAware.Winamp
 
         public bool IsSelected(int index) => selectedIndices.Contains(index);
 
+        public float TotalDuration => songs.Sum(s => s.Duration);
+        public float SelectionDuration => songs.Where((s, i) => selectedIndices.Contains(i)).Sum(s => s.Duration);
+
         private void Awake()
         {
             instance = this;
