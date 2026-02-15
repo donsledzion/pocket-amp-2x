@@ -6,7 +6,7 @@ namespace SoftAware
     /// <summary>
     /// Controls the Winamp status indicators (Play, Pause, Stop, and Red/Green Squares).
     /// </summary>
-    public class WinampStatusDisplay : MonoBehaviour
+    public class WinampStatusDisplay : MonoBehaviour, IWinampSkinApplicator
     {
         public enum WinampStatus
         {
@@ -78,7 +78,7 @@ namespace SoftAware
                 img.enabled = false;
             }
         }
-        public void UpdateSkin(WinampSkin skin)
+        public void ApplySkin(WinampSkin skin)
         {
             if (skin == null) return;
 

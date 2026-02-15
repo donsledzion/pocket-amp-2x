@@ -26,7 +26,7 @@ namespace SoftAware.Winamp
 
             if (statusDisplay != null)
             {
-                statusDisplay.UpdateSkin(skin);
+                statusDisplay.ApplySkin(skin);
             }
             // Apply Title Bar (via component)
             if (mainTitleBar != null)
@@ -70,6 +70,12 @@ namespace SoftAware.Winamp
                     ss.pressedSprite = skin.PosKnobPressed;
                 }
                 progressSlider.spriteState = ss;
+            }
+
+            // Apply Time Display
+            if (timeDisplay != null)
+            {
+                timeDisplay.ApplySkin(skin);
             }
         }
 

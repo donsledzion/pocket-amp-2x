@@ -249,15 +249,64 @@ namespace SoftAware
                                                     currentSkin.Status_Indicator_Load = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.LoadingIndicator);
                                                 }
                                                 
-                                                // Finally apply!
-                                                ApplySkinToHierarchy();
+                                                // Load Numbers
+                                                WinampSkinImporter.Instance.LoadNumbersBmp((numbersTex) => {
+                                                    bool numbersFound = false;
+                                                    if (numbersTex != null)
+                                                    {
+                                                        Debug.Log($"[WinampSkinManager] Found NUMBERS.BMP. Slicing...");
+                                                        currentSkin.TimeDigits = new Sprite[10];
+                                                        for (int i = 0; i < 10; i++)
+                                                        {
+                                                            currentSkin.TimeDigits[i] = WinampSkinSlicer.SliceSprite(numbersTex, WinampSkinSlicer.Numbers.GetDigitRect(i));
+                                                        }
+                                                        numbersFound = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        Debug.Log("[WinampSkinManager] NUMBERS.BMP not found, will check Nums_ex later.");
+                                                    }
+
+                                                    // Load NumsEx (Minus sign and potential digits fallback)
+                                                    WinampSkinImporter.Instance.LoadNumsExBmp((numsExTex) => {
+                                                        if (numsExTex != null)
+                                                        {
+                                                            Debug.Log($"[WinampSkinManager] Nums_ex found ({numsExTex.width}x{numsExTex.height}).");
+                                                            
+                                                            // Fallback: if digits weren't found in NUMBERS, or if Nums_ex is wide enough to have digits
+                                                            if (!numbersFound && numsExTex.width >= 90)
+                                                            {
+                                                                Debug.Log("[WinampSkinManager] Using Nums_ex as source for digits 0-9.");
+                                                                currentSkin.TimeDigits = new Sprite[10];
+                                                                for (int i = 0; i < 10; i++)
+                                                                {
+                                                                    currentSkin.TimeDigits[i] = WinampSkinSlicer.SliceSprite(numsExTex, WinampSkinSlicer.Numbers.GetDigitRect(i));
+                                                                }
+                                                            }
+
+                                                            currentSkin.TimeMinus = WinampSkinSlicer.SliceSprite(numsExTex, WinampSkinSlicer.NumsEx.MinusSign);
+                                                            if (currentSkin.TimeMinus != null) Debug.Log("[WinampSkinManager] Sliced TimeMinus from Nums_ex.");
+                                                        }
+                                                        else
+                                                        {
+                                                            Debug.LogWarning("[WinampSkinManager] NUMS_EX.BMP not found!");
+                                                        }
+
+                                                        if (currentSkin.TimeDigits == null) 
+                                                            Debug.LogError("[WinampSkinManager] TimeDigits is STILL NULL after all attempts!");
+                                                        else
+                                                            Debug.Log($"[WinampSkinManager] TimeDigits final count: {currentSkin.TimeDigits.Length}");
+
+                                                        ApplySkinToHierarchy();
+                                                    });
+                                                });
                                             });
                                         });
                                     });
-                                });
                             });
                         });
                     });
+                });
                 }
             });
             

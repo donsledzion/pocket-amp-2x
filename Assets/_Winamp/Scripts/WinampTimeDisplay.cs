@@ -8,7 +8,7 @@ namespace SoftAware
     /// Handles the main Winamp time display (MM:SS).
     /// Supports elapsed and remaining time modes.
     /// </summary>
-    public class WinampTimeDisplay : MonoBehaviour, IPointerClickHandler
+    public class WinampTimeDisplay : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
     {
         [Header("Digit Images (MM:SS)")]
         [SerializeField] private Image minTen;
@@ -143,6 +143,23 @@ namespace SoftAware
             isRemainingMode = remaining;
             lastCurrentTime = -1f; // Force refresh
             OnModeChanged?.Invoke(isRemainingMode);
+        }
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+
+            if (skin.TimeDigits != null && skin.TimeDigits.Length == 10)
+            {
+                digitSprites = skin.TimeDigits;
+            }
+
+            if (skin.TimeMinus != null)
+            {
+                minusSprite = skin.TimeMinus;
+            }
+
+            lastCurrentTime = -1f; // Force refresh
         }
 
         public void OnPointerClick(PointerEventData eventData)

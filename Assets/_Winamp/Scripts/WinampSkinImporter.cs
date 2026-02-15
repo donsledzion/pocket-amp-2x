@@ -177,14 +177,31 @@ namespace SoftAware
             
             try
             {
-                // Use custom BMP loader (ImageConversion doesn't support BMP)
-                tex = BMPLoader.LoadBMP(path);
+                byte[] fileData = File.ReadAllBytes(path);
+                string extension = Path.GetExtension(path).ToLower();
+
+                if (extension == ".bmp")
+                {
+                    // Use custom BMP loader
+                    tex = BMPLoader.LoadBMP(path);
+                }
+                else
+                {
+                    // Use Unity's native loader for PNG/JPG
+                    tex = new Texture2D(2, 2);
+                    if (!ImageConversion.LoadImage(tex, fileData))
+                    {
+                        Debug.LogError($"[WinampSkinImporter] Failed to load non-BMP image: {path}");
+                        Destroy(tex);
+                        tex = null;
+                    }
+                }
                 
                 if (tex != null)
                 {
-                    Log($"Texture loaded successfully: {tex.width}x{tex.height}, format: {tex.format}");
+                    Log($"Texture loaded successfully: {path} ({tex.width}x{tex.height}), format: {tex.format}");
                     
-                    // Remove magenta transparency
+                    // Remove magenta transparency (standard for Winamp)
                     RemoveMagenta(tex);
                     
                     lastLoadedTexture = tex;
@@ -192,7 +209,7 @@ namespace SoftAware
                 }
                 else
                 {
-                    Debug.LogError($"Failed to decode BMP from: {path}");
+                    Debug.LogError($"Failed to decode image from: {path}");
                     onComplete?.Invoke(null);
                 }
             }
@@ -355,6 +372,16 @@ namespace SoftAware
         public void LoadVolumeBmp(System.Action<Texture2D> onComplete)
         {
             LoadSkinFile(new[] { "VOLUME.BMP", "volume.bmp", "VOLUME.PNG", "volume.png" }, onComplete);
+        }
+
+        public void LoadNumbersBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "NUMBERS.BMP", "numbers.bmp", "Numbers.bmp", "NUMBERS.PNG", "numbers.png", "Numbers.png" }, onComplete);
+        }
+
+        public void LoadNumsExBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "NUMS_EX.BMP", "nums_ex.bmp", "Nums_ex.bmp", "NUMS_EX.PNG", "nums_ex.png", "Nums_ex.png" }, onComplete);
         }
 
         public void LoadBalanceBmp(System.Action<Texture2D> onComplete)

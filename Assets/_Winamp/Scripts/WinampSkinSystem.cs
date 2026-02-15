@@ -22,6 +22,9 @@ namespace SoftAware
         public Sprite Status_Stop;
         public Sprite Status_Indicator_Play; // Green/Active
         public Sprite Status_Indicator_Load; // Red/Loading
+        
+        public Sprite[] TimeDigits; // Numbers 0-9
+        public Sprite TimeMinus;   // Minus sign
 
         // Song Title Display (optional font/bg)]
         [Header("Title Bar Buttons")]

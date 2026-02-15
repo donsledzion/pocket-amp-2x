@@ -138,6 +138,18 @@ namespace SoftAware
             public static readonly Rect LoadingIndicator = new Rect(39, 0, 3, 9); // Red
         }
 
+        public static class Numbers
+        {
+            public static readonly int Width = 9;
+            public static readonly int Height = 13;
+            public static Rect GetDigitRect(int digit) => new Rect(digit * Width, 0, Width, Height);
+        }
+
+        public static class NumsEx
+        {
+            public static readonly Rect MinusSign = new Rect(101, 6, 5, 1);
+        }
+
         /// <summary>
         /// Rectangles for MONOSTER.BMP (Mono/Stereo Indicators)
         /// Texture Size: 58x24
