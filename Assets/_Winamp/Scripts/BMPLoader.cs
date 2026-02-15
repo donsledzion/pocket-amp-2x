@@ -53,34 +53,39 @@ namespace SoftAware
             int bytesPerPixel = bitsPerPixel / 8;
             int rowSize = ((width * bitsPerPixel + 31) / 32) * 4;
             
-            // BMP stores pixels bottom-to-top by default (unless height is negative)
-            bool bottomUp = height > 0;
-            int absHeight = Mathf.Abs(height);
-            
-            // Read pixel data
-            for (int y = 0; y < absHeight; y++)
-            {
-                int rowStart = dataOffset + y * rowSize;
+                // BMP stores pixels bottom-to-top by default (unless height is negative)
+                bool bottomUp = height > 0;
+                int absHeight = Mathf.Abs(height);
                 
-                for (int x = 0; x < width; x++)
+                // Read pixel data
+                for (int y = 0; y < absHeight; y++)
                 {
-                    int pixelOffset = rowStart + x * bytesPerPixel;
+                    int rowStart = dataOffset + y * rowSize;
                     
-                    // BMP stores pixels as BGR or BGRA
-                    byte b = data[pixelOffset];
-                    byte g = data[pixelOffset + 1];
-                    byte r = data[pixelOffset + 2];
-                    byte a = (bitsPerPixel == 32) ? data[pixelOffset + 3] : (byte)255;
-                    
-                    // Calculate correct pixel position (flip Y if bottom-up)
-                    int targetY = bottomUp ? (absHeight - 1 - y) : y;
-                    int pixelIndex = targetY * width + x;
-                    
-                    pixels[pixelIndex] = new Color32(r, g, b, a);
+                    for (int x = 0; x < width; x++)
+                    {
+                        int pixelOffset = rowStart + x * bytesPerPixel;
+                        
+                        // BMP stores pixels as BGR or BGRA
+                        byte b = data[pixelOffset];
+                        byte g = data[pixelOffset + 1];
+                        byte r = data[pixelOffset + 2];
+                        byte a = (bitsPerPixel == 32) ? data[pixelOffset + 3] : (byte)255;
+                        
+                        // Unity Texture2D expects pixels from bottom-left to top-right
+                        // Standard BMP (bottomUp) stores lines from bottom to top.
+                        // So we can copy lines directly without flipping Y.
+                        // If BMP is top-down (!bottomUp), we need to flip Y.
+                        
+                        int targetY = bottomUp ? y : (absHeight - 1 - y);
+                        int pixelIndex = targetY * width + x;
+                        
+                        // Use Color32 for performance and direct mapping
+                        pixels[pixelIndex] = new Color32(r, g, b, a);
+                    }
                 }
-            }
-            
-            texture.SetPixels32(pixels);
+                
+                texture.SetPixels32(pixels);
             texture.Apply();
             
             return texture;

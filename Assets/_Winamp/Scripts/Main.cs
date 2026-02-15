@@ -1,10 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
+using SoftAware; // For IWinampSkinApplicator and WinampSkin
 
 namespace SoftAware.Winamp
 {
-    public class Main : MonoBehaviour
+    public class Main : MonoBehaviour, IWinampSkinApplicator
     {
+        [Header("Skinning")]
+        [SerializeField] private Image mainBackgroundImage;
+
+        public void ApplySkin(WinampSkin skin)
+        {
+            if (skin == null) return;
+            
+            // Apply Main Window Background
+            if (mainBackgroundImage && skin.MainBackground)
+            {
+                mainBackgroundImage.sprite = skin.MainBackground;
+            }
+
+            // Future: Apply buttons skin here
+        }
+
         [Header("Controls Buttons")]
         [SerializeField] private Button prevButton;
         [SerializeField] private Button playButton;

@@ -19,9 +19,16 @@ namespace SoftAware
         
         [Header("Test Settings (Editor Only)")]
         [SerializeField] private string testWszPath = "";
+        [SerializeField] private UnityEngine.UI.Image testImage = null;
+        [SerializeField] private bool setNativeSizeOnApply = true;
         
         private string lastUnpackedSkinPath = "";
         private string lastUnpackedSkinName = "";
+        private Sprite lastSlicedSprite = null;
+        
+        // Keep track of specific textures
+        private Texture2D mainTexture = null;
+        private Texture2D cbuttonsTexture = null;
         
         public static WinampSkinImporter Instance { get; private set; }
         
@@ -247,7 +254,31 @@ namespace SoftAware
             }
             
             string mainBmpPath = Path.Combine(lastUnpackedSkinPath, "main.bmp");
-            LoadTexture(mainBmpPath, onComplete);
+            LoadTexture(mainBmpPath, (tex) => {
+                if (tex != null) mainTexture = tex;
+                lastLoadedTexture = tex;
+                onComplete?.Invoke(tex);
+            });
+        }
+
+        /// <summary>
+        /// Loads cbuttons.bmp from the last unpacked skin
+        /// </summary>
+        public void LoadCButtonsBmp(System.Action<Texture2D> onComplete)
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath))
+            {
+                Debug.LogWarning("No skin has been unpacked yet.");
+                onComplete?.Invoke(null);
+                return;
+            }
+            
+            string bmpPath = Path.Combine(lastUnpackedSkinPath, "cbuttons.bmp");
+            LoadTexture(bmpPath, (tex) => {
+                if (tex != null) cbuttonsTexture = tex;
+                lastLoadedTexture = tex;
+                onComplete?.Invoke(tex);
+            });
         }
         
         #endregion
@@ -336,6 +367,22 @@ namespace SoftAware
                 }
             });
         }
+
+        [ContextMenu("Test: Load CButtons BMP")]
+        private void TestLoadCButtonsBmp()
+        {
+            LoadCButtonsBmp((tex) =>
+            {
+                if (tex != null)
+                {
+                    Debug.Log($"[TEST] Successfully loaded cbuttons.bmp: {tex.width}x{tex.height}");
+                }
+                else
+                {
+                    Debug.LogError("[TEST] Failed to load cbuttons.bmp");
+                }
+            });
+        }
         
         [ContextMenu("Test: Show Texture Info")]
         private void TestShowTextureInfo()
@@ -353,6 +400,67 @@ namespace SoftAware
             Debug.Log($"Filter Mode: {lastLoadedTexture.filterMode}");
             Debug.Log($"Wrap Mode: {lastLoadedTexture.wrapMode}");
             Debug.Log($"===================");
+        }
+        
+        [ContextMenu("Test: Slice Play Button (CButtons)")]
+        private void TestSlicePlayButton()
+        {
+            // Prefer cbuttonsTexture if available, otherwise fallback to lastLoaded with warning
+            Texture2D sourceTex = cbuttonsTexture != null ? cbuttonsTexture : lastLoadedTexture;
+
+            if (sourceTex == null)
+            {
+                Debug.LogWarning("No texture loaded yet. Use 'Test: Load CButtons BMP' first.");
+                return;
+            }
+            
+            // Check dimensions to warn user if they loaded wrong file
+            if (sourceTex.width != 136 || sourceTex.height != 34)
+            {
+                Debug.LogWarning($"Current texture size ({sourceTex.width}x{sourceTex.height}) doesn't match standard CBUTTONS.BMP (136x34). Correct file loaded?");
+            }
+            
+            Sprite sprite = WinampSkinSlicer.SlicePlayButton(sourceTex);
+            
+            if (sprite != null)
+            {
+                lastSlicedSprite = sprite;
+                Debug.Log($"[TEST] Successfully sliced Play button sprite: {sprite.rect}");
+                Debug.Log($"Sprite size: {sprite.rect.width}x{sprite.rect.height}");
+                Debug.Log($"Use 'Test: Apply to Test Image' to visualize it in the scene");
+            }
+            else
+            {
+                Debug.LogError("[TEST] Failed to slice Play button sprite");
+            }
+        }
+        
+        [ContextMenu("Test: Apply to Test Image")]
+        private void TestApplyToTestImage()
+        {
+            if (testImage == null)
+            {
+                Debug.LogWarning("testImage is not assigned. Assign a UI Image in the Inspector first.");
+                return;
+            }
+            
+            if (lastSlicedSprite == null)
+            {
+                Debug.LogWarning("No sprite sliced yet. Use 'Test: Slice Play Button' first.");
+                return;
+            }
+            
+            testImage.sprite = lastSlicedSprite;
+            
+            if (setNativeSizeOnApply)
+            {
+                testImage.SetNativeSize();
+                Debug.Log($"[TEST] Applied sprite and SetNativeSize: {testImage.rectTransform.sizeDelta}");
+            }
+            else
+            {
+                Debug.Log($"[TEST] Applied sprite (kept original Image size: {testImage.rectTransform.sizeDelta})");
+            }
         }
         
         #endregion
