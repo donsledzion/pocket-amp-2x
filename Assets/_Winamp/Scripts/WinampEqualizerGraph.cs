@@ -9,7 +9,8 @@ namespace SoftAware
     {
         [Header("Assets")]
         [SerializeField] private Sprite colorsSprite;
-        [SerializeField] private Sprite preampSprite;
+        [SerializeField] private Image preampLineImage;
+        [SerializeField] private RectTransform preampLineTransform;
 
         private float preamp = 0f;
         private float[] bands = new float[10];
@@ -30,7 +31,25 @@ namespace SoftAware
             {
                 System.Array.Copy(bandValues, bands, 10);
             }
+            
+            UpdatePreampPosition();
             SetAllDirty();
+        }
+
+        private void UpdatePreampPosition()
+        {
+            if (preampLineTransform == null) return;
+
+            // preamp is -20 to +20. 
+            // In graph: +20 is TOP, -20 is BOTTOM.
+            // Percentage from bottom: 0 to 1
+            float t = (preamp + 20f) / 40f;
+            
+            // anchoredPosition Y: -height/2 to +height/2 (assuming Center pivot)
+            float h = rectTransform.rect.height;
+            float localY = (t - 0.5f) * h;
+            
+            preampLineTransform.anchoredPosition = new Vector2(preampLineTransform.anchoredPosition.x, localY);
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -51,9 +70,6 @@ namespace SoftAware
                 int level = MapGainToLevel(interpolatedGains[x]);
                 DrawGraphColumn(vh, x, level, rect, colWidth);
             }
-
-            // 3. Draw Preamp Line
-            DrawPreampLine(vh, rect);
         }
 
         private float[] InterpolateBands()
@@ -106,29 +122,6 @@ namespace SoftAware
                 Color.white);
         }
 
-        private void DrawPreampLine(VertexHelper vh, Rect rect)
-        {
-            if (preampSprite == null) return;
-
-            // Inverted: +20dB moves line DOWN, -20dB moves line UP.
-            float t = 1f - (preamp + 20f) / 40f;
-            float y = rect.yMin + Mathf.Clamp01(t) * rect.height;
-
-            Rect uvRect = preampSprite.rect;
-            Texture tex = preampSprite.texture;
-            
-            // Map texture height (pixels) to UI space 1:1 based on graph scaling
-            float spriteHeightInUI = uvRect.height * (rect.height / GraphHeight);
-
-            Vector2 uv = new Vector2((uvRect.x + uvRect.width * 0.5f) / tex.width, 
-                                     (uvRect.y + uvRect.height * 0.5f) / tex.height);
-
-            DrawQuad(vh, 
-                new Vector2(rect.xMin, y - spriteHeightInUI * 0.5f), 
-                new Vector2(rect.width, spriteHeightInUI), 
-                uv, 
-                Color.white);
-        }
 
         private void DrawQuad(VertexHelper vh, Vector2 pos, Vector2 size, Vector2 uv, Color color)
         {
@@ -162,8 +155,14 @@ namespace SoftAware
             if (skin == null) return;
 
             if (skin.EqGraphColors != null) colorsSprite = skin.EqGraphColors;
-            if (skin.EqGraphPreampLine != null) preampSprite = skin.EqGraphPreampLine;
+            if (preampLineImage != null && skin.EqGraphPreampLine != null)
+            {
+                preampLineImage.sprite = skin.EqGraphPreampLine;
+                // Preamp bar might have its own size in skin, but we usually want to keep it 1:1 or stretched.
+                // We don't use SetNativeSize as per rules.
+            }
 
+            UpdatePreampPosition();
             SetAllDirty();
         }
     }

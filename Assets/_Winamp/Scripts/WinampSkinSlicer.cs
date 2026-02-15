@@ -172,7 +172,7 @@ namespace SoftAware
             
             public static readonly Rect GraphBG = new Rect(0, 294, 113, 19);
             public static readonly Rect GraphColors = new Rect(115, 294, 1, 19);
-            public static readonly Rect PreampLine = new Rect(0, 314, 164, 1);
+            public static readonly Rect PreampLine = new Rect(0, 314, 113, 1);
         }
 
         public static class Numbers
