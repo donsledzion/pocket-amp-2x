@@ -362,6 +362,11 @@ namespace SoftAware
             LoadSkinFile(new[] { "BALANCE.BMP", "balance.bmp", "BALANCE.PNG", "balance.png" }, onComplete);
         }
 
+        public void LoadPlayPausBmp(System.Action<Texture2D> onComplete)
+        {
+            LoadSkinFile(new[] { "PLAYPAUS.BMP", "playpaus.bmp", "PlayPaus.bmp", "PLAYPAUS.PNG", "playpaus.png", "PlayPaus.png" }, onComplete);
+        }
+
         public void LoadPosbarBmp(System.Action<Texture2D> onComplete)
         {
             LoadSkinFile(new[] { "POSBAR.BMP", "posbar.bmp", "Posbar.bmp", "POSBAR.PNG", "posbar.png" }, onComplete);

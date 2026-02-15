@@ -235,8 +235,23 @@ namespace SoftAware
                                                 }
                                             }
                                             
-                                            // Finally apply!
-                                            ApplySkinToHierarchy();
+                                            // Load PlayPaus
+                                            WinampSkinImporter.Instance.LoadPlayPausBmp((playpausTex) => {
+                                                if (playpausTex != null)
+                                                {
+                                                    Debug.Log("[WinampSkinManager] Slicing Play/Pause/Stop from PLAYPAUS.BMP");
+                                                    // Y=0 because content is at top (as per user/meta)
+                                                    currentSkin.Status_Play = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.PlayIcon);
+                                                    currentSkin.Status_Pause = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.PauseIcon);
+                                                    currentSkin.Status_Stop = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.StopIcon);
+                                                    
+                                                    currentSkin.Status_Indicator_Play = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.PlayingIndicator);
+                                                    currentSkin.Status_Indicator_Load = WinampSkinSlicer.SliceSprite(playpausTex, WinampSkinSlicer.PlayPaus.LoadingIndicator);
+                                                }
+                                                
+                                                // Finally apply!
+                                                ApplySkinToHierarchy();
+                                            });
                                         });
                                     });
                                 });

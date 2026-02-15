@@ -16,6 +16,14 @@ namespace SoftAware
         public Sprite TitleBar;
         public Sprite ClutterBar; // The bar with O I A V scroll buttons etc.
         
+        // Status Icons (Play/Pause/Stop/Indicators from PLAYPAUS.BMP)
+        public Sprite Status_Play;
+        public Sprite Status_Pause;
+        public Sprite Status_Stop;
+        public Sprite Status_Indicator_Play; // Green/Active
+        public Sprite Status_Indicator_Load; // Red/Loading
+
+        // Song Title Display (optional font/bg)]
         [Header("Title Bar Buttons")]
         public Sprite MinimizeBtn_Normal;
         public Sprite MinimizeBtn_Pressed;

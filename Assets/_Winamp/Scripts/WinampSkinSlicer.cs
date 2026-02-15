@@ -127,6 +127,18 @@ namespace SoftAware
         }
 
         /// <summary>
+        /// Rectangles for PLAYPAUS.BMP (Play/Pause/Stop/Indicators)
+        /// </summary>
+        public static class PlayPaus
+        {
+            public static readonly Rect PlayIcon = new Rect(1, 0, 8, 9);
+            public static readonly Rect PauseIcon = new Rect(9, 0, 9, 9);
+            public static readonly Rect StopIcon = new Rect(18, 0, 9, 9);
+            public static readonly Rect PlayingIndicator = new Rect(36, 0, 3, 9); // Green
+            public static readonly Rect LoadingIndicator = new Rect(39, 0, 3, 9); // Red
+        }
+
+        /// <summary>
         /// Rectangles for MONOSTER.BMP (Mono/Stereo Indicators)
         /// Texture Size: 58x24
         /// </summary>

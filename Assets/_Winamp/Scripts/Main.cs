@@ -24,6 +24,10 @@ namespace SoftAware.Winamp
                 mainBackgroundImage.sprite = skin.MainBackground;
             }
 
+            if (statusDisplay != null)
+            {
+                statusDisplay.UpdateSkin(skin);
+            }
             // Apply Title Bar (via component)
             if (mainTitleBar != null)
             {
