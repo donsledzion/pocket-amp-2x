@@ -141,6 +141,117 @@ namespace SoftAware
         
         #endregion
         
+        #region Texture Loading
+        
+        private Texture2D lastLoadedTexture = null;
+        
+        /// <summary>
+        /// Loads a BMP texture from the specified path
+        /// Uses UnityWebRequest for runtime loading
+        /// </summary>
+        public void LoadTexture(string bmpPath, System.Action<Texture2D> onComplete)
+        {
+            if (!File.Exists(bmpPath))
+            {
+                Debug.LogError($"Texture file does not exist: {bmpPath}");
+                onComplete?.Invoke(null);
+                return;
+            }
+            
+            StartCoroutine(LoadTextureCoroutine(bmpPath, onComplete));
+        }
+        
+        private IEnumerator LoadTextureCoroutine(string path, System.Action<Texture2D> onComplete)
+        {
+            Log($"Loading texture: {path}");
+            
+            Texture2D tex = null;
+            
+            try
+            {
+                // Use custom BMP loader (ImageConversion doesn't support BMP)
+                tex = BMPLoader.LoadBMP(path);
+                
+                if (tex != null)
+                {
+                    Log($"Texture loaded successfully: {tex.width}x{tex.height}, format: {tex.format}");
+                    
+                    // Remove magenta transparency
+                    RemoveMagenta(tex);
+                    
+                    lastLoadedTexture = tex;
+                    onComplete?.Invoke(tex);
+                }
+                else
+                {
+                    Debug.LogError($"Failed to decode BMP from: {path}");
+                    onComplete?.Invoke(null);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to load texture: {ex.Message}\nPath: {path}\n{ex.StackTrace}");
+                if (tex != null) Destroy(tex);
+                onComplete?.Invoke(null);
+            }
+            
+            yield return null;
+        }
+        
+        /// <summary>
+        /// Removes magenta color (#FF00FF) by making it transparent
+        /// This is the standard transparency color in Winamp skins
+        /// </summary>
+        private void RemoveMagenta(Texture2D tex)
+        {
+            if (tex == null) return;
+            
+            Log("Removing magenta transparency...");
+            
+            Color[] pixels = tex.GetPixels();
+            int magentaCount = 0;
+            
+            // Magenta color with some tolerance for compression artifacts
+            const float tolerance = 0.05f;
+            
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                Color pixel = pixels[i];
+                
+                // Check if pixel is close to magenta (R=1, G=0, B=1)
+                if (Mathf.Abs(pixel.r - 1f) < tolerance && 
+                    pixel.g < tolerance && 
+                    Mathf.Abs(pixel.b - 1f) < tolerance)
+                {
+                    pixels[i] = new Color(pixel.r, pixel.g, pixel.b, 0f); // Make transparent
+                    magentaCount++;
+                }
+            }
+            
+            tex.SetPixels(pixels);
+            tex.Apply();
+            
+            Log($"Removed {magentaCount} magenta pixels ({(magentaCount * 100f / pixels.Length):F2}% of image)");
+        }
+        
+        /// <summary>
+        /// Loads main.bmp from the last unpacked skin
+        /// </summary>
+        public void LoadMainBmp(System.Action<Texture2D> onComplete)
+        {
+            if (string.IsNullOrEmpty(lastUnpackedSkinPath))
+            {
+                Debug.LogWarning("No skin has been unpacked yet.");
+                onComplete?.Invoke(null);
+                return;
+            }
+            
+            string mainBmpPath = Path.Combine(lastUnpackedSkinPath, "main.bmp");
+            LoadTexture(mainBmpPath, onComplete);
+        }
+        
+        #endregion
+        
         #region Debug Methods
         
         /// <summary>
@@ -208,6 +319,40 @@ namespace SoftAware
             }
             
             UnpackWsz(testWszPath);
+        }
+        
+        [ContextMenu("Test: Load Main BMP")]
+        private void TestLoadMainBmp()
+        {
+            LoadMainBmp((tex) =>
+            {
+                if (tex != null)
+                {
+                    Debug.Log($"[TEST] Successfully loaded main.bmp: {tex.width}x{tex.height}");
+                }
+                else
+                {
+                    Debug.LogError("[TEST] Failed to load main.bmp");
+                }
+            });
+        }
+        
+        [ContextMenu("Test: Show Texture Info")]
+        private void TestShowTextureInfo()
+        {
+            if (lastLoadedTexture == null)
+            {
+                Debug.LogWarning("No texture loaded yet. Use 'Test: Load Main BMP' first.");
+                return;
+            }
+            
+            Debug.Log($"=== Texture Info ===");
+            Debug.Log($"Size: {lastLoadedTexture.width}x{lastLoadedTexture.height}");
+            Debug.Log($"Format: {lastLoadedTexture.format}");
+            Debug.Log($"Mipmap: {lastLoadedTexture.mipmapCount}");
+            Debug.Log($"Filter Mode: {lastLoadedTexture.filterMode}");
+            Debug.Log($"Wrap Mode: {lastLoadedTexture.wrapMode}");
+            Debug.Log($"===================");
         }
         
         #endregion
