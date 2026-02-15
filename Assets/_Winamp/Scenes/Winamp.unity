@@ -1212,7 +1212,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 29, y: 12}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &148582685
@@ -1541,7 +1541,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 18}
+  m_SizeDelta: {x: 4, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &208121407
 CanvasRenderer:
@@ -1869,7 +1869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 95, y: -6}
+  m_AnchoredPosition: {x: 93, y: -6}
   m_SizeDelta: {x: 23, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &257304243
@@ -4728,18 +4728,18 @@ RectTransform:
   m_GameObject: {fileID: 776791689}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.0232158, y: 3.0232158, z: 3.0232158}
+  m_LocalScale: {x: 4.534824, y: 4.534824, z: 4.534824}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1893449500}
   - {fileID: 927804355}
   m_Father: {fileID: 1147423833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 275, y: 0}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &776791691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4762,8 +4762,8 @@ MonoBehaviour:
   nativeWidth: 275
   mainHeight: 116
   eqHeight: 116
-  isLandscape: 1
-  currentScale: 3.0232158
+  isLandscape: 0
+  currentScale: 4.534824
   showDebugLogs: 1
   debugColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &792801598
@@ -5704,7 +5704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampSkinManager
   loadOnStart: 1
-  testSkinPath: C:\Users\choja\Downloads\Matrix_Code0110101.wsz
+  testSkinPath: C:\Users\choja\Downloads\WhOaH.wsz
   mainController: {fileID: 996247208}
   currentSkin:
     SkinName: 
@@ -6078,7 +6078,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 22, y: 18}
+  m_SizeDelta: {x: 26, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &892622457
 MonoBehaviour:
@@ -6656,14 +6656,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 132724955}
-  - {fileID: 1777476129}
   m_Father: {fileID: 776791690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: 0}
-  m_SizeDelta: {x: 275, y: 412.5}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -232}
+  m_SizeDelta: {x: 275, y: 134.66666}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &929997137
 GameObject:
   m_ObjectHideFlags: 0
@@ -8147,7 +8146,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 18}
+  m_SizeDelta: {x: 5, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1031774177
 CanvasRenderer:
@@ -11158,7 +11157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 118, y: -6}
+  m_AnchoredPosition: {x: 116, y: -6}
   m_SizeDelta: {x: 23, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1395137656
@@ -12624,7 +12623,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 29, y: 12}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1563485293
@@ -13163,7 +13162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 16
+    m_Left: 19
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -15117,13 +15116,13 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 281245790}
-  m_Father: {fileID: 927804355}
+  m_Father: {fileID: 1893449500}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -116}
   m_SizeDelta: {x: 275, y: 275}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1777476130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15976,13 +15975,14 @@ RectTransform:
   m_Children:
   - {fileID: 996247204}
   - {fileID: 693281831}
+  - {fileID: 1777476129}
   m_Father: {fileID: 776791690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 232}
-  m_Pivot: {x: 0, y: 1}
+  m_SizeDelta: {x: 275, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1913216276
 GameObject:
   m_ObjectHideFlags: 0
@@ -17321,8 +17321,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 102.7, y: 11}
-  m_SizeDelta: {x: 59, y: 12}
+  m_AnchoredPosition: {x: 101.5, y: 11}
+  m_SizeDelta: {x: 58, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2098605184
 MonoBehaviour:

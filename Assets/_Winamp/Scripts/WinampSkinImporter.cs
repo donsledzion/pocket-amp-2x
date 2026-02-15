@@ -441,11 +441,28 @@ namespace SoftAware
             string foundPath = null;
             foreach (var cand in candidates)
             {
-                string p = Path.Combine(lastUnpackedSkinPath, cand);
-                if (File.Exists(p))
+                // Try direct path first (optimal)
+                string directPath = Path.Combine(lastUnpackedSkinPath, cand);
+                if (File.Exists(directPath))
                 {
-                    foundPath = p;
+                    foundPath = directPath;
                     break;
+                }
+
+                // Fallback: Recursive search for skins with subdirectories
+                try
+                {
+                    string[] files = Directory.GetFiles(lastUnpackedSkinPath, cand, SearchOption.AllDirectories);
+                    if (files != null && files.Length > 0)
+                    {
+                        foundPath = files[0];
+                        Log($"Found nested skin file: {cand} -> {foundPath}");
+                        break;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"[WinampSkinImporter] Recursive search failed for {cand}: {ex.Message}");
                 }
             }
 
