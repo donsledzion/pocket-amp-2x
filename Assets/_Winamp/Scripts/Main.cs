@@ -154,6 +154,9 @@ namespace SoftAware.Winamp
         internal GameObject PlaylistWindow => playlistWindow;
         internal GameObject VisWindow => visWindow;
 
+        [Header("System Windows")]
+        [SerializeField] private GameObject skinsLibraryWindow; 
+
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
         [SerializeField] private Button minimizeButton;
@@ -370,6 +373,19 @@ namespace SoftAware.Winamp
             {
                 PlaylistButton.Toggle(); // This will trigger the OnValueChanged listener which hides the window
             }
+        }
+
+        public void OpenSkinsLibrary()
+        {
+            Debug.Log($"[Main] OpenSkinsLibrary called. Window ref: {skinsLibraryWindow}");
+            if (skinsLibraryWindow == null) Debug.LogError("[Main] SkinsLibraryWindow reference is NULL!");
+            
+            SetWindowVisibility(skinsLibraryWindow, true);
+        }
+
+        public void CloseSkinsLibrary()
+        {
+            SetWindowVisibility(skinsLibraryWindow, false);
         }
 
         private void ToggleVisWindow()

@@ -30,15 +30,48 @@ namespace SoftAware
 
         private IEnumerator Start()
         {
-            if (loadOnStart)
+            // Wait for systems to initialize
+            yield return null;
+
+            string skinToLoad = "";
+            bool foundSkin = false;
+
+            // 1. Priority: Settings (Last used skin)
+            if (SettingsManager.Instance != null && !string.IsNullOrEmpty(SettingsManager.Instance.LastSkinPath))
             {
-                yield return new WaitForSeconds(1f);
-                LoadAndApplyTestSkin();
+                string savedPath = SettingsManager.Instance.LastSkinPath;
+                if (System.IO.File.Exists(savedPath))
+                {
+                    Debug.Log($"[WinampSkinManager] Loading saved skin from Settings: {savedPath}");
+                    skinToLoad = savedPath;
+                    foundSkin = true;
+                }
             }
-            else if (loadFromPersistentOnStart && !Application.isEditor)
+
+            // 2. Fallback: Persistent Data Path (default persistent skin)
+            if (!foundSkin && loadFromPersistentOnStart)
             {
-                yield return new WaitForSeconds(1f);
-                LoadFromPersistentPath();
+                string pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
+                if (System.IO.File.Exists(pPath))
+                {
+                    Debug.Log($"[WinampSkinManager] Loading persistent fallback skin: {pPath}");
+                    skinToLoad = pPath;
+                    foundSkin = true;
+                }
+            }
+
+            // 3. Fallback: Test Skin Path (Inspector) - only if explicitly enabled
+            if (!foundSkin && loadOnStart && !string.IsNullOrEmpty(testSkinPath))
+            {
+                 Debug.Log($"[WinampSkinManager] Loading test skin: {testSkinPath}");
+                 skinToLoad = testSkinPath;
+                 foundSkin = true;
+            }
+
+            // Execute Load
+            if (foundSkin && !string.IsNullOrEmpty(skinToLoad))
+            {
+                LoadSkin(skinToLoad);
             }
         }
 
@@ -46,20 +79,46 @@ namespace SoftAware
         public void LoadFromPersistentPath()
         {
             string pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
-            if (System.IO.File.Exists(pPath))
+            LoadSkin(pPath);
+        }
+
+        /// <summary>
+        /// Loads a skin from the given path.
+        /// </summary>
+        /// <returns>True if loading initiated successfully and parsing started, False if file not found.</returns>
+        public async System.Threading.Tasks.Task<bool> LoadSkin(string absolutePath)
+        {
+            if (System.IO.File.Exists(absolutePath))
             {
-                Debug.Log($"[WinampSkinManager] Found persistent skin at: {pPath}");
-                testSkinPath = pPath;
-                LoadAndApplyTestSkin();
+                Debug.Log($"[WinampSkinManager] Loading skin from: {absolutePath}");
+                testSkinPath = absolutePath;
+                
+                try 
+                {
+                    await LoadAndApplyTestSkin();
+                    // If we are here, it means no exception was thrown in await
+                    if (SettingsManager.Instance != null)
+                    {
+                        SettingsManager.Instance.LastSkinPath = absolutePath;
+                        Debug.Log("[WinampSkinManager] Saved LastSkinPath to Settings.");
+                    }
+                    return true;
+                }
+                catch (System.Exception ex)
+                {
+                     Debug.LogError($"[WinampSkinManager] Failed to load skin: {ex.Message}");
+                     return false;
+                }
             }
             else
             {
-                Debug.LogWarning($"[WinampSkinManager] Persistent skin file not found at: {pPath}");
+                Debug.LogWarning($"[WinampSkinManager] Skin file not found at: {absolutePath}");
+                return false;
             }
         }
 
         [ProPlayButton]
-        public async void LoadAndApplyTestSkin()
+        public async System.Threading.Tasks.Task LoadAndApplyTestSkin()
         {
             if (string.IsNullOrEmpty(testSkinPath))
             {
@@ -286,6 +345,7 @@ namespace SoftAware
             catch (System.Exception ex)
             {
                 Debug.LogError($"[WinampSkinManager] CRITICAL ERROR during skin loading: {ex.Message}\n{ex.StackTrace}");
+                throw;
             }
             finally
             {

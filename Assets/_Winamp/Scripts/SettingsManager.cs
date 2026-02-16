@@ -121,6 +121,13 @@ namespace SoftAware.Winamp
             set { if (value != IsFirstRun) { PlayerPrefs.SetInt(KEY_IS_FIRST_RUN, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
+        private const string KEY_LAST_SKIN = "Winamp_LastSkin";
+        public string LastSkinPath
+        {
+            get => PlayerPrefs.GetString(KEY_LAST_SKIN, "");
+            set { if (value != LastSkinPath) { PlayerPrefs.SetString(KEY_LAST_SKIN, value); PlayerPrefs.Save(); } }
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
