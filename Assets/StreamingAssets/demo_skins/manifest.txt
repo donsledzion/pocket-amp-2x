@@ -1,5 +1,4 @@
 AMPBOY.wsz
-Bugs_Bunny_Amp.wsz
 Matrix_Code0110101.wsz
 Nat-Amp_v01.wsz
 WhOaH.wsz
