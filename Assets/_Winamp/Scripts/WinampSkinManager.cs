@@ -10,6 +10,8 @@ namespace SoftAware
         [SerializeField] private bool loadOnStart;
         [Header("Settings")]
         [SerializeField] private string testSkinPath = "";
+        [SerializeField] private string persistentSkinFileName = "skin.wsz";
+        [SerializeField] private bool loadFromPersistentOnStart = true;
         
         [Header("Hierarchy References")]
         [SerializeField] private Main mainController;
@@ -28,9 +30,32 @@ namespace SoftAware
 
         private IEnumerator Start()
         {
-            if (!loadOnStart) yield break;
-            yield return new WaitForSeconds(1f);
-            LoadAndApplyTestSkin();
+            if (loadOnStart)
+            {
+                yield return new WaitForSeconds(1f);
+                LoadAndApplyTestSkin();
+            }
+            else if (loadFromPersistentOnStart && !Application.isEditor)
+            {
+                yield return new WaitForSeconds(1f);
+                LoadFromPersistentPath();
+            }
+        }
+
+        [ProPlayButton]
+        public void LoadFromPersistentPath()
+        {
+            string pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
+            if (System.IO.File.Exists(pPath))
+            {
+                Debug.Log($"[WinampSkinManager] Found persistent skin at: {pPath}");
+                testSkinPath = pPath;
+                LoadAndApplyTestSkin();
+            }
+            else
+            {
+                Debug.LogWarning($"[WinampSkinManager] Persistent skin file not found at: {pPath}");
+            }
         }
 
         [ProPlayButton]

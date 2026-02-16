@@ -24,16 +24,13 @@ namespace SoftAware.Winamp
                 // Use the provided sessionId (e.g. from MediaPlayer)
                 // Fallback to 0 (Global Mix) only if sessionId is -1
                 int targetSession = (sessionId == -1) ? 0 : sessionId; 
-                
-                Playlist.Log($"[Viz] Java Init Session: {targetSession}");
+                                
                 javaVisualizer = new AndroidJavaObject("com.softaware.winamp.WinampVisualizer");
                 bool success = javaVisualizer.Call<bool>("initialize", targetSession);
-                
-                Playlist.Log($"[Viz] Java Init Result: {success}");
             }
             catch (Exception e)
             {
-                Playlist.Log($"[Viz] Java ERR: {e.Message}");
+                Debug.LogError($"[Viz] Java ERR: {e.Message}");
             }
 #endif
         }
@@ -103,7 +100,7 @@ namespace SoftAware.Winamp
                 }
                 catch (Exception e)
                 {
-                    Playlist.Log($"[Viz] GetFFT ERR: {e.Message}");
+                    Debug.LogError($"[Viz] GetFFT ERR: {e.Message}");
                 }
             }
 #endif
@@ -127,7 +124,7 @@ namespace SoftAware.Winamp
                 }
                 catch (Exception e)
                 {
-                    Playlist.Log($"[Viz] GetWinampFFT ERR: {e.Message}");
+                    Debug.LogError($"[Viz] GetWinampFFT ERR: {e.Message}");
                 }
             }
 #endif
@@ -151,7 +148,7 @@ namespace SoftAware.Winamp
                 }
                 catch (Exception e)
                 {
-                    Playlist.Log($"[Viz] GetWave fatal: {e.Message}");
+                    Debug.LogError($"[Viz] GetWave fatal: {e.Message}");
                 }
             }
 #endif

@@ -192,8 +192,8 @@ namespace SoftAware
             public static readonly Rect BottomRight = new Rect(126, 72, 150, 38);
             public static readonly Rect BottomStretch = new Rect(179, 0, 25, 38); 
 
-            public static readonly Rect LeftEdge = new Rect(0, 42, 25, 29);
-            public static readonly Rect RightEdge = new Rect(26, 42, 25, 29);
+            public static readonly Rect LeftEdge = new Rect(0, 42, 11, 29);
+            public static readonly Rect RightEdge = new Rect(32, 42, 19, 29);
             public static readonly Rect Background = new Rect(11, 42, 14, 29);
 
             // Buttons Add

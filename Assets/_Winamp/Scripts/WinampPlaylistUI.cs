@@ -396,8 +396,7 @@ namespace SoftAware.Winamp
 
             if (plBackground) 
             {
-                plBackground.sprite = skin.PlBackground;
-                plBackground.type = Image.Type.Tiled;
+                plBackground.color = skin.PlNormalBGColor;
             }
 
             if (scrollHandleImage != null && skin.PlScrollHandleNormal != null)

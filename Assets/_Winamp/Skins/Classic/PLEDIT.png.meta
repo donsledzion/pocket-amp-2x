@@ -272,7 +272,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 115
-        width: 25
+        width: 11
         height: 29
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -292,9 +292,9 @@ TextureImporter:
       name: RightEdge
       rect:
         serializedVersion: 2
-        x: 26
+        x: 32
         y: 115
-        width: 25
+        width: 19
         height: 29
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1199,7 +1199,7 @@ TextureImporter:
         width: 9
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1221,7 +1221,7 @@ TextureImporter:
         width: 7
         height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

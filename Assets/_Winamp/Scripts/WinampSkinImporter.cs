@@ -548,7 +548,7 @@ namespace SoftAware
                 
                 skin.PlLeftEdge = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.LeftEdge);
                 skin.PlRightEdge = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RightEdge);
-                skin.PlBackground = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.Background);
+                // Background is handled by color from PLEDIT.TXT
 
                 // Buttons Add
                 skin.PlAddUrlNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddUrlNormal);
