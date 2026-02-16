@@ -5918,6 +5918,8 @@ MonoBehaviour:
   testSkinPath: C:\Users\choja\Downloads\Matrix_Code0110101.wsz
   persistentSkinFileName: skin.wsz
   loadFromPersistentOnStart: 0
+  baseSkinFileName: base-2.91.wsz
+  useBaseSkinFallback: 1
   mainController: {fileID: 996247208}
   playlistUI: {fileID: 204421522}
   currentSkin:

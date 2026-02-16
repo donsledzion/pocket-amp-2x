@@ -13,6 +13,9 @@ namespace SoftAware
         [SerializeField] private string persistentSkinFileName = "skin.wsz";
         [SerializeField] private bool loadFromPersistentOnStart = true;
         
+        [SerializeField] private string baseSkinFileName = "base.wsz";
+        [SerializeField] private bool useBaseSkinFallback = true;
+        
         [Header("Hierarchy References")]
         [SerializeField] private Main mainController;
         [SerializeField] private WinampPlaylistUI playlistUI;
@@ -33,6 +36,13 @@ namespace SoftAware
             // Wait for systems to initialize
             yield return null;
 
+            // 0. Ensure Base Skin Exists (Copy from StreamingAssets if needed)
+            if (useBaseSkinFallback)
+            {
+                var copyTask = EnsureBaseSkinExists();
+                yield return new WaitUntil(() => copyTask.IsCompleted);
+            }
+
             string skinToLoad = "";
             bool foundSkin = false;
 
@@ -45,6 +55,10 @@ namespace SoftAware
                     Debug.Log($"[WinampSkinManager] Loading saved skin from Settings: {savedPath}");
                     skinToLoad = savedPath;
                     foundSkin = true;
+                }
+                else
+                {
+                    Debug.LogWarning($"[WinampSkinManager] Saved skin not found at {savedPath}");
                 }
             }
 
@@ -60,7 +74,19 @@ namespace SoftAware
                 }
             }
 
-            // 3. Fallback: Test Skin Path (Inspector) - only if explicitly enabled
+            // 3. Fallback: Base Skin (from StreamingAssets -> Persistent)
+            if (!foundSkin && useBaseSkinFallback)
+            {
+                string basePath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
+                if (System.IO.File.Exists(basePath))
+                {
+                    Debug.Log($"[WinampSkinManager] Loading BASE skin: {basePath}");
+                    skinToLoad = basePath;
+                    foundSkin = true;
+                }
+            }
+
+            // 4. Fallback: Test Skin Path (Inspector) - only if explicitly enabled
             if (!foundSkin && loadOnStart && !string.IsNullOrEmpty(testSkinPath))
             {
                  Debug.Log($"[WinampSkinManager] Loading test skin: {testSkinPath}");
@@ -71,7 +97,71 @@ namespace SoftAware
             // Execute Load
             if (foundSkin && !string.IsNullOrEmpty(skinToLoad))
             {
-                LoadSkin(skinToLoad);
+                // We start the async task but don't await strictly in Start (it returns void/IEnumerator)
+                // But we can fire and forget, or handle it properly.
+                // Since this is Start coroutine, we can just call it.
+                var loadTask =  LoadSkin(skinToLoad);
+            }
+        }
+        
+        private async System.Threading.Tasks.Task EnsureBaseSkinExists()
+        {
+            string destPath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
+            
+            // If it already exists, we assume it's fine. 
+            // Optional: Check hash/version? For now, just existence.
+            if (System.IO.File.Exists(destPath)) return;
+
+            Debug.Log($"[WinampSkinManager] Base skin missing at {destPath}. Copying from StreamingAssets...");
+            
+            string sourcePath = System.IO.Path.Combine(Application.streamingAssetsPath, baseSkinFileName);
+            byte[] data = null;
+
+            if (sourcePath.Contains("://") || Application.platform == RuntimePlatform.Android)
+            {
+                // Android / WebGL requires UnityWebRequest
+                using (var wr = UnityEngine.Networking.UnityWebRequest.Get(sourcePath))
+                {
+                    var op = wr.SendWebRequest();
+                    while (!op.isDone) await System.Threading.Tasks.Task.Yield();
+                    
+                    if (wr.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                    {
+                        data = wr.downloadHandler.data;
+                    }
+                    else
+                    {
+                        Debug.LogError($"[WinampSkinManager] Failed to read Base Skin from StreamingAssets: {wr.error}");
+                    }
+                }
+            }
+            else
+            {
+                // PC / Editor
+                if (System.IO.File.Exists(sourcePath))
+                {
+                    data = await System.IO.File.ReadAllBytesAsync(sourcePath);
+                }
+            }
+
+            if (data != null)
+            {
+                try 
+                {
+                    string dir = System.IO.Path.GetDirectoryName(destPath);
+                    if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
+                    
+                    await System.IO.File.WriteAllBytesAsync(destPath, data);
+                    Debug.Log("[WinampSkinManager] Base Skin copied successfully.");
+                }
+                catch (System.Exception ex)
+                {
+                     Debug.LogError($"[WinampSkinManager] Failed to write Base Skin to persistent path: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[WinampSkinManager] Base Skin '{baseSkinFileName}' not found in StreamingAssets.");
             }
         }
 
