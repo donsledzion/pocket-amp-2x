@@ -40,9 +40,22 @@ namespace SoftAware.Winamp.SystemMenus.Skins
             // Fallback for content URIs if Path.GetFileName returns empty or bad name
             if (string.IsNullOrEmpty(fileName) || sourcePath.StartsWith("content://"))
             {
-                // Try to query the content resolver for the real name, or just use a timestamp
-                // Querying name via JNI is another step. Let's start with timestamp to be safe.
-                fileName = "imported_skin_" + System.DateTime.Now.Ticks + ".wsz";
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    string realName = GetFileNameFromContentUri(sourcePath);
+                    if (!string.IsNullOrEmpty(realName))
+                    {
+                        fileName = realName;
+                    }
+                    else
+                    {
+                        fileName = "imported_skin_" + System.DateTime.Now.Ticks + ".wsz";
+                    }
+                }
+                else
+                {
+                     fileName = "imported_skin_" + System.DateTime.Now.Ticks + ".wsz";
+                }
             }
             
             var destPath = Path.Combine(SkinsDirectory, fileName);
@@ -149,6 +162,45 @@ namespace SoftAware.Winamp.SystemMenus.Skins
                 Debug.LogError($"[SkinService] JNI Error copying content URI: {ex.Message}\n{ex.StackTrace}");
                 throw; // Re-throw to show error in UI
             }
+        }
+
+        private string GetFileNameFromContentUri(string uriString)
+        {
+            try
+            {
+                using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (var contentResolver = currentActivity.Call<AndroidJavaObject>("getContentResolver"))
+                using (var uriClass = new AndroidJavaClass("android.net.Uri"))
+                using (var uriObject = uriClass.CallStatic<AndroidJavaObject>("parse", uriString))
+                {
+                    // Query columns: just _display_name
+                    // Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+                    // We need to pass projection as String[]
+                    
+                    // But creating String[] in JNI is annoying. Passing null returns all columns.
+                    // Let's pass null and find the column index by name.
+                    
+                    using (var cursor = contentResolver.Call<AndroidJavaObject>("query", uriObject, null, null, null, null))
+                    {
+                        if (cursor != null && cursor.Call<bool>("moveToFirst"))
+                        {
+                            // OpenableColumns.DISPLAY_NAME is "_display_name"
+                            int nameIndex = cursor.Call<int>("getColumnIndex", "_display_name");
+                            if (nameIndex >= 0)
+                            {
+                                string name = cursor.Call<string>("getString", nameIndex);
+                                if (!string.IsNullOrEmpty(name)) return name;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[SkinService] Could not retrieve filename from URI: {ex.Message}");
+            }
+            return null;
         }
 
         public async Task DeleteSkinAsync(string skinName)
