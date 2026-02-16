@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 403948906}
+  menuClipper: {fileID: 1241849765}
 --- !u!114 &5062311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2110,10 +2111,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1760160657}
   - {fileID: 873465294}
   - {fileID: 1564584160}
   - {fileID: 1535055445}
-  - {fileID: 1760160657}
   m_Father: {fileID: 820814887}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -2446,15 +2447,15 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1241849764}
   - {fileID: 2047423885}
   - {fileID: 1627466165}
   - {fileID: 896902754}
-  - {fileID: 1241849764}
   m_Father: {fileID: 5062309}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 27}
+  m_AnchoredPosition: {x: 4.8, y: 27}
   m_SizeDelta: {x: 22, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &403948907
@@ -2990,10 +2991,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 853484059}
   - {fileID: 1216913241}
   - {fileID: 1580683146}
   - {fileID: 1050237459}
-  - {fileID: 853484059}
   m_Father: {fileID: 1533829907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -5370,7 +5371,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 18.170033, y: 12}
+  m_AnchoredPosition: {x: 20.5, y: 12}
   m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &820814888
@@ -5386,6 +5387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 327339445}
+  menuClipper: {fileID: 1760160658}
 --- !u!114 &820814889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5822,7 +5824,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: 0}
   m_SizeDelta: {x: 3, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &853484060
@@ -6045,6 +6047,11 @@ MonoBehaviour:
     PlScrollHandlePressed: {fileID: 0}
     PlCloseNormal: {fileID: 0}
     PlClosePressed: {fileID: 0}
+    PlAddClipper: {fileID: 0}
+    PlRemoveClipper: {fileID: 0}
+    PlSelectClipper: {fileID: 0}
+    PlMiscClipper: {fileID: 0}
+    PlListOptionsClipper: {fileID: 0}
     PlNormalColor: {r: 0, g: 1, b: 0, a: 1}
     PlCurrentColor: {r: 1, g: 1, b: 1, a: 1}
     PlNormalBGColor: {r: 0, g: 0, b: 0, a: 1}
@@ -10378,7 +10385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: 0}
   m_SizeDelta: {x: 3, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1241849765
@@ -12403,7 +12410,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -34.999996, y: 12}
+  m_AnchoredPosition: {x: -37.5, y: 12}
   m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1483184873
@@ -12419,6 +12426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 1633104987}
+  menuClipper: {fileID: 1975642364}
 --- !u!114 &1483184874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12913,7 +12921,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -31.000008, y: 12}
+  m_AnchoredPosition: {x: -33, y: 12}
   m_SizeDelta: {x: 22, y: 18}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1533829908
@@ -13011,6 +13019,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 503328502}
+  menuClipper: {fileID: 853484060}
 --- !u!1 &1535055444
 GameObject:
   m_ObjectHideFlags: 0
@@ -14120,7 +14129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: 0}
   m_SizeDelta: {x: 3, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1622930870
@@ -14576,10 +14585,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1975642363}
   - {fileID: 464226798}
   - {fileID: 1849970497}
   - {fileID: 534039485}
-  - {fileID: 1975642363}
   m_Father: {fileID: 1483184872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -14642,11 +14651,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1622930869}
   - {fileID: 1005204141}
   - {fileID: 71524806}
   - {fileID: 1373315661}
   - {fileID: 1420929540}
-  - {fileID: 1622930869}
   m_Father: {fileID: 1779691829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -16020,7 +16029,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: 0}
   m_SizeDelta: {x: 3, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1760160658
@@ -16282,6 +16291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaylistMainButton
   optionsContainer: {fileID: 1657955937}
+  menuClipper: {fileID: 1622930870}
 --- !u!114 &1779691831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17897,7 +17907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: 0}
   m_SizeDelta: {x: 3, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1975642364

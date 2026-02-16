@@ -160,6 +160,9 @@ namespace SoftAware
         // Close Button
         public Sprite PlCloseNormal, PlClosePressed;
 
+        // Context Menu Clippers
+        public Sprite PlAddClipper, PlRemoveClipper, PlSelectClipper, PlMiscClipper, PlListOptionsClipper;
+
         // Colors (from PLEDIT.TXT)
         public Color PlNormalColor = Color.green;
         public Color PlCurrentColor = Color.white;

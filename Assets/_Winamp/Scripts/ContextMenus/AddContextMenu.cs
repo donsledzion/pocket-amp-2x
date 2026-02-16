@@ -55,6 +55,8 @@ namespace SoftAware.Winamp
                 spriteState.pressedSprite = skin.PlAddFilePressed;
                 AddFileButton.spriteState = spriteState;
             }
+
+            if (MenuClipper) MenuClipper.sprite = skin.PlAddClipper;
         }
     }
 }

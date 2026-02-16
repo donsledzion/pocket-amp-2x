@@ -55,6 +55,8 @@ namespace SoftAware.Winamp
                 ss.pressedSprite = skin.PlSelectAllPressed;
                 SelectAllButton.spriteState = ss;
             }
+
+            if (MenuClipper) MenuClipper.sprite = skin.PlSelectClipper;
         }
     }
 }

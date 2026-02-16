@@ -599,6 +599,13 @@ namespace SoftAware
                 // Close Button
                 skin.PlCloseNormal = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.CloseNormal);
                 skin.PlClosePressed = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.ClosePressed);
+
+                // Clippers
+                skin.PlAddClipper = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.AddClipper);
+                skin.PlRemoveClipper = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.RemoveClipper);
+                skin.PlSelectClipper = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.SelectClipper);
+                skin.PlMiscClipper = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.MiscClipper);
+                skin.PlListOptionsClipper = WinampSkinSlicer.SliceSprite(plEditTex, WinampSkinSlicer.Playlist.ListOptionsClipper);
             }
         }
 

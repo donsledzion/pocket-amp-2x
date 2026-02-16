@@ -56,6 +56,8 @@ namespace SoftAware.Winamp
                 ss.pressedSprite = skin.PlMiscPressed;
                 MiscOptionsButton.spriteState = ss;
             }
+
+            if (MenuClipper) MenuClipper.sprite = skin.PlMiscClipper;
         }
     }
 }

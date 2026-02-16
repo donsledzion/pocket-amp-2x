@@ -205,14 +205,25 @@ namespace SoftAware
             public static readonly Rect AddFilePressed = new Rect(23, 149, 22, 18);
 
             // Buttons Remove
-            public static readonly Rect RemAllNormal = new Rect(51, 111, 22, 18); // Map manually if not in meta
-            public static readonly Rect RemAllPressed = new Rect(74, 111, 22, 18);
-            public static readonly Rect RemSelNormal = new Rect(51, 130, 22, 18);
-            public static readonly Rect RemSelPressed = new Rect(74, 130, 22, 18);
-            public static readonly Rect RemCropNormal = new Rect(51, 149, 22, 18);
-            public static readonly Rect RemCropPressed = new Rect(74, 149, 22, 18);
-            public static readonly Rect RemMiscNormal = new Rect(51, 168, 22, 18);
-            public static readonly Rect RemMiscPressed = new Rect(74, 168, 22, 18);
+            // Buttons Remove
+            // Meta: RemMisc=0, RemSel=19, RemCrop=38, RemAll=57
+            // Top-Down Y = 186 - metaY - H(18)
+            // RemMisc (y=0) -> 186 - 0 - 18 = 168
+            // RemSel (y=19) -> 186 - 19 - 18 = 149
+            // RemCrop (y=38) -> 186 - 38 - 18 = 130
+            // RemAll (y=57) -> 186 - 57 - 18 = 111
+
+            public static readonly Rect RemAllNormal = new Rect(54, 111, 22, 18); // Meta: x=54, y=57
+            public static readonly Rect RemAllPressed = new Rect(77, 111, 22, 18); // Meta: x=77
+            
+            public static readonly Rect RemCropNormal = new Rect(54, 130, 22, 18); // Meta: x=54, y=38
+            public static readonly Rect RemCropPressed = new Rect(77, 130, 22, 18); // Meta: x=77
+
+            public static readonly Rect RemSelNormal = new Rect(54, 149, 22, 18); // Meta: x=54, y=19
+            public static readonly Rect RemSelPressed = new Rect(77, 149, 22, 18); // Meta: x=77
+
+            public static readonly Rect RemMiscNormal = new Rect(54, 168, 22, 18); // Meta: x=54, y=0
+            public static readonly Rect RemMiscPressed = new Rect(77, 168, 22, 18); // Meta: x=77
 
             // Buttons Select
             public static readonly Rect SelAllNormal = new Rect(104, 149, 22, 18);
@@ -241,6 +252,13 @@ namespace SoftAware
             // Handle
             public static readonly Rect SliderHandleNormal = new Rect(52, 53, 8, 18);
             public static readonly Rect SliderHandlePressed = new Rect(61, 53, 8, 18);
+
+            // Menu Clippers (Top-Down Y = 186 - metaY - H)
+            public static readonly Rect AddClipper = new Rect(48, 111, 3, 54);
+            public static readonly Rect RemoveClipper = new Rect(100, 111, 3, 72);
+            public static readonly Rect SelectClipper = new Rect(150, 111, 3, 54);
+            public static readonly Rect MiscClipper = new Rect(200, 111, 3, 54);
+            public static readonly Rect ListOptionsClipper = new Rect(250, 111, 3, 54);
         }
 
         public static class Numbers

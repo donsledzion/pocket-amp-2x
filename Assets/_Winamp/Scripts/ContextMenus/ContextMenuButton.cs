@@ -6,7 +6,9 @@ namespace SoftAware.Winamp
     public abstract class ContextMenuButton : MonoBehaviour
     {
         [SerializeField] private Transform optionsContainer;
+        [SerializeField] private Image menuClipper;
         internal Button[] MenuButtons { get; private set; }
+        internal Image MenuClipper => menuClipper;
 
         private Button button;
 
