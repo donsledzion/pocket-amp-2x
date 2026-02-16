@@ -43,6 +43,10 @@ namespace SoftAware
                 yield return new WaitUntil(() => copyTask.IsCompleted);
             }
 
+            // 0.5 Ensure Demo Skins
+            var demoTask = EnsureDemoSkinsExist();
+            yield return new WaitUntil(() => demoTask.IsCompleted);
+
             string skinToLoad = "";
             bool foundSkin = false;
 
@@ -104,6 +108,7 @@ namespace SoftAware
             }
         }
         
+
         private async System.Threading.Tasks.Task EnsureBaseSkinExists()
         {
             string destPath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
@@ -163,6 +168,94 @@ namespace SoftAware
             {
                 Debug.LogWarning($"[WinampSkinManager] Base Skin '{baseSkinFileName}' not found in StreamingAssets.");
             }
+        }
+
+        private async System.Threading.Tasks.Task EnsureDemoSkinsExist()
+        {
+            if (PlayerPrefs.GetInt("DemoSkinsCopied", 0) == 1) return;
+
+            Debug.Log("[WinampSkinManager] Checking for Demo Skins to copy (First Run)...");
+            
+            string manifestPath = System.IO.Path.Combine(Application.streamingAssetsPath, "demo_skins", "manifest.txt").Replace("\\", "/");
+            string[] filesToCopy = null;
+
+            // Read manifest
+            if (manifestPath.Contains("://") || Application.platform == RuntimePlatform.Android)
+            {
+                using (var wr = UnityEngine.Networking.UnityWebRequest.Get(manifestPath))
+                {
+                    var op = wr.SendWebRequest();
+                    while (!op.isDone) await System.Threading.Tasks.Task.Yield();
+                    
+                    if (wr.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                    {
+                        filesToCopy = wr.downloadHandler.text.Split(new[] { '\r', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    }
+                }
+            }
+            else
+            {
+                 if (System.IO.File.Exists(manifestPath))
+                 {
+                     filesToCopy = await System.IO.File.ReadAllLinesAsync(manifestPath);
+                 }
+            }
+
+            if (filesToCopy == null || filesToCopy.Length == 0)
+            {
+                Debug.Log("[WinampSkinManager] No demo skins manifest found or empty.");
+                // Mark as done anyway to avoid failing every startup
+                PlayerPrefs.SetInt("DemoSkinsCopied", 1);
+                PlayerPrefs.Save();
+                return;
+            }
+
+            Debug.Log($"[WinampSkinManager] Found {filesToCopy.Length} demo skins to copy.");
+
+            // Copy files
+            foreach (var fileName in filesToCopy)
+            {
+                string cleanName = fileName.Trim();
+                if (string.IsNullOrEmpty(cleanName)) continue;
+
+                string sourcePath = System.IO.Path.Combine(Application.streamingAssetsPath, "demo_skins", cleanName).Replace("\\", "/");
+                string destPath = System.IO.Path.Combine(Application.persistentDataPath, "skins", cleanName);
+
+                if (System.IO.File.Exists(destPath)) continue;
+
+                byte[] data = null;
+                if (sourcePath.Contains("://") || Application.platform == RuntimePlatform.Android)
+                {
+                     using (var wr = UnityEngine.Networking.UnityWebRequest.Get(sourcePath))
+                     {
+                         var op = wr.SendWebRequest();
+                         while (!op.isDone) await System.Threading.Tasks.Task.Yield();
+                         if (wr.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                             data = wr.downloadHandler.data;
+                         else
+                             Debug.LogWarning($"[WinampSkinManager] Failed to read demo skin {cleanName}: {wr.error}");
+                     }
+                }
+                else
+                {
+                     if (System.IO.File.Exists(sourcePath)) data = await System.IO.File.ReadAllBytesAsync(sourcePath);
+                }
+
+                if (data != null)
+                {
+                     try 
+                     {
+                         string dir = System.IO.Path.GetDirectoryName(destPath);
+                         if (!System.IO.Directory.Exists(dir)) System.IO.Directory.CreateDirectory(dir);
+                         await System.IO.File.WriteAllBytesAsync(destPath, data);
+                         Debug.Log($"[WinampSkinManager] Copied demo skin: {cleanName}");
+                     }
+                     catch (System.Exception ex) { Debug.LogError($"Failed to copy demo skin {cleanName}: {ex.Message}"); }
+                }
+            }
+
+            PlayerPrefs.SetInt("DemoSkinsCopied", 1);
+            PlayerPrefs.Save();
         }
 
         [ProPlayButton]
