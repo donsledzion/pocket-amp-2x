@@ -411,6 +411,9 @@ namespace SoftAware
             LoadSkinFile(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" }, onComplete);
         }
 
+        public Task<Texture2D> LoadTextBmpAsync() => LoadSkinFileAsync(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" });
+        public Task<Texture2D> LoadTitleBarBmpAsync() => LoadSkinFileAsync(new[] { "TITLEBAR.BMP", "titlebar.bmp", "TitleBar.bmp", "TITLEBAR.PNG", "titlebar.png", "TitleBar.png" });
+
         public Task<Texture2D> LoadMainBmpAsync() => LoadSkinFileAsync(new[] { "MAIN.BMP", "main.bmp", "MAIN.PNG", "main.png" });
         public Task<Texture2D> LoadCButtonsBmpAsync() => LoadSkinFileAsync(new[] { "CBUTTONS.BMP", "cbuttons.bmp", "CBUTTONS.PNG", "cbuttons.png" });
         public Task<Texture2D> LoadShufRepBmpAsync() => LoadSkinFileAsync(new[] { "SHUFREP.BMP", "shufrep.bmp", "SHUFREP.PNG", "shufrep.png" });
@@ -421,7 +424,7 @@ namespace SoftAware
         public Task<Texture2D> LoadPlayPausBmpAsync() => LoadSkinFileAsync(new[] { "PLAYPAUS.BMP", "playpaus.bmp", "PlayPaus.bmp", "PLAYPAUS.PNG", "playpaus.png", "PlayPaus.png" });
         public Task<Texture2D> LoadPosbarBmpAsync() => LoadSkinFileAsync(new[] { "POSBAR.BMP", "posbar.bmp", "Posbar.bmp", "POSBAR.PNG", "posbar.png" });
         public Task<Texture2D> LoadMonoSterBmpAsync() => LoadSkinFileAsync(new[] { "MONOSTER.BMP", "MONOSTER.PNG" });
-        public Task<Texture2D> LoadTextBmpAsync() => LoadSkinFileAsync(new[] { "TEXT.BMP", "text.bmp", "Text.bmp", "TEXT.PNG", "text.png", "Text.png" });
+        // Duplicate LoadTextBmpAsync removed
 
         public async Task<Color[]> LoadVisColorAsync()
         {

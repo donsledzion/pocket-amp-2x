@@ -224,19 +224,34 @@ namespace SoftAware
             // 1. Unpack
             WinampSkinImporter.Instance.UnpackWsz(testSkinPath);
             
-            // 2. Load Main BMP
+            // 2. Load Main BMP and TitleBar
             Texture2D mainTex = await WinampSkinImporter.Instance.LoadMainBmpAsync();
+            Texture2D titleBarTex = await WinampSkinImporter.Instance.LoadTitleBarBmpAsync();
+
             if (mainTex != null)
             {
                 Debug.Log($"[WinampSkinManager] Slicing Main from {mainTex.name}");
                 currentSkin.MainBackground = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.MainPanel);
-                currentSkin.TitleBar = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.TitleBar);
-
-                // Title bar buttons
-                currentSkin.MinimizeBtn_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.MinimizeButton);
-                currentSkin.MinimizeBtn_Pressed = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.MinimizeButtonPressed);
-                currentSkin.CloseBtn_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.CloseButton);
-                currentSkin.CloseBtn_Pressed = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.CloseButtonPressed);
+                
+                // If separate TitleBar exists, use it. Otherwise use Main.
+                if (titleBarTex != null)
+                {
+                    Debug.Log($"[WinampSkinManager] Slicing TitleBar from separate {titleBarTex.name}");
+                    currentSkin.TitleBar = WinampSkinSlicer.SliceSpriteBottomUp(titleBarTex, WinampSkinSlicer.TitleBarSeparate.Focused);
+                    currentSkin.MinimizeBtn_Normal = WinampSkinSlicer.SliceSpriteBottomUp(titleBarTex, WinampSkinSlicer.TitleBarSeparate.MinimizeNormal);
+                    currentSkin.MinimizeBtn_Pressed = WinampSkinSlicer.SliceSpriteBottomUp(titleBarTex, WinampSkinSlicer.TitleBarSeparate.MinimizePressed);
+                    currentSkin.CloseBtn_Normal = WinampSkinSlicer.SliceSpriteBottomUp(titleBarTex, WinampSkinSlicer.TitleBarSeparate.CloseNormal);
+                    currentSkin.CloseBtn_Pressed = WinampSkinSlicer.SliceSpriteBottomUp(titleBarTex, WinampSkinSlicer.TitleBarSeparate.ClosePressed);
+                }
+                else
+                {
+                    Debug.Log("[WinampSkinManager] Slicing TitleBar from MAIN.BMP (standard)");
+                    currentSkin.TitleBar = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.TitleBar);
+                    currentSkin.MinimizeBtn_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.MinimizeButton);
+                    currentSkin.MinimizeBtn_Pressed = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.MinimizeButtonPressed);
+                    currentSkin.CloseBtn_Normal = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.CloseButton);
+                    currentSkin.CloseBtn_Pressed = WinampSkinSlicer.SliceSprite(mainTex, WinampSkinSlicer.CloseButtonPressed);
+                }
             }
 
             // 3. Load ShufRep

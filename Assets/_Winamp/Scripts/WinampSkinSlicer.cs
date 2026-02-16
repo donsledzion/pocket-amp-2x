@@ -12,6 +12,21 @@ namespace SoftAware
         public static readonly Rect MainPanel = new Rect(0, 0, 275, 116);
         public static readonly Rect TitleBar = new Rect(0, 0, 275, 14); // Standard Title Bar height
         
+        /// <summary>
+        /// Rectangles for separate TITLEBAR.BMP (Bottom-Up coordinates from Meta)
+        /// </summary>
+        public static class TitleBarSeparate
+        {
+            public static readonly Rect Focused = new Rect(27, 73, 275, 14);
+            public static readonly Rect Unfocused = new Rect(27, 58, 275, 14); // Guessing Unfocused position relative? Meta said 58.
+            public static readonly Rect MinimizeNormal = new Rect(9, 78, 9, 9);
+            public static readonly Rect MinimizePressed = new Rect(9, 69, 9, 9);
+            public static readonly Rect CloseNormal = new Rect(18, 78, 9, 9);
+            public static readonly Rect ClosePressed = new Rect(18, 69, 9, 9);
+            // Shade button might be missing in this specific meta, we handle fallback or omission?
+            // For now, let's leave Shade out or map it if we find it later.
+        }
+
         // Title bar buttons (MAIN.BMP)
         public static readonly Rect MinimizeButton = new Rect(244, 3, 9, 9);
         public static readonly Rect MinimizeButtonPressed = new Rect(244, 13, 9, 9); // usually below? Need to verification or trial. Standard is usually below.
@@ -451,6 +466,21 @@ namespace SoftAware
             );
             
             return sprite;
+        }
+
+        /// <summary>
+        /// Creates a sprite from a texture using Bottom-Left origin coordinates (Standard Unity/Meta)
+        /// Did not flip Y.
+        /// </summary>
+        public static Sprite SliceSpriteBottomUp(Texture2D texture, Rect rect, float pixelsPerUnit = 1f)
+        {
+             if (texture == null) return null;
+             
+             // Pivot at top-left relative to the sprite bounds? 
+             // Standard UI pivots are usually Top-Left (0,1).
+             Vector2 pivot = new Vector2(0, 1);
+             
+             return Sprite.Create(texture, rect, pivot, pixelsPerUnit);
         }
         
         /// <summary>
