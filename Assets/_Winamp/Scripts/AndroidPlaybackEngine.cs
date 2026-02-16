@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SoftAware.Winamp
@@ -35,11 +36,6 @@ namespace SoftAware.Winamp
             {
                 try { nativeEq.Call("release"); } catch { }
                 nativeEq = null;
-            }
-            if (nativeLoudness != null)
-            {
-                try { nativeLoudness.Call("release"); } catch { }
-                nativeLoudness = null;
             }
         }
 
@@ -91,28 +87,29 @@ namespace SoftAware.Winamp
         {
             baseVolumeL = left;
             baseVolumeR = right;
-            ApplyFinalVolume();
+            
+            // Still using throttling for volume updates when EQ is ON to be ultra-safe,
+            // but we removed the preamp multiplier which caused frequent re-calculations.
+            if (eqEnabled)
+            {
+                isVolumeDirty = true;
+                lastVolInteractionTimeMs = _throttleClock.ElapsedMilliseconds;
+            }
+            else
+            {
+                ApplyFinalVolume();
+                isVolumeDirty = false;
+            }
         }
 
         private void ApplyFinalVolume()
         {
             if (currentMusicID == -1) return;
-
-            float multiplier = 1f;
-            // Preamp cut: if < 0, we reduce the volume multiplier.
-            // If > 0, we use LoudnessEnhancer for boost.
-            if (eqEnabled && lastPreamp < 0)
-            {
-                // -20dB is approx 0.1 gain, 0dB is 1.0 gain.
-                // Logarithmic mapping: multiplier = 10^(db/20)
-                multiplier = Mathf.Pow(10f, lastPreamp / 20f);
-            }
-
-            ANAMusic.setVolume(currentMusicID, baseVolumeL * multiplier, baseVolumeR * multiplier);
+            // Pure volume and balance only. No preamp scaling here anymore.
+            ANAMusic.setVolume(currentMusicID, baseVolumeL, baseVolumeR);
         }
 
         private AndroidJavaObject nativeEq;
-        private AndroidJavaObject nativeLoudness;
         
         private bool eqEnabled = false;
         private float[] lastBands;
@@ -133,6 +130,10 @@ namespace SoftAware.Winamp
         private long lastInteractionTimeMs = 0;
         private bool isPendingUpdate = false;
         private const int SettleTimeMs = 1000; // Winamp-style delay
+
+        private bool isVolumeDirty = false;
+        private long lastVolInteractionTimeMs = 0;
+        private const int VolSettleTimeMs = 250; 
 
         public void SetEqualizerEnabled(bool enabled)
         {
@@ -167,63 +168,91 @@ namespace SoftAware.Winamp
             
             try
             {
-                // 1. Initialize Effects (if needed)
+                // 1. Initialize Equalizer (if needed)
                 if (nativeEq == null)
                 {
+                    Debug.Log($"[EQ-Debug] Creating Equalizer for session {currentMusicID}");
                     nativeEq = new AndroidJavaObject("android.media.audiofx.Equalizer", 1000, currentMusicID);
-                    Debug.Log($"Created native Equalizer for session {currentMusicID} with priority 1000");
                     
-                    // Cache hardware info once
-                    cachedNumBands = nativeEq.Call<short>("getNumberOfBands");
+                    IntPtr clazz = nativeEq.GetRawClass();
+                    Debug.Log($"[EQ-Debug] Equalizer created. RawClassPtr: {clazz}");
+                    
+                    // Use more robust JNI calls for hardware info
+                    IntPtr getNumBandsMethod = AndroidJNI.GetMethodID(clazz, "getNumberOfBands", "()S");
+                    Debug.Log($"[EQ-Debug] getNumberOfBands MethodID: {getNumBandsMethod}");
+                    
+                    cachedNumBands = AndroidJNI.CallShortMethod(nativeEq.GetRawObject(), getNumBandsMethod, new jvalue[0]);
+                    Debug.Log($"[EQ-Debug] Hardware NumBands: {cachedNumBands}");
+
                     short[] range = nativeEq.Call<short[]>("getBandLevelRange");
                     cachedMinLevel = range[0];
                     cachedMaxLevel = range[1];
+                    Debug.Log($"[EQ-Debug] Range: {cachedMinLevel} to {cachedMaxLevel} mB");
                     
                     cachedCenterFreqs = new int[cachedNumBands];
                     for (short i = 0; i < cachedNumBands; i++)
                     {
-                        cachedCenterFreqs[i] = nativeEq.Call<int>("getCenterFreq", i) / 1000;
+                        cachedCenterFreqs[i] = nativeEq.Call<int>("getCenterFreq", (short)i) / 1000;
                     }
                 }
 
-                if (nativeLoudness == null)
-                {
-                    // priority 1000 not supported by LoudnessEnhancer constructor in the same way, but it's fine
-                    nativeLoudness = new AndroidJavaObject("android.media.audiofx.LoudnessEnhancer", currentMusicID);
-                    Debug.Log($"Created native LoudnessEnhancer for session {currentMusicID}");
-                }
+                IntPtr currentClazz = nativeEq.GetRawClass();
 
                 // 2. Only toggle state if changed (major cause of pops)
                 if (eqEnabled != lastAppliedEnabledState || forced)
                 {
-                    nativeEq.Call<int>("setEnabled", eqEnabled);
-                    nativeLoudness.Call<int>("setEnabled", eqEnabled);
+                    Debug.Log($"[EQ-Debug] Setting enabled to {eqEnabled}. Forced: {forced}");
+                    IntPtr setEnabledMethod = AndroidJNI.GetMethodID(currentClazz, "setEnabled", "(Z)I");
+                    if (setEnabledMethod != IntPtr.Zero)
+                    {
+                        jvalue[] args = new jvalue[1];
+                        args[0].z = eqEnabled;
+                        int result = AndroidJNI.CallIntMethod(nativeEq.GetRawObject(), setEnabledMethod, args);
+                        Debug.Log($"[EQ-Debug] setEnabled({eqEnabled}) result: {result}");
+                        if (AndroidJNI.ExceptionOccurred() != IntPtr.Zero) 
+                        {
+                            Debug.LogError("[EQ-Debug] Exception occurred during setEnabled!");
+                            AndroidJNI.ExceptionClear();
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("[EQ-Debug] FAILED to find setEnabled(Z)I method!");
+                    }
                     lastAppliedEnabledState = eqEnabled;
                 }
 
-                // 3. Update Preamp Cut (Volume scaling)
-                if (eqEnabled && !Mathf.Approximately(lastPreamp, lastAppliedPreamp))
-                {
-                    ApplyFinalVolume();
-                }
-
-                // 4. Update Preamp Boost (LoudnessEnhancer)
-                if (eqEnabled)
-                {
-                    int boostmB = lastPreamp > 0 ? (int)(lastPreamp * 100) : 0;
-                    nativeLoudness.Call("setTargetGain", boostmB);
-                }
-
-                // 5. Update Frequency Bands
+                // 3. Update Frequency Bands (Including Preamp integration)
                 if (eqEnabled && lastBands != null)
                 {
-                    for (short i = 0; i < cachedNumBands; i++)
+                    // Correct signature for setBandLevel is (SS)V (takes two shorts, returns void)
+                    IntPtr setBandLevelMethod = AndroidJNI.GetMethodID(currentClazz, "setBandLevel", "(SS)V");
+                    if (setBandLevelMethod != IntPtr.Zero)
                     {
-                        float interpolatedGain = GetInterpolatedWinampGain(cachedCenterFreqs[i]);
-                        float clampedGain = Mathf.Clamp(interpolatedGain, -20f, 20f);
-                        
-                        short level = (short)Mathf.Lerp(cachedMinLevel, cachedMaxLevel, (clampedGain + 20f) / 40f);
-                        nativeEq.Call("setBandLevel", i, level);
+                        Debug.Log("[EQ-Debug] Found setBandLevel(SS)V method.");
+                        jvalue[] jniArgs = new jvalue[2];
+                        for (short i = 0; i < cachedNumBands; i++)
+                        {
+                            float interpolatedGain = GetInterpolatedWinampGain(cachedCenterFreqs[i]);
+                            float finalGain = interpolatedGain + lastPreamp;
+                            float clampedGain = Mathf.Clamp(finalGain, -20f, 20f);
+                            short level = (short)Mathf.Lerp(cachedMinLevel, cachedMaxLevel, (clampedGain + 20f) / 40f);
+
+                            jniArgs[0].s = i;
+                            jniArgs[1].s = level;
+                            
+                            AndroidJNI.CallVoidMethod(nativeEq.GetRawObject(), setBandLevelMethod, jniArgs);
+                            
+                            if (AndroidJNI.ExceptionOccurred() != IntPtr.Zero) 
+                            {
+                                Debug.LogError($"[EQ-Debug] Exception setting band {i} to {level}");
+                                AndroidJNI.ExceptionClear();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("[EQ-Debug] FAILED to find setBandLevel(SS)V method!");
                     }
                 }
 
@@ -231,20 +260,31 @@ namespace SoftAware.Winamp
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Native EQ/Loudness Error: {e.Message}");
+                Debug.LogError($"Native EQ Error: {e.Message}");
                 ReleaseEffects();
             }
         }
 
         public void Update()
         {
+            long currentTimeMs = _throttleClock.ElapsedMilliseconds;
+
             if (isPendingUpdate)
             {
-                long currentTimeMs = _throttleClock.ElapsedMilliseconds;
                 if (currentTimeMs - lastInteractionTimeMs >= SettleTimeMs)
                 {
                     isPendingUpdate = false;
+                    isVolumeDirty = false; // UpdateNativeEQ will handle volume
                     UpdateNativeEQ(true); // Apply settled changes
+                }
+            }
+
+            if (isVolumeDirty)
+            {
+                if (currentTimeMs - lastVolInteractionTimeMs >= VolSettleTimeMs)
+                {
+                    isVolumeDirty = false;
+                    ApplyFinalVolume();
                 }
             }
         }
