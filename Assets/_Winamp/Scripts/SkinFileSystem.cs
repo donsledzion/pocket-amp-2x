@@ -92,25 +92,58 @@ namespace SoftAware
         /// <summary>
         /// Finds a file in the given directory or subdirectories.
         /// Returns the first match or null.
+        /// Handles case-insensitivity manually for Android/Linux support.
         /// </summary>
         public string FindFile(string directory, string[] candidates)
         {
             if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory)) return null;
 
+            // 1. Fast Path: Exact Match
             foreach (var cand in candidates)
             {
-                // Trusted direct check
                 string direct = Path.Combine(directory, cand);
                 if (File.Exists(direct)) return direct;
-
-                // Recursive check
-                try
-                {
-                    string[] files = Directory.GetFiles(directory, cand, SearchOption.AllDirectories);
-                    if (files != null && files.Length > 0) return files[0];
-                }
-                catch { }
             }
+
+            // 2. Slow Path: Case-Insensitive Search
+            // Android/Linux file systems are case-sensitive, so "File.Exists" fails if case mismatches.
+            // We must iterate and check manually.
+            
+            try
+            {
+                // Check top-level files first (optimization)
+                var topLevelFiles = Directory.EnumerateFiles(directory);
+                foreach (var filePath in topLevelFiles)
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    foreach (var cand in candidates)
+                    {
+                        if (fileName.Equals(cand, System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            return filePath;
+                        }
+                    }
+                }
+
+                // If not found, check recursively (deep scan)
+                var allFiles = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories);
+                foreach (var filePath in allFiles)
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    foreach (var cand in candidates)
+                    {
+                        if (fileName.Equals(cand, System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            return filePath;
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[SkinFileSystem] Error during case-insensitive search: {ex.Message}");
+            }
+
             return null;
         }
 
