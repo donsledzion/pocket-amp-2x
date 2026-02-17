@@ -245,25 +245,38 @@ namespace SoftAware
 
             int w = monosterTex.width;
             
-            // Standard Winamp MonoSter is 29px width per item (total 58px)
-            // But some skins (and sometimes default exports) are 56px (28px each) or 57px.
-            // We calculate width dynamically to prevent out-of-bounds errors.
-            int halfW = w / 2;
-            int rightX = halfW;
+            // Winamp Standard Dimensions:
+            // Total Width: 56px.
+            // Stereo (Left): 29px.
+            // Mono (Right): 27px.
+            //
+            // Some modern skins use 58px (29px + 29px).
+            // We should always prioritize the standard 29px for Stereo.
             
-            // Should be 29 if width is 58+.
-            // If width is 56, halfW is 28.
+            int stereoW = 29;
             
-            // Use Min to ensure we don't exceed 29 if texture is huge for some reason, 
-            // though usually we just want to split it.
-            // Actually, best to just split whatever we have.
+            // Safety for weirdly small textures
+            if (w < 29) stereoW = w; 
             
-            skin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 0, halfW, 12));
-            skin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 12, halfW, 12));
-            skin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(rightX, 12, w - rightX, 12));
+            // Mono takes the rest
+            int monoX = stereoW;
+            int monoW = w - monoX;
             
-            // Note: Mono_Active (Rect(rightX, 0, ...)) seems unused in current skin def?
-            // If we needed it: skin.Mono_Active = ... new Rect(rightX, 0, w - rightX, 12));
+            skin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 0, stereoW, 12));
+            skin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 12, stereoW, 12));
+            
+            // Ensure we have width for Mono
+            if (monoW > 0)
+            {
+                skin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(monoX, 12, monoW, 12));
+            }
+            else
+            {
+                skin.Mono_Inactive = WinampSkinSlicer.CreateTransparentSprite();
+            }
+            
+            // Note: Mono_Active (Rect(monoX, 0, ...)) seems unused in current skin def?
+            // If we needed it: skin.Mono_Active = ... new Rect(monoX, 0, monoW, 12));
         }
 
         public void ComposeVolume(WinampSkin skin, Texture2D volumeTex)
