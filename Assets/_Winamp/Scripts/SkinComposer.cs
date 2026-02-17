@@ -271,15 +271,85 @@ namespace SoftAware
             if (skin == null || volumeTex == null) return;
 
             float h = volumeTex.height;
-            skin.VolumeKnobNormal = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(WinampSkinSlicer.Volume.KnobNormal.x, h - WinampSkinSlicer.Volume.KnobNormal.y - WinampSkinSlicer.Volume.KnobNormal.height, WinampSkinSlicer.Volume.KnobNormal.width, WinampSkinSlicer.Volume.KnobNormal.height));
-            skin.VolumeKnobPressed = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(WinampSkinSlicer.Volume.KnobPressed.x, h - WinampSkinSlicer.Volume.KnobPressed.y - WinampSkinSlicer.Volume.KnobPressed.height, WinampSkinSlicer.Volume.KnobPressed.width, WinampSkinSlicer.Volume.KnobPressed.height));
+            // Standard Volume height is ~420px + knobs (11px) = ~431px+
+            // If height is small (e.g. just slider frames ~420), we likely have no knobs.
+            // Knobs are usually at Y=0 (bottom) or Y=Height (top) depending on format, 
+            // but standard Winamp Volume.bmp has slider frames from top, and knobs at the very bottom?
+            // Actually standard: 
+            // 0-14: Slider Background (28 frames)
+            // ...
+            // At the bottom: Slider Knobs.
+            
+            // In Unity Slicing (Bottom-Left 0,0), if we use Top-Down logic:
+            // Volume Frames start at Y=0 (top) down to Y=420.
+            // Knobs are usually below that (Y > 420 in Top-Down, or Y < something in Bottom-Up).
+            
+            // Let's protect against missing knobs.
+            // Standard knob rects are at Top-Down Y ~422?
+            // If texture height < 422, we probably don't have knobs.
+            
+            bool hasKnobs = h >= 422; 
+            
+            if (hasKnobs)
+            {
+               skin.VolumeKnobNormal = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(WinampSkinSlicer.Volume.KnobNormal.x, h - WinampSkinSlicer.Volume.KnobNormal.y - WinampSkinSlicer.Volume.KnobNormal.height, WinampSkinSlicer.Volume.KnobNormal.width, WinampSkinSlicer.Volume.KnobNormal.height));
+               skin.VolumeKnobPressed = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(WinampSkinSlicer.Volume.KnobPressed.x, h - WinampSkinSlicer.Volume.KnobPressed.y - WinampSkinSlicer.Volume.KnobPressed.height, WinampSkinSlicer.Volume.KnobPressed.width, WinampSkinSlicer.Volume.KnobPressed.height));
+            }
+            else
+            {
+                // Create transparent sprites for missing knobs
+                skin.VolumeKnobNormal = WinampSkinSlicer.CreateTransparentSprite();
+                skin.VolumeKnobPressed = WinampSkinSlicer.CreateTransparentSprite();
+            }
+
             
             skin.VolumeAnimation = new Sprite[WinampSkinSlicer.Volume.FrameCount];
             for (int i = 0; i < WinampSkinSlicer.Volume.FrameCount; i++)
             {
-                float yBottom = 420 - (i * WinampSkinSlicer.Volume.FrameStride);
-                float yTop = h - yBottom - WinampSkinSlicer.Volume.FrameHeight;
-                skin.VolumeAnimation[i] = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(0, yTop, WinampSkinSlicer.Volume.FrameWidth, WinampSkinSlicer.Volume.FrameHeight));
+                // Standard logic: Frames are 15px high (stride), 13px actual visual? 
+                // WinampSkinSlicer.Volume.FrameStride = 15.
+                // If texture is standard, we slice 28 frames.
+                
+                // If texture is single frame (unlikely for Volume but possible), we could handle it.
+                // But usually Volume has all frames. 
+                // The issue user reported was MISSING KNOBS, not single frame volume.
+                
+                // Using standard logic but with clamped Y from our robust Slicer.
+                // Calculation:
+                // i=0 -> Y=0 (Top)
+                // i=27 -> Y=27*15 = 405.
+                // 405 + 15 = 420.
+                
+                // In Bottom-Up:
+                // yTop = h - (i * stride) - height? 
+                // Wait, previous logic was:
+                // float yBottom = 420 - (i * stride);
+                // This '420' was a hardcoded assumption of texture content height excluding knobs?
+                
+                // Let's trust the "Top-Down" nature:
+                // Frame 0 is at Top 0.
+                // Frame 1 is at Top 15.
+                // ...
+                // Rect(0, i * 15, 65, 13). 
+                // SliceSprite takes Top-Down Rect Y.
+                
+                float topY = i * WinampSkinSlicer.Volume.FrameStride;
+                
+                // Robust check: valid only if within texture
+                if (topY + WinampSkinSlicer.Volume.FrameHeight <= h)
+                {
+                     skin.VolumeAnimation[i] = WinampSkinSlicer.SliceSprite(volumeTex, new Rect(0, topY, WinampSkinSlicer.Volume.FrameWidth, WinampSkinSlicer.Volume.FrameHeight));
+                }
+                else
+                {
+                     // Fallback if texture is too short for all frames, repeat last valid or transparent?
+                     // Usually shouldn't happen if h >= 420.
+                     // If h < 420, we might be in "Single Frame" territory?
+                     if (i > 0 && skin.VolumeAnimation[i-1] != null)
+                        skin.VolumeAnimation[i] = skin.VolumeAnimation[i-1];
+                     else
+                        skin.VolumeAnimation[i] = WinampSkinSlicer.CreateTransparentSprite();
+                }
             }
         }
 
@@ -288,15 +358,69 @@ namespace SoftAware
             if (skin == null || balanceTex == null) return;
 
             float h = balanceTex.height;
-            skin.BalanceKnobNormal = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(WinampSkinSlicer.Balance.KnobNormal.x, h - WinampSkinSlicer.Balance.KnobNormal.y - WinampSkinSlicer.Balance.KnobNormal.height, WinampSkinSlicer.Balance.KnobNormal.width, WinampSkinSlicer.Balance.KnobNormal.height));
-            skin.BalanceKnobPressed = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(WinampSkinSlicer.Balance.KnobPressed.x, h - WinampSkinSlicer.Balance.KnobPressed.y - WinampSkinSlicer.Balance.KnobPressed.height, WinampSkinSlicer.Balance.KnobPressed.width, WinampSkinSlicer.Balance.KnobPressed.height));
+            
+            // Check for Single Frame Case
+            // Standard Balance has 28 frames * 15px = 420px.
+            // If height is small (e.g. < 50px), it's likely a single frame to be repeated.
+            bool isSingleFrame = h < 100; // Heuristic
             
             skin.BalanceAnimation = new Sprite[WinampSkinSlicer.Balance.FrameCount];
-            for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+
+            if (isSingleFrame)
             {
-                float yBottom = 420 - (i * WinampSkinSlicer.Balance.FrameStride);
-                float yTop = h - yBottom - WinampSkinSlicer.Balance.FrameHeight;
-                skin.BalanceAnimation[i] = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(9, yTop, WinampSkinSlicer.Balance.FrameWidth, WinampSkinSlicer.Balance.FrameHeight));
+                // Slice the only frame we have (assuming it's at 0,0 or similar)
+                // Use a safe rect based on texture size
+                Rect singleRect = new Rect(9, 0, WinampSkinSlicer.Balance.FrameWidth, Mathf.Min(WinampSkinSlicer.Balance.FrameHeight, h));
+                
+                // Often in single frame skins, the graphic might not be exactly at X=9 if it's a "compact" style?
+                // But let's stick to standard X=9 if possible, or X=0 if texture is narrow?
+                if (balanceTex.width < 15) singleRect.x = 0; // If texture is just the slider knob width
+                
+                Sprite singleSprite = WinampSkinSlicer.SliceSprite(balanceTex, singleRect);
+                
+                for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+                {
+                    skin.BalanceAnimation[i] = singleSprite;
+                }
+                
+                // Knobs for single frame usually don't exist
+                skin.BalanceKnobNormal = WinampSkinSlicer.CreateTransparentSprite();
+                skin.BalanceKnobPressed = WinampSkinSlicer.CreateTransparentSprite();
+            }
+            else
+            {
+                // Standard Multi-Frame Logic
+                
+                // Check for knobs (Standard height > 422?)
+                bool hasKnobs = h >= 422;
+                
+                if (hasKnobs)
+                {
+                    skin.BalanceKnobNormal = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(WinampSkinSlicer.Balance.KnobNormal.x, h - WinampSkinSlicer.Balance.KnobNormal.y - WinampSkinSlicer.Balance.KnobNormal.height, WinampSkinSlicer.Balance.KnobNormal.width, WinampSkinSlicer.Balance.KnobNormal.height));
+                    skin.BalanceKnobPressed = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(WinampSkinSlicer.Balance.KnobPressed.x, h - WinampSkinSlicer.Balance.KnobPressed.y - WinampSkinSlicer.Balance.KnobPressed.height, WinampSkinSlicer.Balance.KnobPressed.width, WinampSkinSlicer.Balance.KnobPressed.height));
+                }
+                else
+                {
+                    skin.BalanceKnobNormal = WinampSkinSlicer.CreateTransparentSprite();
+                    skin.BalanceKnobPressed = WinampSkinSlicer.CreateTransparentSprite();
+                }
+
+                for (int i = 0; i < WinampSkinSlicer.Balance.FrameCount; i++)
+                {
+                    float topY = i * WinampSkinSlicer.Balance.FrameStride;
+                    
+                    if (topY + WinampSkinSlicer.Balance.FrameHeight <= h)
+                    {
+                        skin.BalanceAnimation[i] = WinampSkinSlicer.SliceSprite(balanceTex, new Rect(9, topY, WinampSkinSlicer.Balance.FrameWidth, WinampSkinSlicer.Balance.FrameHeight));
+                    }
+                    else
+                    {
+                        if (i > 0 && skin.BalanceAnimation[i-1] != null)
+                            skin.BalanceAnimation[i] = skin.BalanceAnimation[i-1];
+                        else
+                             skin.BalanceAnimation[i] = WinampSkinSlicer.CreateTransparentSprite();
+                    }
+                }
             }
         }
 

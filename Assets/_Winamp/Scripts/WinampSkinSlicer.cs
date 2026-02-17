@@ -550,5 +550,16 @@ namespace SoftAware
         {
             return SliceSprite(cbuttonsTexture, CButtons.Eject);
         }
+        /// <summary>
+        /// Creates a 1x1 transparent sprite.
+        /// Used for missing skin elements (like knobs in partial skins).
+        /// </summary>
+        public static Sprite CreateTransparentSprite(float pixelsPerUnit = 1f)
+        {
+            Texture2D tex = new Texture2D(1, 1);
+            tex.SetPixel(0, 0, Color.clear);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), pixelsPerUnit);
+        }
     }
 }
