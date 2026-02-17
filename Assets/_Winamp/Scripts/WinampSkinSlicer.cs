@@ -438,16 +438,30 @@ namespace SoftAware
                 return null;
             }
             
-            // Validate rect is within texture bounds
-            if (rect.x < 0 || rect.y < 0 || 
-                rect.x + rect.width > texture.width || 
-                rect.y + rect.height > texture.height)
-            {
-                Debug.LogWarning($"Rect {rect} is outside texture bounds ({texture.width}x{texture.height})");
-            }
+            // Validate and Clamp rect to be within texture bounds to prevent crashes
+            float x = rect.x;
+            float y = rect.y;
+            float w = rect.width;
+            float h = rect.height;
+
+            if (x < 0) { w += x; x = 0; }
+            if (y < 0) { h += y; y = 0; }
             
+            if (x + w > texture.width) w = texture.width - x;
+            if (y + h > texture.height) h = texture.height - y;
+            
+            if (w <= 0 || h <= 0)
+            {
+                Debug.LogWarning($"Rect {rect} is fully outside or invalid for texture bounds ({texture.width}x{texture.height}). Returning null.");
+                return null;
+            }
+
+            // Update rect with clamped values
+            rect = new Rect(x, y, w, h);
+
             // Unity's Sprite.Create expects Y coordinate from bottom
             // BMP coordinates are from top, so we need to flip Y
+            // Note: We use the clamped 'h' and 'y' for flipping
             Rect flippedRect = new Rect(
                 rect.x,
                 texture.height - rect.y - rect.height, // Flip Y coordinate
@@ -458,14 +472,20 @@ namespace SoftAware
             // Pivot at top-left (0, 1) for UI elements
             Vector2 pivot = new Vector2(0, 1);
             
-            Sprite sprite = Sprite.Create(
-                texture,
-                flippedRect,
-                pivot,
-                pixelsPerUnit
-            );
-            
-            return sprite;
+            try 
+            {
+                return Sprite.Create(
+                    texture,
+                    flippedRect,
+                    pivot,
+                    pixelsPerUnit
+                );
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to create sprite: {ex.Message}. Rect: {flippedRect}, Tex: {texture.width}x{texture.height}");
+                return null;
+            }
         }
 
         /// <summary>

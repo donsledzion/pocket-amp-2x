@@ -243,9 +243,27 @@ namespace SoftAware
         {
             if (skin == null || monosterTex == null) return;
 
-            skin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOn);
-            skin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.StereoOff);
-            skin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, WinampSkinSlicer.MonoSter.MonoOff);
+            int w = monosterTex.width;
+            
+            // Standard Winamp MonoSter is 29px width per item (total 58px)
+            // But some skins (and sometimes default exports) are 56px (28px each) or 57px.
+            // We calculate width dynamically to prevent out-of-bounds errors.
+            int halfW = w / 2;
+            int rightX = halfW;
+            
+            // Should be 29 if width is 58+.
+            // If width is 56, halfW is 28.
+            
+            // Use Min to ensure we don't exceed 29 if texture is huge for some reason, 
+            // though usually we just want to split it.
+            // Actually, best to just split whatever we have.
+            
+            skin.Stereo_Active = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 0, halfW, 12));
+            skin.Stereo_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(0, 12, halfW, 12));
+            skin.Mono_Inactive = WinampSkinSlicer.SliceSprite(monosterTex, new Rect(rightX, 12, w - rightX, 12));
+            
+            // Note: Mono_Active (Rect(rightX, 0, ...)) seems unused in current skin def?
+            // If we needed it: skin.Mono_Active = ... new Rect(rightX, 0, w - rightX, 12));
         }
 
         public void ComposeVolume(WinampSkin skin, Texture2D volumeTex)
