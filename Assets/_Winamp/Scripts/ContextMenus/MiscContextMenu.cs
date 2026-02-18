@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class MiscContextMenu : ContextMenuButton, IWinampSkinApplicator
     {

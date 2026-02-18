@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SoftAware.Winamp.SystemMenus.Core
+namespace SoftAware.PocketAmp.SystemMenus.Core
 {
     public interface IMenuItem
     {

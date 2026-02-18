@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace SoftAware.Winamp.Visualizers
+namespace SoftAware.PocketAmp.Visualizers
 {
     public class VisPluginManager : MonoBehaviour
     {

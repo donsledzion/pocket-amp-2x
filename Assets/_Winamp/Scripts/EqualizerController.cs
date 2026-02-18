@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class EqualizerController : MonoBehaviour, IWinampSkinApplicator
     {

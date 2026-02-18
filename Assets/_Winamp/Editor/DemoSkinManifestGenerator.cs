@@ -5,7 +5,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace SoftAware.Winamp.Editor
+namespace SoftAware.PocketAmp.Editor
 {
     public class DemoSkinManifestGenerator : IPreprocessBuildWithReport
     {

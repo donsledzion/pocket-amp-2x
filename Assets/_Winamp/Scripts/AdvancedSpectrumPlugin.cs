@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware.Winamp.Visualizers
+namespace SoftAware.PocketAmp.Visualizers
 {
     /// <summary>
     /// A sample high-performance shader-based visualizer plugin.

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class AndroidPlaybackEngine : IPlaybackEngine
     {

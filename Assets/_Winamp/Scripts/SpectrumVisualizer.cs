@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
     {

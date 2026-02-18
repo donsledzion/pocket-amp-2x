@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Concurrent;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     /// <summary>
     /// The main playback manager. Handles playlist logic, high-level states,

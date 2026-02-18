@@ -1,4 +1,4 @@
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public enum PlaybackState
     {

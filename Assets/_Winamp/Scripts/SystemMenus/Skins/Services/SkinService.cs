@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using System; // Added for IntPtr, Exception
-using SoftAware.Winamp.SystemMenus.Core;
+using System;
+using SoftAware.PocketAmp.SystemMenus.Core; // Added for IntPtr, Exception
 
-namespace SoftAware.Winamp.SystemMenus.Skins
+namespace SoftAware.PocketAmp.SystemMenus.Skins
 {
     public class SkinService : IService
     {

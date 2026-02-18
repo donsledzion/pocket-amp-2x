@@ -4,7 +4,7 @@ using TMPro;
 using System;
 using System.Collections;
 using UnityEngine.EventSystems;
-using SoftAware.Winamp;
+using SoftAware.PocketAmp;
 
 namespace SoftAware
 {

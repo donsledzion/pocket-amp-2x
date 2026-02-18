@@ -2,15 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
-using SoftAware.Winamp.SystemMenus.Skins; // For SkinService
-using System.Linq;
 
-namespace SoftAware.Winamp.SystemMenus.Skins.UI
+namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 {
     public class SkinsLibraryWindow : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private GameObject skinItemPrefab;
+        [SerializeField] private SkinItemView skinItemPrefab;
         [SerializeField] private Transform listContent;
         
         [Header("Buttons")]
@@ -41,15 +39,16 @@ namespace SoftAware.Winamp.SystemMenus.Skins.UI
         {
             RefreshList();
             UpdateButtonsState();
+            ClearStatus();
         }
+
+        private void ClearStatus() => statusText.text = "";
 
         private async void RefreshList()
         {
             // Clear existing
             foreach (var item in currentItems)
-            {
-                if (item != null) Destroy(item.gameObject);
-            }
+                if (item) Destroy(item.gameObject);
             currentItems.Clear();
 
             // Fetch skins
@@ -58,15 +57,11 @@ namespace SoftAware.Winamp.SystemMenus.Skins.UI
             // Populate
             foreach (var skinName in skins)
             {
-                var go = Instantiate(skinItemPrefab, listContent);
-                var view = go.GetComponent<SkinItemView>();
-                if (view != null)
-                {
-                    string displayName = System.IO.Path.GetFileNameWithoutExtension(skinName);
-                    // Debug.Log($"[SkinsLibraryWindow] Created item: ID='{skinName}', Display='{displayName}'");
-                    view.Setup(skinName, displayName, OnSkinSelected, OnSkinDoubleClicked);
-                    currentItems.Add(view);
-                }
+                var view = Instantiate(skinItemPrefab, listContent);
+                if (!view) continue;
+                var displayName = System.IO.Path.GetFileNameWithoutExtension(skinName);
+                view.Setup(skinName, displayName, OnSkinSelected, OnSkinDoubleClicked);
+                currentItems.Add(view);
             }
             
             // Re-select if possible

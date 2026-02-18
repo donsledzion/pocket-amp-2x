@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class ContextMenuHandler : MonoBehaviour
     {

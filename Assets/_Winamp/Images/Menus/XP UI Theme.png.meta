@@ -1,0 +1,2558 @@
+fileFormatVersion: 2
+guid: b726ab4ba1f0a0f4c8b62362aeb9d996
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2094137112079494963
+    second: XP UI Theme_0
+  - first:
+      213: -718007019110315162
+    second: XP UI Theme_1
+  - first:
+      213: 3973772672475938447
+    second: XP UI Theme_2
+  - first:
+      213: -6351456593895810818
+    second: XP UI Theme_3
+  - first:
+      213: 8377427242051089249
+    second: XP UI Theme_4
+  - first:
+      213: 7978980578418764648
+    second: XP UI Theme_5
+  - first:
+      213: 8150659792031551845
+    second: XP UI Theme_6
+  - first:
+      213: -8767789066411349790
+    second: XP UI Theme_7
+  - first:
+      213: 9042907504989977053
+    second: XP UI Theme_8
+  - first:
+      213: 8205829543181986152
+    second: XP UI Theme_9
+  - first:
+      213: 6112546451150491417
+    second: XP UI Theme_10
+  - first:
+      213: 791610561358485502
+    second: XP UI Theme_11
+  - first:
+      213: 6088307427266546439
+    second: XP UI Theme_12
+  - first:
+      213: -3106446586455869290
+    second: XP UI Theme_13
+  - first:
+      213: 8231130704514601980
+    second: XP UI Theme_14
+  - first:
+      213: -1340260082715405483
+    second: XP UI Theme_15
+  - first:
+      213: 5450741178132438641
+    second: XP UI Theme_16
+  - first:
+      213: 7112643817694960297
+    second: XP UI Theme_17
+  - first:
+      213: -3864399525570436800
+    second: XP UI Theme_18
+  - first:
+      213: -827466796087961878
+    second: XP UI Theme_19
+  - first:
+      213: 5561207013745048512
+    second: XP UI Theme_20
+  - first:
+      213: 8396623894561534857
+    second: XP UI Theme_21
+  - first:
+      213: 5545275376654315199
+    second: XP UI Theme_22
+  - first:
+      213: -1307020206813267680
+    second: XP UI Theme_23
+  - first:
+      213: -6434136404829154448
+    second: XP UI Theme_24
+  - first:
+      213: 4781343985929895881
+    second: XP UI Theme_25
+  - first:
+      213: 6468453005663531173
+    second: XP UI Theme_26
+  - first:
+      213: -5468332626056209501
+    second: XP UI Theme_27
+  - first:
+      213: -1576773890060207860
+    second: XP UI Theme_28
+  - first:
+      213: 6138393896817287711
+    second: XP UI Theme_29
+  - first:
+      213: -2598650562199600123
+    second: XP UI Theme_30
+  - first:
+      213: -4816982378310943008
+    second: XP UI Theme_31
+  - first:
+      213: -1554105501217249553
+    second: XP UI Theme_32
+  - first:
+      213: 1229131806142337719
+    second: XP UI Theme_33
+  - first:
+      213: -28935975893663243
+    second: XP UI Theme_34
+  - first:
+      213: -7173591717826580071
+    second: XP UI Theme_35
+  - first:
+      213: 3641538190353874104
+    second: XP UI Theme_36
+  - first:
+      213: -6436848550856467972
+    second: XP UI Theme_37
+  - first:
+      213: 7486050563093366613
+    second: XP UI Theme_38
+  - first:
+      213: 8856599345624874883
+    second: XP UI Theme_39
+  - first:
+      213: 392617721987888467
+    second: XP UI Theme_40
+  - first:
+      213: -354270015235273142
+    second: XP UI Theme_41
+  - first:
+      213: 6700371955644618884
+    second: XP UI Theme_42
+  - first:
+      213: 6632409184284913570
+    second: XP UI Theme_43
+  - first:
+      213: -5609852966178785736
+    second: XP UI Theme_44
+  - first:
+      213: 6598584329443467469
+    second: XP UI Theme_45
+  - first:
+      213: -4236982296300881298
+    second: XP UI Theme_46
+  - first:
+      213: -2535760801613485596
+    second: XP UI Theme_47
+  - first:
+      213: -5729101151123338096
+    second: XP UI Theme_48
+  - first:
+      213: -957190584474113912
+    second: XP UI Theme_49
+  - first:
+      213: -8098321115803454529
+    second: XP UI Theme_50
+  - first:
+      213: 435706694082319914
+    second: XP UI Theme_51
+  - first:
+      213: -5999884458276617286
+    second: XP UI Theme_52
+  - first:
+      213: 4607043599557416743
+    second: XP UI Theme_53
+  - first:
+      213: -358854280799261078
+    second: XP UI Theme_54
+  - first:
+      213: 2896932142803486180
+    second: XP UI Theme_55
+  - first:
+      213: 992490888750371706
+    second: XP UI Theme_56
+  - first:
+      213: -337994575411588791
+    second: XP UI Theme_57
+  - first:
+      213: 9148936849661526416
+    second: XP UI Theme_58
+  - first:
+      213: -3749629920123440835
+    second: XP UI Theme_59
+  - first:
+      213: 9078846871263137379
+    second: XP UI Theme_60
+  - first:
+      213: 2259890035109417731
+    second: XP UI Theme_61
+  - first:
+      213: -68347360655139272
+    second: XP UI Theme_62
+  - first:
+      213: -6271780383315075355
+    second: XP UI Theme_63
+  - first:
+      213: -2470065998149608280
+    second: XP UI Theme_64
+  - first:
+      213: -210163860875079948
+    second: XP UI Theme_65
+  - first:
+      213: 3280526505557664886
+    second: XP UI Theme_66
+  - first:
+      213: 4966967570799161402
+    second: XP UI Theme_67
+  - first:
+      213: 6993080715442877148
+    second: XP UI Theme_68
+  - first:
+      213: -2739002781375487889
+    second: XP UI Theme_69
+  - first:
+      213: -3215515496977253606
+    second: XP UI Theme_70
+  - first:
+      213: 2361631052134048041
+    second: XP UI Theme_71
+  - first:
+      213: -6643436989055880493
+    second: XP UI Theme_72
+  - first:
+      213: 311314119405407643
+    second: XP UI Theme_73
+  - first:
+      213: -9042054061361450220
+    second: XP UI Theme_74
+  - first:
+      213: 5693927031538437602
+    second: XP UI Theme_75
+  - first:
+      213: 6253588166952017041
+    second: XP UI Theme_76
+  - first:
+      213: 5411974905263627657
+    second: XP UI Theme_77
+  - first:
+      213: 2703071086853908889
+    second: XP UI Theme_78
+  - first:
+      213: 3324060258129530525
+    second: XP UI Theme_79
+  - first:
+      213: 5006954178426794476
+    second: XP UI Theme_80
+  - first:
+      213: 3983272928833290453
+    second: XP UI Theme_81
+  - first:
+      213: 1968023731927927908
+    second: XP UI Theme_82
+  - first:
+      213: -9164440206550343277
+    second: XP UI Theme_83
+  - first:
+      213: 7275232243495350764
+    second: XP UI Theme_84
+  - first:
+      213: -2766742662434084856
+    second: XP UI Theme_85
+  - first:
+      213: -4972929335763157443
+    second: XP UI Theme_86
+  - first:
+      213: 5341655759010612774
+    second: XP UI Theme_87
+  - first:
+      213: 4920120235599318672
+    second: XP UI Theme_88
+  - first:
+      213: -4548510136155841698
+    second: XP UI Theme_89
+  - first:
+      213: -8567379988560027692
+    second: XP UI Theme_90
+  - first:
+      213: 6002489485719623977
+    second: XP UI Theme_91
+  - first:
+      213: -2388622017786771670
+    second: XP UI Theme_92
+  - first:
+      213: -2871967265888164768
+    second: XP UI Theme_93
+  - first:
+      213: 3687407027485348955
+    second: XP UI Theme_94
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: XP UI Theme_0
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 992
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33fe574bb9edf0d10800000000000000
+      internalID: 2094137112079494963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_1
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 992
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66b41b79b602906f0800000000000000
+      internalID: -718007019110315162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_2
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 992
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8e3511113da52730800000000000000
+      internalID: 3973772672475938447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_3
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 992
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef8178a11e71bd7a0800000000000000
+      internalID: -6351456593895810818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_4
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 992
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 163b22ee0b9924470800000000000000
+      internalID: 8377427242051089249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_5
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 992
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86b2466cf880bbe60800000000000000
+      internalID: 7978980578418764648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_6
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 992
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 561991595e5fc1170800000000000000
+      internalID: 8150659792031551845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_7
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 992
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e86ffe3c4e825680800000000000000
+      internalID: -8767789066411349790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_8
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 992
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd934a3e67cde7d70800000000000000
+      internalID: 9042907504989977053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_9
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 992
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 869a4c04e76f0e170800000000000000
+      internalID: 8205829543181986152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_10
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 992
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91f46e59c9024d450800000000000000
+      internalID: 6112546451150491417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_11
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 992
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef758368c9d5cfa00800000000000000
+      internalID: 791610561358485502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_12
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 992
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70b489d09530e7450800000000000000
+      internalID: 6088307427266546439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_13
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 916
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 698b29cc94fa3e4d0800000000000000
+      internalID: -3106446586455869290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_14
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 928
+        width: 17
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf3576ee3c9da3270800000000000000
+      internalID: 8231130704514601980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_16
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 826
+        width: 13
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17e9d25e83ce4ab40800000000000000
+      internalID: 5450741178132438641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_17
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 790
+        width: 16
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aa16972edf25b260800000000000000
+      internalID: 7112643817694960297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_19
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 957
+        width: 20
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae61fb3455f3484f0800000000000000
+      internalID: -827466796087961878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_20
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 936
+        width: 20
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cb3fa080506d2d40800000000000000
+      internalID: 5561207013745048512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_21
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 936
+        width: 24
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 983b5e3e1fcc68470800000000000000
+      internalID: 8396623894561534857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_22
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 936
+        width: 11
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbe633f2396c4fc40800000000000000
+      internalID: 5545275376654315199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_23
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 896
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 3}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02933aafb088cdde0800000000000000
+      internalID: -1307020206813267680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_24
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 819
+        width: 21
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 073dfb1870b55b6a0800000000000000
+      internalID: -6434136404829154448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_25
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 819
+        width: 21
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cf3d46c50fba5240800000000000000
+      internalID: 4781343985929895881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_26
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 956
+        width: 97
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a0f1e0ccbf84c950800000000000000
+      internalID: 6468453005663531173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_27
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 969
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ab9d36f2749c14b0800000000000000
+      internalID: -5468332626056209501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_28
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 963
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c09b9d7408c2e1ae0800000000000000
+      internalID: -1576773890060207860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_29
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 963
+        width: 16
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f12683ff9b4ff2550800000000000000
+      internalID: 6138393896817287711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_30
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 923
+        width: 97
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50449b8f41dbfebd0800000000000000
+      internalID: -2598650562199600123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_31
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 911
+        width: 229
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eeb5736c04a62db0800000000000000
+      internalID: -4816982378310943008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_32
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 836
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe62778d745be6ae0800000000000000
+      internalID: -1554105501217249553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_33
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 888
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b29f3f8dd0ce0110800000000000000
+      internalID: 1229131806142337719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_34
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 888
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f101ab12e2399ff0800000000000000
+      internalID: -28935975893663243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_35
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 890
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99133470758427c90800000000000000
+      internalID: -7173591717826580071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_36
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 857
+        width: 16
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bcbf00c0b7598230800000000000000
+      internalID: 3641538190353874104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_37
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 867
+        width: 20
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf9563dc858bba6a0800000000000000
+      internalID: -6436848550856467972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_38
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 867
+        width: 24
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5570bc7035bc3e760800000000000000
+      internalID: 7486050563093366613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_39
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 867
+        width: 11
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f7de93e26f8ea70800000000000000
+      internalID: 8856599345624874883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_40
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 873
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 3}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3557c9becbbd27500800000000000000
+      internalID: 392617721987888467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_41
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 890
+        width: 97
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4e44535c41651bf0800000000000000
+      internalID: -354270015235273142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_42
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 879
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 488df272bc08cfc50800000000000000
+      internalID: 6700371955644618884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_43
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 879
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2af275a530d0b0c50800000000000000
+      internalID: 6632409184284913570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_44
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 883
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 836fdb4137cc522b0800000000000000
+      internalID: -5609852966178785736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_45
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 876
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0efe0ac71e29b50800000000000000
+      internalID: 6598584329443467469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_46
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 870
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6afd5dcc073335c0800000000000000
+      internalID: -4236982296300881298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_47
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 870
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e9e7786cfa2fccd0800000000000000
+      internalID: -2535760801613485596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_48
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 869
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09c030d6bd42e70b0800000000000000
+      internalID: -5729101151123338096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_49
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 861
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888621e1c3067b2f0800000000000000
+      internalID: -957190584474113912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_50
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 861
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb37d771adbfc9f80800000000000000
+      internalID: -8098321115803454529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_51
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 852
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2659070ee0fb0600800000000000000
+      internalID: 435706694082319914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_52
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 852
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab3090bbfd02cbca0800000000000000
+      internalID: -5999884458276617286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_53
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 793
+        width: 16
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7275b50aeb18fef30800000000000000
+      internalID: 4607043599557416743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_54
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 843
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6ee4d2dee7150bf0800000000000000
+      internalID: -358854280799261078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_55
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 843
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e5863e6f68f33820800000000000000
+      internalID: 2896932142803486180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_56
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 638
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7317c2743906cd00800000000000000
+      internalID: 992490888750371706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_57
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 638
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 941559479b33f4bf0800000000000000
+      internalID: -337994575411588791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_58
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 638
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0918e84779d87fe70800000000000000
+      internalID: 9148936849661526416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_59
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 638
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d31bddb3473a6fbc0800000000000000
+      internalID: -3749629920123440835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_60
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 638
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36e4ecba02b8efd70800000000000000
+      internalID: 9078846871263137379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_61
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 638
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3035426730ebc5f10800000000000000
+      internalID: 2259890035109417731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_62
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 536
+        width: 21
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83e90d6007e2d0ff0800000000000000
+      internalID: -68347360655139272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_63
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 536
+        width: 21
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5eedd3f78f826f8a0800000000000000
+      internalID: -6271780383315075355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_64
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 536
+        width: 21
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ac9588cf0098bdd0800000000000000
+      internalID: -2470065998149608280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_65
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 769
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fe8aeff419551df0800000000000000
+      internalID: -210163860875079948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_66
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 536
+        width: 21
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 674a400d975c68d20800000000000000
+      internalID: 3280526505557664886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_67
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 602
+        width: 66
+        height: 29
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 5, z: 5, w: 5}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a307e5480b63ee440800000000000000
+      internalID: 4966967570799161402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_68
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 602
+        width: 66
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd27b991cd96c0160800000000000000
+      internalID: 6993080715442877148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_69
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 602
+        width: 66
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f60ae417b7b1df9d0800000000000000
+      internalID: -2739002781375487889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_70
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 572
+        width: 5
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1b38e821b13063d0800000000000000
+      internalID: -3215515496977253606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_71
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 621
+        width: 49
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9216bf0fde236c020800000000000000
+      internalID: 2361631052134048041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_72
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 510
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d232a3c145cdc3a0800000000000000
+      internalID: -6643436989055880493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_73
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 510
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9d09bcca82025400800000000000000
+      internalID: 311314119405407643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_74
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 510
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4133ca0fcbb248280800000000000000
+      internalID: -9042054061361450220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_75
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 510
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2edc7dba774e40f40800000000000000
+      internalID: 5693927031538437602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_76
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 510
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19cd2ce0e4539c650800000000000000
+      internalID: 6253588166952017041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_77
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 510
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98d1191a0823b1b40800000000000000
+      internalID: 5411974905263627657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_78
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 510
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9996e8ef4dc338520800000000000000
+      internalID: 2703071086853908889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_82
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 487
+        width: 128
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46c4a1b3823df4b10800000000000000
+      internalID: 1968023731927927908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_84
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 477
+        width: 50
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce1320cfd21d6f460800000000000000
+      internalID: 7275232243495350764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_85
+      rect:
+        serializedVersion: 2
+        x: 428
+        y: 464
+        width: 28
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 808a2b4153e8a99d0800000000000000
+      internalID: -2766742662434084856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_86
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 367
+        width: 26
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3eb7b8ed1b9cfab0800000000000000
+      internalID: -4972929335763157443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_87
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 479
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6264f3c8c9f512a40800000000000000
+      internalID: 5341655759010612774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_88
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 233
+        width: 17
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09ecb1f4947c74440800000000000000
+      internalID: 4920120235599318672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_89
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 451
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5bda25512270e0c0800000000000000
+      internalID: -4548510136155841698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_90
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 423
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dfd616da4d8a1980800000000000000
+      internalID: -8567379988560027692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_91
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 395
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 929d55c72602d4350800000000000000
+      internalID: 6002489485719623977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_92
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 367
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2784272ee8e9ded0800000000000000
+      internalID: -2388622017786771670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_93
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 339
+        width: 26
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 064af2eecf8b428d0800000000000000
+      internalID: -2871967265888164768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_94
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 727
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9613a2dc9dac7474294e1db216d899c1
+      internalID: 757497303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_15
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 488
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 966bd3169b62ee74f8f63d7e1ab50921
+      internalID: -1340260082715405483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_18
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 488
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f245c1ed74c3c874abcd69b3254b8602
+      internalID: -3864399525570436800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_79
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 418
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 3}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8661fa1effabce244ae4361d8bd8e5ad
+      internalID: 3324060258129530525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_80
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 489
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 1}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2d69aab718b47444a6aba6a3394e35b
+      internalID: 5006954178426794476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 49179bc88a1b40047a61a7c201e6532a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      XP UI Theme_0: 2094137112079494963
+      XP UI Theme_1: -718007019110315162
+      XP UI Theme_10: 6112546451150491417
+      XP UI Theme_11: 791610561358485502
+      XP UI Theme_12: 6088307427266546439
+      XP UI Theme_13: -3106446586455869290
+      XP UI Theme_14: 8231130704514601980
+      XP UI Theme_15: -1340260082715405483
+      XP UI Theme_16: 5450741178132438641
+      XP UI Theme_17: 7112643817694960297
+      XP UI Theme_18: -3864399525570436800
+      XP UI Theme_19: -827466796087961878
+      XP UI Theme_2: 3973772672475938447
+      XP UI Theme_20: 5561207013745048512
+      XP UI Theme_21: 8396623894561534857
+      XP UI Theme_22: 5545275376654315199
+      XP UI Theme_23: -1307020206813267680
+      XP UI Theme_24: -6434136404829154448
+      XP UI Theme_25: 4781343985929895881
+      XP UI Theme_26: 6468453005663531173
+      XP UI Theme_27: -5468332626056209501
+      XP UI Theme_28: -1576773890060207860
+      XP UI Theme_29: 6138393896817287711
+      XP UI Theme_3: -6351456593895810818
+      XP UI Theme_30: -2598650562199600123
+      XP UI Theme_31: -4816982378310943008
+      XP UI Theme_32: -1554105501217249553
+      XP UI Theme_33: 1229131806142337719
+      XP UI Theme_34: -28935975893663243
+      XP UI Theme_35: -7173591717826580071
+      XP UI Theme_36: 3641538190353874104
+      XP UI Theme_37: -6436848550856467972
+      XP UI Theme_38: 7486050563093366613
+      XP UI Theme_39: 8856599345624874883
+      XP UI Theme_4: 8377427242051089249
+      XP UI Theme_40: 392617721987888467
+      XP UI Theme_41: -354270015235273142
+      XP UI Theme_42: 6700371955644618884
+      XP UI Theme_43: 6632409184284913570
+      XP UI Theme_44: -5609852966178785736
+      XP UI Theme_45: 6598584329443467469
+      XP UI Theme_46: -4236982296300881298
+      XP UI Theme_47: -2535760801613485596
+      XP UI Theme_48: -5729101151123338096
+      XP UI Theme_49: -957190584474113912
+      XP UI Theme_5: 7978980578418764648
+      XP UI Theme_50: -8098321115803454529
+      XP UI Theme_51: 435706694082319914
+      XP UI Theme_52: -5999884458276617286
+      XP UI Theme_53: 4607043599557416743
+      XP UI Theme_54: -358854280799261078
+      XP UI Theme_55: 2896932142803486180
+      XP UI Theme_56: 992490888750371706
+      XP UI Theme_57: -337994575411588791
+      XP UI Theme_58: 9148936849661526416
+      XP UI Theme_59: -3749629920123440835
+      XP UI Theme_6: 8150659792031551845
+      XP UI Theme_60: 9078846871263137379
+      XP UI Theme_61: 2259890035109417731
+      XP UI Theme_62: -68347360655139272
+      XP UI Theme_63: -6271780383315075355
+      XP UI Theme_64: -2470065998149608280
+      XP UI Theme_65: -210163860875079948
+      XP UI Theme_66: 3280526505557664886
+      XP UI Theme_67: 4966967570799161402
+      XP UI Theme_68: 6993080715442877148
+      XP UI Theme_69: -2739002781375487889
+      XP UI Theme_7: -8767789066411349790
+      XP UI Theme_70: -3215515496977253606
+      XP UI Theme_71: 2361631052134048041
+      XP UI Theme_72: -6643436989055880493
+      XP UI Theme_73: 311314119405407643
+      XP UI Theme_74: -9042054061361450220
+      XP UI Theme_75: 5693927031538437602
+      XP UI Theme_76: 6253588166952017041
+      XP UI Theme_77: 5411974905263627657
+      XP UI Theme_78: 2703071086853908889
+      XP UI Theme_79: 3324060258129530525
+      XP UI Theme_8: 9042907504989977053
+      XP UI Theme_80: 5006954178426794476
+      XP UI Theme_81: 3983272928833290453
+      XP UI Theme_82: 1968023731927927908
+      XP UI Theme_83: -9164440206550343277
+      XP UI Theme_84: 7275232243495350764
+      XP UI Theme_85: -2766742662434084856
+      XP UI Theme_86: -4972929335763157443
+      XP UI Theme_87: 5341655759010612774
+      XP UI Theme_88: 4920120235599318672
+      XP UI Theme_89: -4548510136155841698
+      XP UI Theme_9: 8205829543181986152
+      XP UI Theme_90: -8567379988560027692
+      XP UI Theme_91: 6002489485719623977
+      XP UI Theme_92: -2388622017786771670
+      XP UI Theme_93: -2871967265888164768
+      XP UI Theme_94: 757497303
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

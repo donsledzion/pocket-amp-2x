@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     /// <summary>
     /// Central controller for all Winamp UI elements.

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using com.cyborgAssets.inspectorButtonPro;
-using SoftAware.Winamp; // Required for Main class
+using SoftAware.PocketAmp; // Required for Main class
 
 namespace SoftAware
 {

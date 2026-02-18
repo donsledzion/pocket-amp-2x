@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public abstract class ContextMenuButton : MonoBehaviour
     {

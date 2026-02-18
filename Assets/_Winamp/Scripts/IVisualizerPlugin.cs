@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SoftAware.Winamp.Visualizers
+namespace SoftAware.PocketAmp.Visualizers
 {
     /// <summary>
     /// Base interface for all audio visualizer plugins (AVS/MilkDrop style).

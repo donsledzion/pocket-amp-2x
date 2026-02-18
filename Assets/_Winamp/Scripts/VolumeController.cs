@@ -7,7 +7,7 @@ using System.Linq; // For sorting
 using UnityEditor;
 #endif
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class VolumeController : MonoBehaviour, IWinampSkinApplicator
     {

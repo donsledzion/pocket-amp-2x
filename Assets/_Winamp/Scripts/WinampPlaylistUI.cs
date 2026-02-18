@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class WinampPlaylistUI : MonoBehaviour, IWinampSkinApplicator
     {

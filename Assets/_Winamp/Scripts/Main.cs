@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SoftAware; // For IWinampSkinApplicator and WinampSkin
 
-namespace SoftAware.Winamp
+namespace SoftAware.PocketAmp
 {
     public class Main : MonoBehaviour, IWinampSkinApplicator
     {

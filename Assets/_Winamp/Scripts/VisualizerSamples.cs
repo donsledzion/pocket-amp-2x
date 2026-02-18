@@ -1,4 +1,4 @@
-namespace SoftAware.Winamp.Visualizers
+namespace SoftAware.PocketAmp.Visualizers
 {
     [System.Serializable]
     public class VisualizerSamples

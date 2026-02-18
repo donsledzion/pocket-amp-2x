@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using TMPro; // Assuming TMP, checking references in other files suggests TMP is used (e.g. SpriteTextDisplay uses it?) No, SpriteTextDisplay uses Image/Sprite. WinampPlaylistUI uses TMPro? Let me check.
 // Checking WinampPlaylistUI imports: using TMPro; YES.
 
-namespace SoftAware.Winamp.SystemMenus.Skins.UI
+namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 {
     public class SkinItemView : MonoBehaviour, IPointerClickHandler
     {
