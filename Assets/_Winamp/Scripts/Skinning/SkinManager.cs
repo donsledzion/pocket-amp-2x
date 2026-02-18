@@ -5,7 +5,7 @@ using SoftAware.PocketAmp; // Required for Main class
 
 namespace SoftAware
 {
-    public class WinampSkinManager : MonoBehaviour
+    public class SkinManager : MonoBehaviour
     {
         [SerializeField] private bool loadOnStart;
         [Header("Settings")]
@@ -26,15 +26,9 @@ namespace SoftAware
         // Use the new SkinFileSystem directly for setup tasks
         private SkinFileSystem skinFileSystem;
 
-        public static WinampSkinManager Instance { get; private set; }
+        //public static SkinManager Instance { get; private set; }
 
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
-            
-            skinFileSystem = new SkinFileSystem();
-        }
+        private void Awake() => skinFileSystem = new SkinFileSystem();
 
         private IEnumerator Start()
         {
@@ -52,13 +46,13 @@ namespace SoftAware
             var demoTask = skinFileSystem.EnsureDemoSkinsExist();
             yield return new WaitUntil(() => demoTask.IsCompleted);
 
-            string skinToLoad = "";
-            bool foundSkin = false;
+            var skinToLoad = "";
+            var foundSkin = false;
 
             // 1. Priority: Settings (Last used skin)
             if (SettingsManager.Instance != null && !string.IsNullOrEmpty(SettingsManager.Instance.LastSkinPath))
             {
-                string savedPath = SettingsManager.Instance.LastSkinPath;
+                var savedPath = SettingsManager.Instance.LastSkinPath;
                 if (System.IO.File.Exists(savedPath))
                 {
                     Debug.Log($"[WinampSkinManager] Loading saved skin from Settings: {savedPath}");
@@ -70,7 +64,7 @@ namespace SoftAware
             // 2. Fallback: Persistent Data Path
             if (!foundSkin && loadFromPersistentOnStart)
             {
-                string pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
+                var pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
                 if (System.IO.File.Exists(pPath))
                 {
                     Debug.Log($"[WinampSkinManager] Loading persistent fallback skin: {pPath}");
@@ -82,7 +76,7 @@ namespace SoftAware
             // 3. Fallback: Base Skin
             if (!foundSkin && useBaseSkinFallback)
             {
-                string basePath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
+                var basePath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
                 if (System.IO.File.Exists(basePath))
                 {
                     Debug.Log($"[WinampSkinManager] Loading BASE skin: {basePath}");
@@ -105,18 +99,11 @@ namespace SoftAware
                 var loadTask = LoadSkin(skinToLoad);
             }
         }
-        
-        [ProPlayButton]
-        public void LoadFromPersistentPath()
-        {
-            string pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
-            LoadSkin(pPath);
-        }
 
         /// <summary>
         /// Loads a skin from the given path.
         /// </summary>
-        public async System.Threading.Tasks.Task<bool> LoadSkin(string absolutePath)
+        internal async System.Threading.Tasks.Task<bool> LoadSkin(string absolutePath)
         {
             if (System.IO.File.Exists(absolutePath))
             {
@@ -147,7 +134,7 @@ namespace SoftAware
         }
 
         [ProPlayButton]
-        public async System.Threading.Tasks.Task LoadAndApplyTestSkin()
+        private async System.Threading.Tasks.Task LoadAndApplyTestSkin()
         {
             if (string.IsNullOrEmpty(testSkinPath))
             {

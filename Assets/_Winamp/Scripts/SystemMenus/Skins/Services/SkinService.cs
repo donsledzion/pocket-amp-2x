@@ -42,7 +42,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             {
                 if (Application.platform == RuntimePlatform.Android)
                 {
-                    string realName = GetFileNameFromContentUri(sourcePath);
+                    var realName = GetFileNameFromContentUri(sourcePath);
                     if (!string.IsNullOrEmpty(realName))
                     {
                         fileName = realName;
@@ -105,7 +105,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             }
         }
 
-        private void CopyAndroidContentUri(string uriString, string destPath)
+        private static void CopyAndroidContentUri(string uriString, string destPath)
         {
             // Use JNI to read from ContentResolver
             try
@@ -122,8 +122,8 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                      using (var outputStream = File.OpenWrite(destPath))
                      {
                          // Buffer size
-                         int bufferSize = 4096;
-                         IntPtr bufferPtr = AndroidJNI.NewByteArray(bufferSize);
+                         var bufferSize = 4096;
+                         var bufferPtr = AndroidJNI.NewByteArray(bufferSize);
                          // byte[] managedBuffer = new byte[bufferSize]; // Not needed with FromByteArray
                          
                          try 
@@ -134,7 +134,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                              while (true)
                              {
                                  // Call read(buffer)
-                                 jvalue[] args = new jvalue[1];
+                                 var args = new jvalue[1];
                                  args[0].l = bufferPtr;
                                  
                                  int bytesRead = AndroidJNI.CallIntMethod(inputStream.GetRawObject(), readMethodId, args);
@@ -186,10 +186,10 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                         if (cursor != null && cursor.Call<bool>("moveToFirst"))
                         {
                             // OpenableColumns.DISPLAY_NAME is "_display_name"
-                            int nameIndex = cursor.Call<int>("getColumnIndex", "_display_name");
+                            var nameIndex = cursor.Call<int>("getColumnIndex", "_display_name");
                             if (nameIndex >= 0)
                             {
-                                string name = cursor.Call<string>("getString", nameIndex);
+                                var name = cursor.Call<string>("getString", nameIndex);
                                 if (!string.IsNullOrEmpty(name)) return name;
                             }
                         }
@@ -215,10 +215,8 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
         public async Task<bool> LoadSkin(string skinName)
         {
             var path = Path.Combine(SkinsDirectory, skinName);
-            if (File.Exists(path) && WinampSkinManager.Instance != null)
-            {
-                return await WinampSkinManager.Instance.LoadSkin(path);
-            }
+            if (File.Exists(path))
+                return await Refs.SkinManager.LoadSkin(path);
             return false;
         }
     }

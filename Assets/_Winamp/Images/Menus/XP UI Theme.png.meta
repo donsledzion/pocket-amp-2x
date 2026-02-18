@@ -2427,7 +2427,7 @@ TextureImporter:
         width: 14
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 1}
       customData: 
       outline: []
@@ -2436,6 +2436,72 @@ TextureImporter:
       bones: []
       spriteID: a2d69aab718b47444a6aba6a3394e35b
       internalID: 5006954178426794476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_81
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 882
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 1, z: 1, w: 1}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64a1da1ae67738b45bd5378a50315421
+      internalID: 3983272928833290453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_83
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 921
+        width: 11
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d1f44a351c465a4f8a13fb7510f6652
+      internalID: -9164440206550343277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP UI Theme_95
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 921
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 1, y: 1, z: 1, w: 1}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 455100c14ae46b740b88f31a0908cd06
+      internalID: -1014026752
       vertices: []
       indices: 
       edges: []
@@ -2551,6 +2617,7 @@ TextureImporter:
       XP UI Theme_92: -2388622017786771670
       XP UI Theme_93: -2871967265888164768
       XP UI Theme_94: 757497303
+      XP UI Theme_95: -1014026752
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -23,6 +23,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private string spriteNamePrefix = "VOLUME_BG"; // Default based on Winamp skins
 
         public Slider Slider => slider;
+        private static Main main => Refs.Main;
 
         private bool isInteracting;
 
@@ -49,30 +50,26 @@ namespace SoftAware.PocketAmp
             }
             
             // Apply Pressed State to Slider
-            if (slider != null)
+            if (slider == null) return;
+            var ss = slider.spriteState;
+            if (skin.VolumeKnobPressed != null)
             {
-                SpriteState ss = slider.spriteState;
-                if (skin.VolumeKnobPressed != null)
-                {
-                    ss.pressedSprite = skin.VolumeKnobPressed;
-                }
-                slider.spriteState = ss;
+                ss.pressedSprite = skin.VolumeKnobPressed;
             }
+            slider.spriteState = ss;
         }
 
         private void Start()
         {
-            if (slider != null)
-            {
-                slider.onValueChanged.AddListener(OnVolumeChanged);
-                // Initialize visual state
-                OnVolumeChanged(slider.value);
+            if (slider == null) return;
+            slider.onValueChanged.AddListener(OnVolumeChanged);
+            // Initialize visual state
+            OnVolumeChanged(slider.value);
 
-                // Attach interaction helper
-                var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
-                interaction.OnPointerDownAction += OnPointerDown;
-                interaction.OnPointerUpAction += OnPointerUp;
-            }
+            // Attach interaction helper
+            var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
+            interaction.OnPointerDownAction += OnPointerDown;
+            interaction.OnPointerUpAction += OnPointerUp;
         }
 
         private void OnPointerDown()
@@ -84,14 +81,13 @@ namespace SoftAware.PocketAmp
         private void OnPointerUp()
         {
             isInteracting = false;
-            Main main = FindObjectOfType<Main>();
             if (main != null && main.SongTitleDisplay != null)
             {
                 main.SongTitleDisplay.ClearOverrideText();
             }
         }
 
-        public void OnVolumeChanged(float value)
+        private void OnVolumeChanged(float value)
         {
             if (targetImage == null || sprites == null || sprites.Count == 0) return;
 
@@ -106,19 +102,13 @@ namespace SoftAware.PocketAmp
             }
 
             if (isInteracting)
-            {
                 UpdateTitleDisplay(value);
-            }
         }
 
         private void UpdateTitleDisplay(float value)
         {
-            Main main = FindObjectOfType<Main>();
-            if (main != null && main.SongTitleDisplay != null)
-            {
-                int percent = Mathf.RoundToInt(value * 100f);
-                main.SongTitleDisplay.SetOverrideText($"VOLUME: {percent}%");
-            }
+            var percent = Mathf.RoundToInt(value * 100f);
+            main.SongTitleDisplay.SetOverrideText($"VOLUME: {percent}%");
         }
 
 #if UNITY_EDITOR
@@ -131,18 +121,16 @@ namespace SoftAware.PocketAmp
                 return;
             }
 
-            string path = AssetDatabase.GetAssetPath(spriteSheet);
+            var path = AssetDatabase.GetAssetPath(spriteSheet);
             var assets = AssetDatabase.LoadAllAssetsAtPath(path);
 
             sprites.Clear();
             foreach (var asset in assets)
             {
-                if (asset is Sprite s)
+                if (asset is not Sprite s) continue;
+                if (string.IsNullOrEmpty(spriteNamePrefix) || s.name.StartsWith(spriteNamePrefix))
                 {
-                    if (string.IsNullOrEmpty(spriteNamePrefix) || s.name.StartsWith(spriteNamePrefix))
-                    {
-                        sprites.Add(s);
-                    }
+                    sprites.Add(s);
                 }
             }
 
