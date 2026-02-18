@@ -74,7 +74,10 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                      return;
                 }
             }
-            catch { }
+            catch(Exception e)
+            {
+                Debug.LogError($"[SkinService] Exception: {e.Message}");
+            }
 
             // 2. Android Content URI handling via JNI (UnityWebRequest fails on content://)
             if (Application.platform == RuntimePlatform.Android && sourcePath.StartsWith("content://"))
@@ -123,7 +126,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                      {
                          // Buffer size
                          var bufferSize = 4096;
-                         var bufferPtr = AndroidJNI.NewByteArray(bufferSize);
+                         var bufferPtr = AndroidJNI.NewSByteArray(bufferSize);
                          // byte[] managedBuffer = new byte[bufferSize]; // Not needed with FromByteArray
                          
                          try 
@@ -137,15 +140,15 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                                  var args = new jvalue[1];
                                  args[0].l = bufferPtr;
                                  
-                                 int bytesRead = AndroidJNI.CallIntMethod(inputStream.GetRawObject(), readMethodId, args);
+                                 var bytesRead = AndroidJNI.CallIntMethod(inputStream.GetRawObject(), readMethodId, args);
                                  
                                  if (bytesRead < 0) break; // End of stream
                                  if (bytesRead == 0) continue;
 
                                  // Read data from Java array to new C# array
                                  // Using FromByteArray is safer than GetByteArrayRegion regarding sbyte[] vs byte[] signatures
-                                 byte[] chunk = AndroidJNI.FromByteArray(bufferPtr);
-                                 
+                                 var sChunk = AndroidJNI.FromSByteArray(bufferPtr);
+                                 var chunk = ByteHelpers.ToByteArray(sChunk);
                                  // Write only the bytes read
                                  outputStream.Write(chunk, 0, bytesRead);
                              }

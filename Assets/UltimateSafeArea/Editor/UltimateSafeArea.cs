@@ -19,7 +19,7 @@ namespace Frosttale_Studios_Assets
         static bool ApplySafeArea_InScene()
         {
             //Look for canvases
-            Canvas[] allCanvases = FindObjectsOfType<Canvas>();
+            var allCanvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
 
             if (allCanvases.Length == 0) return true;
             if (allCanvases[0].GetComponentInChildren<SafeArea>()) return true;

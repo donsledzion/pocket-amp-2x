@@ -80,7 +80,7 @@ namespace SoftAware.PocketAmp
         // ---------------------------------------------------------
 
 
-        private static int silenceCounter = 0;
+        //private static int silenceCounter = 0;
         private static float[] cachedFftData;
 
         public static float[] GetFFTData(int dataSize)

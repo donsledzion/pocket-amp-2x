@@ -293,10 +293,10 @@ namespace SoftAware.PocketAmp
             }
 #else
             // Standard Unity Playback
-            if (currentSong.Clip == null && currentSong.HasNativePath)
+            if (!currentSong.Clip && currentSong.HasNativePath)
                 yield return playlist.LoadSongClip(currentSong);
 
-            if (currentSong.Clip != null)
+            if (currentSong.Clip)
             {
                 if (currentSong.Duration <= 0) currentSong.Duration = currentSong.Clip.length;
                 engine.Play(currentSong);

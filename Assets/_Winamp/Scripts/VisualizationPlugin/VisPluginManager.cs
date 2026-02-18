@@ -1,12 +1,9 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace SoftAware.PocketAmp.Visualizers
 {
     public class VisPluginManager : MonoBehaviour
     {
-        public static VisPluginManager Instance { get; private set; }
-
         [Header("References")]
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private VisWindow visWindow;
@@ -19,11 +16,6 @@ namespace SoftAware.PocketAmp.Visualizers
         private IVisualizerPlugin activePlugin;
         private float[] fftBuffer = new float[1024];
         private float[] waveBuffer = new float[1024];
-
-        private void Awake()
-        {
-            Instance = this;
-        }
 
         private void Start()
         {
@@ -54,7 +46,7 @@ namespace SoftAware.PocketAmp.Visualizers
 
         private void CaptureData()
         {
-            float currentGain = 1.0f;
+            var currentGain = 1.0f;
 #if UNITY_ANDROID && !UNITY_EDITOR
             currentGain = androidGain;
             float[] sharedFft = AndroidVisualizerBridge.GetSharedFFT(1024);
@@ -70,19 +62,19 @@ namespace SoftAware.PocketAmp.Visualizers
             }
 #else
             currentGain = editorGain;
-            if (audioSource != null && audioSource.isPlaying)
+            if (audioSource && audioSource.isPlaying)
             {
                 audioSource.GetSpectrumData(fftBuffer, 0, FFTWindow.BlackmanHarris);
                 audioSource.GetOutputData(waveBuffer, 0);
                 
                 // Apply gain
-                for(int i=0; i<1024; i++) 
+                for(var i=0; i<1024; i++) 
                 {
                     fftBuffer[i] *= currentGain;
                     waveBuffer[i] *= currentGain;
                 }
             }
-            else if (audioSource == null)
+            else if (!audioSource)
             {
                 Debug.LogWarning("[VisPluginManager] AudioSource is not assigned!");
             }

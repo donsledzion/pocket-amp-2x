@@ -24,6 +24,8 @@ namespace SoftAware.PocketAmp
 
         public Slider Slider => slider;
 
+        private static Main main => Refs.Main;
+
         private bool isInteracting;
 
         public void ApplySkin(WinampSkin skin)
@@ -90,7 +92,7 @@ namespace SoftAware.PocketAmp
             // Let's use a slightly wider snap on release: +/- 0.05 (45% to 55%)
             if (slider != null)
             {
-                float val = slider.value;
+                var val = slider.value;
                 if (Mathf.Abs(val - 0.5f) < 0.05f)
                 {
                     slider.value = 0.5f;
@@ -100,14 +102,13 @@ namespace SoftAware.PocketAmp
                 }
             }
 
-            Main main = FindObjectOfType<Main>();
             if (main != null && main.SongTitleDisplay != null)
             {
                 main.SongTitleDisplay.ClearOverrideText();
             }
         }
 
-        public void OnValueChanged(float value)
+        private void OnValueChanged(float value)
         {
             if (targetImage == null || sprites == null || sprites.Count == 0) return;
 
@@ -137,46 +138,43 @@ namespace SoftAware.PocketAmp
 
         private void UpdateTitleDisplay(float value)
         {
-            Main main = FindObjectOfType<Main>();
-            if (main != null && main.SongTitleDisplay != null)
+            if (main == null || main.SongTitleDisplay == null) return;
+            // Logic:
+            // 0% - 48% (approx < 0.48): LEFT
+            // 48% - 52% (approx > 0.48 && < 0.52): CENTER
+            // 52% - 100% (approx > 0.52): RIGHT
+                
+            // Winamp logic is slightly different:
+            // It shows "BALANCE: CENTER" for a range.
+            // It shows "BALANCE: XX% LEFT" or "RIGHT".
+                
+            var text = "";
+            var dist = value - 0.5f; // -0.5 to 0.5
+
+            // Winamp usually treats center as exactly center internally, but displays it with a buffer.
+            // Let's use a small epsilon for display "center"
+            if (Mathf.Abs(dist) < 0.04f) // +/- 4%
             {
-                // Logic:
-                // 0% - 48% (approx < 0.48): LEFT
-                // 48% - 52% (approx > 0.48 && < 0.52): CENTER
-                // 52% - 100% (approx > 0.52): RIGHT
-                
-                // Winamp logic is slightly different:
-                // It shows "BALANCE: CENTER" for a range.
-                // It shows "BALANCE: XX% LEFT" or "RIGHT".
-                
-                string text = "";
-                float dist = value - 0.5f; // -0.5 to 0.5
-
-                // Winamp usually treats center as exactly center internally, but displays it with a buffer.
-                // Let's use a small epsilon for display "center"
-                if (Mathf.Abs(dist) < 0.04f) // +/- 4%
-                {
-                    text = "BALANCE: CENTER";
-                }
-                else if (dist < 0)
-                {
-                    // Left
-                    // Map -0.5...-0.04 to 100%...0%
-                    // actually Winamp displays simplified percentage. 
-                    // If slider is 0 (Left), it is 100% Left.
-                    // If slider is 0.25, it is 50% Left.
-                    float percent = (Mathf.Abs(dist) / 0.5f) * 100f;
-                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% LEFT";
-                }
-                else
-                {
-                    // Right
-                    float percent = (dist / 0.5f) * 100f;
-                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% RIGHT";
-                }
-
-                main.SongTitleDisplay.SetOverrideText(text);
+                text = "BALANCE: CENTER";
             }
+            else if (dist < 0)
+            {
+                // Left
+                // Map -0.5...-0.04 to 100%...0%
+                // actually Winamp displays simplified percentage. 
+                // If slider is 0 (Left), it is 100% Left.
+                // If slider is 0.25, it is 50% Left.
+                float percent = (Mathf.Abs(dist) / 0.5f) * 100f;
+                text = $"BALANCE: {Mathf.RoundToInt(percent)}% LEFT";
+            }
+            else
+            {
+                // Right
+                float percent = (dist / 0.5f) * 100f;
+                text = $"BALANCE: {Mathf.RoundToInt(percent)}% RIGHT";
+            }
+
+            main.SongTitleDisplay.SetOverrideText(text);
         }
 
 #if UNITY_EDITOR

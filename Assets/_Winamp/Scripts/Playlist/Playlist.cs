@@ -228,7 +228,7 @@ namespace SoftAware.PocketAmp
 
         private IEnumerator LoadDirectoryCoroutine(string rootPath)
         {
-            int validAudioFound = 0;
+            var validAudioFound = 0;
             
             var directoriesToScan = new Stack<string>();
             directoriesToScan.Push(rootPath);
@@ -244,6 +244,7 @@ namespace SoftAware.PocketAmp
                 }
                 catch (System.Exception e)
                 {
+                    Debug.LogError($"[Playlist] LoadDirectoryCoroutine Exception: {e.Message}");
                     continue;
                 }
                 
@@ -307,7 +308,7 @@ namespace SoftAware.PocketAmp
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
             FileBrowser.ShowSaveDialog((paths) => {
-                if (paths != null && paths.Length > 0) SavePlaylist(paths[0]);
+                if (paths is { Length: > 0 }) SavePlaylist(paths[0]);
             }, null, FileBrowser.PickMode.Files, false, folderPath, "playlist.json", "Save Playlist", "Save");
         }
 
