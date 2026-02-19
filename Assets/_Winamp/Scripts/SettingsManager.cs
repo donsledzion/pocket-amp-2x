@@ -131,8 +131,15 @@ namespace SoftAware.PocketAmp
         private const string KEY_IS_FULLSCREEN = "Winamp_IsFullscreen";
         public bool IsFullscreen
         {
-            get => PlayerPrefs.GetInt(KEY_IS_FULLSCREEN, 1) == 1;
+            get => PlayerPrefs.GetInt(KEY_IS_FULLSCREEN, 1) == 1; // Default true (Immersive)
             set { if (value != IsFullscreen) { PlayerPrefs.SetInt(KEY_IS_FULLSCREEN, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
+        private const string KEY_IS_NAV_VISIBLE = "Winamp_IsNavVisible";
+        public bool IsNavigationBarVisible
+        {
+            get => PlayerPrefs.GetInt(KEY_IS_NAV_VISIBLE, 1) == 1; // Default true (Visible)
+            set { if (value != IsNavigationBarVisible) { PlayerPrefs.SetInt(KEY_IS_NAV_VISIBLE, value ? 1 : 0); PlayerPrefs.Save(); } }
         }
 
         private void Awake()
@@ -148,6 +155,15 @@ namespace SoftAware.PocketAmp
             // Apply saved fullscreen setting on startup
             if (Application.platform == RuntimePlatform.Android)
             {
+                // Navigation Bar Logic:
+                // Visible -> Screen.fullScreen = false (Windowed mode, shows bars, resizes viewport)
+                // Hidden -> Screen.fullScreen = true (Immersive mode, hides bars)
+                Screen.fullScreen = !IsNavigationBarVisible;
+                
+                // Status Bar Logic:
+                // IsFullscreen (true) -> Status Bar Hidden
+                // IsFullscreen (false) -> Status Bar Visible
+                // We re-apply this AFTER setting Screen.fullScreen because Unity might reset flags
                 AndroidStatusBar.SetVisible(!IsFullscreen);
             }
             else
