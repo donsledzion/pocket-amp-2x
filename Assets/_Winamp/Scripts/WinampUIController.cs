@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
@@ -9,35 +8,31 @@ namespace SoftAware.PocketAmp
     /// </summary>
     public class WinampUIController : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private Main mainPanel;
-        
         private AudioPlayer player;
         private bool isDraggingSlider = false;
+        private static Main main => Refs.Main;
 
         public void Initialize(AudioPlayer audioPlayer)
         {
             player = audioPlayer;
-            
-            if (mainPanel.PlaylistUI != null)
-            {
-                mainPanel.PlaylistUI.Initialize();
-                mainPanel.PlaylistUI.RefreshColors();
-            }
+
+            if (main.PlaylistUI == null) return;
+            main.PlaylistUI.Initialize();
+            main.PlaylistUI.RefreshColors();
         }
 
         public void SetDragging(bool dragging)
         {
             isDraggingSlider = dragging;
-            if (!dragging && mainPanel.SongTitleDisplay != null)
+            if (!dragging && main.SongTitleDisplay != null)
             {
-                mainPanel.SongTitleDisplay.ClearOverrideText();
+                main.SongTitleDisplay.ClearOverrideText();
             }
         }
 
         public void HandleSliderDrag(float normalizedValue, float duration)
         {
-            if (mainPanel.SongTitleDisplay == null) return;
+            if (main.SongTitleDisplay == null) return;
 
             int minutesTotal = (int)(duration / 60);
             int secondsTotal = (int)(duration % 60);
@@ -50,7 +45,7 @@ namespace SoftAware.PocketAmp
 
             int percent = Mathf.RoundToInt(normalizedValue * 100f);
 
-            mainPanel.SongTitleDisplay.SetOverrideText($"SEEK TO: {currentTimeStr}/{totalTimeStr} ({percent}%)");
+            main.SongTitleDisplay.SetOverrideText($"SEEK TO: {currentTimeStr}/{totalTimeStr} ({percent}%)");
         }
 
         public void UpdateUI(float currentTime, float duration, bool isPlaying, bool isPaused)
@@ -62,94 +57,94 @@ namespace SoftAware.PocketAmp
 
         private void UpdateProgress(float currentTime, float duration, bool isPlaying, bool isPaused)
         {
-            if (mainPanel.ProgressSlider == null) return;
+            if (!main.ProgressSlider) return;
 
-            float progress = (duration > 0) ? currentTime / duration : 0f;
+            var progress = (duration > 0) ? currentTime / duration : 0f;
 
             // Knob Visibility
-            if (mainPanel.ProgressSlider.handleRect != null)
-                mainPanel.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isPaused || isDraggingSlider);
+            if (main.ProgressSlider.handleRect)
+                main.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isPaused || isDraggingSlider);
 
             // Slider Value
             if ((isPlaying || isPaused) && !isDraggingSlider)
             {
-                mainPanel.ProgressSlider.value = progress;
+                main.ProgressSlider.value = progress;
             }
 
             // Time Display
-            if (mainPanel.TimeDisplay != null)
+            if (main.TimeDisplay)
             {
                 if (isPlaying || isPaused)
                 {
-                    mainPanel.TimeDisplay.SetTime(currentTime, duration);
-                    mainPanel.TimeDisplay.SetPaused(isPaused);
+                    main.TimeDisplay.SetTime(currentTime, duration);
+                    main.TimeDisplay.SetPaused(isPaused);
                 }
                 else
                 {
-                    mainPanel.TimeDisplay.Clear();
+                    main.TimeDisplay.Clear();
                 }
             }
         }
 
         private void UpdateStatus(bool isPlaying, bool isPaused)
         {
-            if (mainPanel.StatusDisplay == null) return;
+            if (!main.StatusDisplay) return;
 
             if (isPlaying || isPaused)
             {
-                mainPanel.StatusDisplay.SetStatus(isPaused ? 
+                main.StatusDisplay.SetStatus(isPaused ? 
                     StatusDisplay.WinampStatus.Paused : 
                     StatusDisplay.WinampStatus.Playing);
             }
             else
             {
-                mainPanel.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Stop);
+                main.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Stop);
             }
         }
 
         public void ShowLoading()
         {
-            if (mainPanel.StatusDisplay != null)
-                mainPanel.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Loading);
+            if (main.StatusDisplay)
+                main.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Loading);
         }
 
         public void UpdateSongInfo(int index, string title, float duration)
         {
-            if (mainPanel.SongTitleDisplay != null)
+            if (main.SongTitleDisplay)
             {
-                mainPanel.SongTitleDisplay.SetSongInfo(index, title, duration);
+                main.SongTitleDisplay.SetSongInfo(index, title, duration);
             }
 
-            if (mainPanel.PlaylistUI != null)
+            if (main.PlaylistUI)
             {
                 // index here is 1-based from AudioPlayer, PlaylistUI expects 0-based
-                mainPanel.PlaylistUI.UpdateTrackDuration(index - 1, title, duration);
+                main.PlaylistUI.UpdateTrackDuration(index - 1, title, duration);
             }
         }
 
         public void ClearSongInfo()
         {
-            if (mainPanel.SongTitleDisplay != null)
-                mainPanel.SongTitleDisplay.Clear();
+            if (main.SongTitleDisplay)
+                main.SongTitleDisplay.Clear();
         }
 
         public void UpdateMetadata(int bitrateKbps, int sampleRateKHz, int channels, bool active)
         {
-            if (mainPanel.BitrateDisplay != null)
+            if (main.BitrateDisplay)
             {
-                if (active) mainPanel.BitrateDisplay.SetNumber(bitrateKbps);
-                else mainPanel.BitrateDisplay.Clear();
+                if (active) main.BitrateDisplay.SetNumber(bitrateKbps);
+                else main.BitrateDisplay.Clear();
             }
 
-            if (mainPanel.SampleRateDisplay != null)
+            if (main.SampleRateDisplay)
             {
-                if (active) mainPanel.SampleRateDisplay.SetNumber(sampleRateKHz);
-                else mainPanel.SampleRateDisplay.Clear();
+                if (active) main.SampleRateDisplay.SetNumber(sampleRateKHz);
+                else main.SampleRateDisplay.Clear();
             }
 
-            if (mainPanel.ChannelsDisplay != null)
+            if (main.ChannelsDisplay)
             {
-                mainPanel.ChannelsDisplay.UpdateDisplay(active, channels);
+                main.ChannelsDisplay.UpdateDisplay(active, channels);
             }
         }
 

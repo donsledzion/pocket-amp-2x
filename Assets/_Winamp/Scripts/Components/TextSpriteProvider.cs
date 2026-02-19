@@ -84,7 +84,7 @@ namespace SoftAware
             // Convert to uppercase for consistency
             c = char.ToUpper(c);
 
-            if (Instance.spriteCache.TryGetValue(c, out Sprite sprite))
+            if (Instance.spriteCache.TryGetValue(c, out var sprite))
             {
                 return sprite;
             }

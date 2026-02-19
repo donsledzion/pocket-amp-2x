@@ -16,15 +16,14 @@ namespace SoftAware
         [SerializeField] private string baseSkinFileName = "base.wsz";
         [SerializeField] private bool useBaseSkinFallback = true;
         
-        [Header("Hierarchy References")]
-        [SerializeField] private Main mainController;
-        [SerializeField] private PlaylistUI playlistUI;
-        
         [Header("Runtime Data")]
         [SerializeField] private WinampSkin currentSkin;
         
         // Use the new SkinFileSystem directly for setup tasks
         private SkinFileSystem skinFileSystem;
+
+        private static Main main => Refs.Main;
+        private static PlaylistUI playlistUI => Refs.PlaylistUI;
 
         //public static SkinManager Instance { get; private set; }
 
@@ -113,11 +112,9 @@ namespace SoftAware
                 try 
                 {
                     await LoadAndApplyTestSkin(); // Renamed internally but keeps logic
-                    if (SettingsManager.Instance != null)
-                    {
-                        SettingsManager.Instance.LastSkinPath = absolutePath;
-                        Debug.Log("[WinampSkinManager] Saved LastSkinPath to Settings.");
-                    }
+                    if (SettingsManager.Instance == null) return true;
+                    SettingsManager.Instance.LastSkinPath = absolutePath;
+                    Debug.Log("[WinampSkinManager] Saved LastSkinPath to Settings.");
                     return true;
                 }
                 catch (System.Exception ex)
@@ -178,14 +175,8 @@ namespace SoftAware
             }
 
             // Distribute to known applicators
-            if (mainController != null) 
-            {
-                mainController.ApplySkin(currentSkin);
-            }
-            if (playlistUI != null)
-            {
-                playlistUI.ApplySkin(currentSkin);
-            }
+            main.ApplySkin(currentSkin);
+            playlistUI.ApplySkin(currentSkin);
         }
     }
 }

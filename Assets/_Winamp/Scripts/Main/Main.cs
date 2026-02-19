@@ -156,6 +156,7 @@ namespace SoftAware.PocketAmp
 
         [Header("System Windows")]
         [SerializeField] private GameObject skinsLibraryWindow; 
+        [SerializeField] private GameObject miscOptionsMenu; 
 
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
@@ -404,5 +405,8 @@ namespace SoftAware.PocketAmp
             NextButton.onClick.RemoveAllListeners();
             EjectButton.onClick.RemoveAllListeners();
         }
+
+        internal void OpenMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, true);
+        internal void CloseMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, false);
     }
 }

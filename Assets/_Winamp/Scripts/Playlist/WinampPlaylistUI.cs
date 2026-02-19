@@ -107,10 +107,8 @@ namespace SoftAware.PocketAmp
                 Debug.Log("[WinampPlaylistUI] Binding MiscContext options...");
                 miscContextMenu.OnSortListButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnFileInfoButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
-                miscContextMenu.OnMiscOptionsButtonClicked += () => {
-                   Debug.Log("[WinampPlaylistUI] MiscOptions Clicked -> Calling Main.OpenSkinsLibrary");
-                   main.OpenSkinsLibrary();
-                };
+                //miscContextMenu.OnMiscOptionsButtonClicked += main.OpenSkinsLibrary;
+                miscContextMenu.OnMiscOptionsButtonClicked += main.OpenMiscOptionsMenu;
             }
 
             if (main != null && main.TimeDisplay != null)
@@ -155,10 +153,8 @@ namespace SoftAware.PocketAmp
                 Debug.Log("[WinampPlaylistUI] Unbinding MiscContext options");
                 miscContextMenu.OnSortListButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnFileInfoButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
-                // Note: Lambda unsubscription won't work perfectly here with the debug change above, 
-                // but for debugging purposes checking if we reach here is enough.
-                // We will revert this to method group after fixing.
-                miscContextMenu.OnMiscOptionsButtonClicked -= main.OpenSkinsLibrary; 
+                //miscContextMenu.OnMiscOptionsButtonClicked -= main.OpenSkinsLibrary; 
+                miscContextMenu.OnMiscOptionsButtonClicked -= main.OpenMiscOptionsMenu;
             }
 
             if (listOptionsContextMenu != null)

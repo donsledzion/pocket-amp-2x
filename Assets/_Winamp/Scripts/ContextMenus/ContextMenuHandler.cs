@@ -11,7 +11,7 @@ namespace SoftAware.PocketAmp
 
         private void Awake()
         {
-            contextMenus = FindObjectsByType<ContextMenuButton>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            contextMenus = FindObjectsByType<ContextMenuButton>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
 
         private void Update()

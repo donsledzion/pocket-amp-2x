@@ -1,0 +1,19 @@
+# General
+- Communicate in Polish (including Chat, Plans, Summaries, and Artifacts).
+- Write code comments in English.
+- Be concise in chat, elaborate only when asked.
+
+# Unity / C# Standards
+- Use `[SerializeField] private` instead of `public` for Inspector variables.
+- Always use namespaces (e.g., `SoftAware.PocketAmp`).
+- Prefer modern Unity API (Unity 6+):
+  - `TryGetComponent` over `GetComponent` checks.
+  - `FindAnyObjectByType` over `FindObjectOfType`.
+  - `Object.FindFirstObjectByType` where appropriate.
+- Prefer `var` for local variables when type is obvious.
+- Avoid logic in `Update` loops if possible; prefer event-driven approach.
+- Use `TextMeshPro` instead of standard `Text`.
+
+# Project Specifics
+- Implementation should be robust for Android (battery, performance).
+- `Refs.cs` is the central access point for singletons/managers.

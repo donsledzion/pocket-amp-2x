@@ -128,6 +128,13 @@ namespace SoftAware.PocketAmp
             set { if (value != LastSkinPath) { PlayerPrefs.SetString(KEY_LAST_SKIN, value); PlayerPrefs.Save(); } }
         }
 
+        private const string KEY_IS_FULLSCREEN = "Winamp_IsFullscreen";
+        public bool IsFullscreen
+        {
+            get => PlayerPrefs.GetInt(KEY_IS_FULLSCREEN, 1) == 1;
+            set { if (value != IsFullscreen) { PlayerPrefs.SetInt(KEY_IS_FULLSCREEN, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -137,6 +144,16 @@ namespace SoftAware.PocketAmp
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // Apply saved fullscreen setting on startup
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                AndroidStatusBar.SetVisible(!IsFullscreen);
+            }
+            else
+            {
+                Screen.fullScreen = IsFullscreen;
+            }
         }
 
         public void SaveSettings()
