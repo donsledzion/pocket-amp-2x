@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
-    public class MainTitleBar : MonoBehaviour, IWinampSkinApplicator
+    public class MainTitleBar : MonoBehaviour, ISkinApplicator
     {
         [Header("UI References")]
         [SerializeField] private Image background;
@@ -44,12 +44,10 @@ namespace SoftAware.PocketAmp
             }
 
             // Set SpriteState
-            if (pressed != null)
-            {
-                SpriteState state = btn.spriteState;
-                state.pressedSprite = pressed;
-                btn.spriteState = state;
-            }
+            if (pressed == null) return;
+            var state = btn.spriteState;
+            state.pressedSprite = pressed;
+            btn.spriteState = state;
         }
     }
 }

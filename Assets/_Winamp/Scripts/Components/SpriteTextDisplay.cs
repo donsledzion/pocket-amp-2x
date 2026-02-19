@@ -7,7 +7,7 @@ namespace SoftAware
     /// Displays text using sprites from TextSpriteProvider.
     /// Each character position has its own Image component.
     /// </summary>
-    public class SpriteTextDisplay : MonoBehaviour, IWinampSkinApplicator
+    public class SpriteTextDisplay : MonoBehaviour, ISkinApplicator
     {
         [SerializeField] private Image[] characterImages;
         [SerializeField] private bool hideUnusedCharacters = true;
@@ -35,19 +35,19 @@ namespace SoftAware
             if (hideUnusedCharacters)
             {
                 // Right-aligned: fill from right to left
-                int textIndex = text.Length - 1;
+                var textIndex = text.Length - 1;
                 
-                for (int i = characterImages.Length - 1; i >= 0; i--)
+                for (var i = characterImages.Length - 1; i >= 0; i--)
                 {
-                    if (characterImages[i] == null) continue;
+                    if (!characterImages[i]) continue;
 
-                    bool spriteSet = false;
+                    var spriteSet = false;
                     if (textIndex >= 0)
                     {
-                        char c = text[textIndex];
-                        Sprite sprite = TextSpriteProvider.GetSprite(c);
+                        var c = text[textIndex];
+                        var sprite = TextSpriteProvider.GetSprite(c);
 
-                        if (sprite != null)
+                        if (sprite)
                         {
                             characterImages[i].sprite = sprite;
                             characterImages[i].enabled = true;

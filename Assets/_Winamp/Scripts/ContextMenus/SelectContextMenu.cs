@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
-    public class SelectContextMenu : ContextMenuButton, IWinampSkinApplicator
+    public class SelectContextMenu : ContextMenuButton, ISkinApplicator
     {
         internal Button InvertSelectionButton => MenuButtons[0];
         internal Button SelectZeroButton => MenuButtons[1];

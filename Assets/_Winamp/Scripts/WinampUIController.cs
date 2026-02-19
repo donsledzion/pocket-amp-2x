@@ -98,19 +98,19 @@ namespace SoftAware.PocketAmp
             if (isPlaying || isPaused)
             {
                 mainPanel.StatusDisplay.SetStatus(isPaused ? 
-                    WinampStatusDisplay.WinampStatus.Paused : 
-                    WinampStatusDisplay.WinampStatus.Playing);
+                    StatusDisplay.WinampStatus.Paused : 
+                    StatusDisplay.WinampStatus.Playing);
             }
             else
             {
-                mainPanel.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Stop);
+                mainPanel.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Stop);
             }
         }
 
         public void ShowLoading()
         {
             if (mainPanel.StatusDisplay != null)
-                mainPanel.StatusDisplay.SetStatus(WinampStatusDisplay.WinampStatus.Loading);
+                mainPanel.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Loading);
         }
 
         public void UpdateSongInfo(int index, string title, float duration)

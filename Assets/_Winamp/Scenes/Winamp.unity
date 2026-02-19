@@ -1395,7 +1395,7 @@ MonoBehaviour:
   main: {fileID: 996247208}
   playlist: {fileID: 204421520}
   audioPlayer: {fileID: 1138104797}
-  trackPrefab: {fileID: 4760062922114016676, guid: b92ce15815ec4bf46b7e8b99a42bb9ac, type: 3}
+  trackPrefab: {fileID: 5225489487846475697, guid: b92ce15815ec4bf46b7e8b99a42bb9ac, type: 3}
   contentContainer: {fileID: 1854049880}
   scrollRect: {fileID: 792801600}
   scrollbar: {fileID: 1754141645}
@@ -4885,7 +4885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13103e7e20ba1a9408c65103f57b5b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.EqualizerController
-  main: {fileID: 996247208}
   onButton: {fileID: 801895162}
   autoButton: {fileID: 866168021}
   presetsButton: {fileID: 1505739995}
@@ -11332,6 +11331,7 @@ MonoBehaviour:
   equalizer: {fileID: 693281835}
   playlist: {fileID: 204421520}
   skinManager: {fileID: 865236108}
+  audioPlayer: {fileID: 1138104797}
 --- !u!1 &1269265064
 GameObject:
   m_ObjectHideFlags: 0
@@ -17004,7 +17004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90c91f1b27de7646a2330625d915ebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampVisualizer
-  audioSource: {fileID: 1138104798}
   outputImage: {fileID: 1754734117}
   currentMode: 0
   spectrumBars: 19

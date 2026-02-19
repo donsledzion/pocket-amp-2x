@@ -4,12 +4,11 @@ using UnityEngine.EventSystems;
 
 namespace SoftAware.PocketAmp
 {
-    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
+    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler, ISkinApplicator
     {
         public enum VisMode { Spectrum, Waveform, None }
 
         [Header("References")]
-        [SerializeField] private AudioSource audioSource;
         [SerializeField] private RawImage outputImage;
 
         [Header("Settings")]
@@ -23,6 +22,9 @@ namespace SoftAware.PocketAmp
         
         public System.Action<VisMode> OnModeChanged;
         public System.Action OnDoubleClick;
+
+        private AudioPlayer audioPlayer => Refs.AudioPlayer;
+        private AudioSource audioSource => audioPlayer.AudioSource;
 
         private Texture2D visualizerTexture;
         private Color[] palette;
@@ -76,7 +78,7 @@ namespace SoftAware.PocketAmp
             colorTransparent = palette[0];
         }
 
-        private Color FromRGB(int r, int g, int b) => new Color(r / 255f, g / 255f, b / 255f);
+        private static Color FromRGB(int r, int g, int b) => new Color(r / 255f, g / 255f, b / 255f);
 
         private void CreateTexture()
         {
@@ -90,8 +92,8 @@ namespace SoftAware.PocketAmp
 
         private void ClearTexture()
         {
-            for (int x = 0; x < Width; x++)
-                for (int y = 0; y < Height; y++)
+            for (var x = 0; x < Width; x++)
+                for (var y = 0; y < Height; y++)
                     visualizerTexture.SetPixel(x, y, colorTransparent);
         }
 
@@ -99,15 +101,14 @@ namespace SoftAware.PocketAmp
         {
             try
             {
-                var player = audioSource != null ? audioSource.GetComponent<AudioPlayer>() : null;
-                float vol = (player != null) ? player.CurrentVolume : 1f;
+                var vol = audioPlayer.CurrentVolume;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-                if (player != null)
+                if (audioPlayer != null)
                 {
-                    if (player.IsPaused) return; // Frozen
+                    if (audioPlayer.IsPaused) return; // Frozen
                     
-                    if (!player.IsPlaying)
+                    if (!audioPlayer.IsPlaying)
                     {
                         // Stopped
                         ClearTexture();
@@ -116,9 +117,8 @@ namespace SoftAware.PocketAmp
                     }
                 }
 #else
-                if (audioSource == null) return;
                 
-                bool isPausedNow = player != null && player.IsPaused;
+                var isPausedNow = audioPlayer.IsPaused;
 
                 if (!audioSource.isPlaying && !isPausedNow)
                 {
@@ -141,10 +141,15 @@ namespace SoftAware.PocketAmp
 
                 ClearTexture();
 
-                if (currentMode == VisMode.Spectrum)
-                    DrawSpectrum(vol);
-                else if (currentMode == VisMode.Waveform)
-                    DrawWaveform(vol);
+                switch (currentMode)
+                {
+                    case VisMode.Spectrum:
+                        DrawSpectrum(vol);
+                        break;
+                    case VisMode.Waveform:
+                        DrawWaveform(vol);
+                        break;
+                }
 
                 visualizerTexture.Apply();
             }
@@ -162,7 +167,7 @@ namespace SoftAware.PocketAmp
 
         private void DrawSpectrum(float volume)
         {
-            float[] bars = new float[spectrumBars];
+            var bars = new float[spectrumBars];
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             // Android: Get pre-processed (now with high treble boost) 19 bars
@@ -171,18 +176,18 @@ namespace SoftAware.PocketAmp
             // Desktop: Get raw FFT and group into 19 log bars
             audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
             
-            float nyquist = AudioSettings.outputSampleRate / 2.0f;
-            float binWidth = nyquist / spectrumData.Length;
-            int startBin = 1;
+            var nyquist = AudioSettings.outputSampleRate / 2.0f;
+            var binWidth = nyquist / spectrumData.Length;
+            var startBin = 1;
 
-            for (int i = 0; i < spectrumBars; i++)
+            for (var i = 0; i < spectrumBars; i++)
             {
-                int endBin = Mathf.FloorToInt(WINAMP_RANGES_HZ[i] / binWidth);
+                var endBin = Mathf.FloorToInt(WINAMP_RANGES_HZ[i] / binWidth);
                 if (endBin <= startBin) endBin = startBin + 1;
                 if (endBin > spectrumData.Length) endBin = spectrumData.Length;
 
                 float maxVal = 0;
-                for (int b = startBin; b < endBin; b++)
+                for (var b = startBin; b < endBin; b++)
                 {
                     if (spectrumData[b] > maxVal) maxVal = spectrumData[b];
                 }
@@ -190,8 +195,8 @@ namespace SoftAware.PocketAmp
                 // Desktop normalization: 
                 // Unity FFT results are linear power. We use sqrt to get amplitude, 
                 // then apply a calibrated multiplier and a milder Treble Boost.
-                float amplitude = Mathf.Sqrt(maxVal); 
-                float trebleBoost = 1.0f + (i * 0.15f); // 1x to ~3.8x boost
+                var amplitude = Mathf.Sqrt(maxVal); 
+                var trebleBoost = 1.0f + (i * 0.15f); // 1x to ~3.8x boost
                 bars[i] = amplitude * 3.5f * trebleBoost;
                 
                 startBin = endBin;
@@ -201,40 +206,36 @@ namespace SoftAware.PocketAmp
             // Update peaks
             UpdatePeaks(bars, 1.0f);
 
-            int barWidth = Width / spectrumBars;
-            for (int i = 0; i < spectrumBars; i++)
+            var barWidth = Width / spectrumBars;
+            for (var i = 0; i < spectrumBars; i++)
             {
-                float val = bars[i];
-                int barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
+                var val = bars[i];
+                var barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
 
-                for (int y = 0; y < barHeight; y++)
+                for (var y = 0; y < barHeight; y++)
                 {
-                    int colorIdx = 17 - y; 
+                    var colorIdx = 17 - y; 
                     if (colorIdx < 2) colorIdx = 2;
 
-                    for (int x = 0; x < barWidth - 1; x++)
+                    for (var x = 0; x < barWidth - 1; x++)
                     {
                         visualizerTexture.SetPixel(i * barWidth + x, y, palette[colorIdx]);
                     }
                 }
 
-                if (showPeaks)
+                if (!showPeaks) continue;
                 {
-                    int peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
-                    if (peakY >= 0)
-                    {
-                        for (int x = 0; x < barWidth - 1; x++)
-                        {
-                            visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
-                        }
-                    }
+                    var peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
+                    if (peakY < 0) continue;
+                    for (var x = 0; x < barWidth - 1; x++)
+                        visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
                 }
             }
         }
 
         private void UpdatePeaks(float[] data, float multiplier = 1.0f)
         {
-            for (int i = 0; i < spectrumBars; i++)
+            for (var i = 0; i < spectrumBars; i++)
             {
                 float val;
                 if (data == null) val = 0;
@@ -268,44 +269,44 @@ namespace SoftAware.PocketAmp
 #if UNITY_ANDROID && !UNITY_EDITOR
             waveformData = AndroidVisualizerBridge.GetWaveformData(512);
             if (waveformData == null || waveformData.Length == 0) return;
-            float baseMult = 0.8f; 
+            var baseMult = 0.8f; 
 #else
             audioSource.GetOutputData(waveformData, 0);
-            float baseMult = 1.0f;
+            var baseMult = 1.0f;
 #endif
 #if UNITY_ANDROID && !UNITY_EDITOR
-            float multiplier = baseMult; 
+            var multiplier = baseMult; 
 #else
-            float sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
-            float multiplier = baseMult * sensitivity;
+            var sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
+            var multiplier = baseMult * sensitivity;
 #endif
 
-            int centerY = Height / 2;
-            int lastY = centerY;
-            float samplesPerPixel = 512f / Width;
+            var centerY = Height / 2;
+            var lastY = centerY;
+            var samplesPerPixel = 512f / Width;
 
-            for (int x = 0; x < Width; x++)
+            for (var x = 0; x < Width; x++)
             {
-                int startIdx = Mathf.FloorToInt(x * samplesPerPixel);
-                int endIdx = Mathf.FloorToInt((x + 1) * samplesPerPixel);
+                var startIdx = Mathf.FloorToInt(x * samplesPerPixel);
+                var endIdx = Mathf.FloorToInt((x + 1) * samplesPerPixel);
                 float sum = 0;
-                int count = 0;
+                var count = 0;
 
-                for (int i = startIdx; i < endIdx && i < waveformData.Length; i++)
+                for (var i = startIdx; i < endIdx && i < waveformData.Length; i++)
                 {
                     sum += waveformData[i];
                     count++;
                 }
 
-                float avgVal = (count > 0) ? (sum / count) : 0;
-                float val = avgVal * multiplier;
+                var avgVal = (count > 0) ? (sum / count) : 0;
+                var val = avgVal * multiplier;
                 
-                int y = Mathf.Clamp(Mathf.RoundToInt((val + 1f) * 0.5f * Height), 0, Height - 1);
+                var y = Mathf.Clamp(Mathf.RoundToInt((val + 1f) * 0.5f * Height), 0, Height - 1);
                 
                 int startSeg = Mathf.Min(y, lastY);
-                int endSeg = Mathf.Max(y, lastY);
+                var endSeg = Mathf.Max(y, lastY);
 
-                for (int ty = startSeg; ty <= endSeg; ty++)
+                for (var ty = startSeg; ty <= endSeg; ty++)
                 {
                     visualizerTexture.SetPixel(x, ty, palette[18]);
                 }
@@ -329,7 +330,7 @@ namespace SoftAware.PocketAmp
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            float timeSinceLastClick = Time.time - _lastClickTime;
+            var timeSinceLastClick = Time.time - _lastClickTime;
             Debug.Log($"[Vis] Click! Delta: {timeSinceLastClick:F3}s");
 
             if (timeSinceLastClick < DOUBLE_CLICK_TIME)
@@ -343,11 +344,14 @@ namespace SoftAware.PocketAmp
             {
                 // Single click
                 _lastClickTime = Time.time;
-                
-                // Cycle modes (Spectrum -> Waveform -> None)
-                if (currentMode == VisMode.Spectrum) currentMode = VisMode.Waveform;
-                else if (currentMode == VisMode.Waveform) currentMode = VisMode.None;
-                else currentMode = VisMode.Spectrum;
+
+                currentMode = currentMode switch
+                {
+                    // Cycle modes (Spectrum -> Waveform -> None)
+                    VisMode.Spectrum => VisMode.Waveform,
+                    VisMode.Waveform => VisMode.None,
+                    _ => VisMode.Spectrum
+                };
 
                 Debug.Log($"[Vis] Mode Cycle: {currentMode}");
                 OnModeChanged?.Invoke(currentMode);
@@ -383,12 +387,10 @@ namespace SoftAware.PocketAmp
             }
 
             colorTransparent = palette[0];
-            
-            if (visualizerTexture != null)
-            {
-                ClearTexture();
-                visualizerTexture.Apply();
-            }
+
+            if (visualizerTexture == null) return;
+            ClearTexture();
+            visualizerTexture.Apply();
         }
     }
 }

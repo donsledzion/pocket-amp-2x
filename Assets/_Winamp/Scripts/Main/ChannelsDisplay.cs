@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SoftAware
 {
-    public class ChannelsDisplay : MonoBehaviour, IWinampSkinApplicator
+    public class ChannelsDisplay : MonoBehaviour, ISkinApplicator
     {
         [Header("References")]
         [SerializeField] private Image monoImage;
@@ -41,8 +41,6 @@ namespace SoftAware
             this.isPlaying = isPlaying;
             this.currentChannels = channels;
 
-            if (monoImage == null || stereoImage == null) return;
-
             if (!isPlaying)
             {
                 // Stopped: All OFF
@@ -51,20 +49,20 @@ namespace SoftAware
                 stereoImage.sprite = stereoOff;
                 
                 // Ensure visibility (in case they were disabled by MainIndicators previously)
-                monoImage.enabled = (monoImage.sprite != null);
-                stereoImage.enabled = (stereoImage.sprite != null);
+                monoImage.enabled = monoImage.sprite;
+                stereoImage.enabled = stereoImage.sprite;
                 return;
             }
 
             // Playing: Check channels
             // 1 = Mono, 2 (or more) = Stereo
-            bool isMono = (channels == 1);
+            var isMono = (channels == 1);
 
             monoImage.sprite = isMono ? monoOn : monoOff;
             stereoImage.sprite = !isMono ? stereoOn : stereoOff;
             
-            monoImage.enabled = (monoImage.sprite != null);
-            stereoImage.enabled = (stereoImage.sprite != null);
+            monoImage.enabled = monoImage.sprite;
+            stereoImage.enabled = stereoImage.sprite;
         }
     }
 }

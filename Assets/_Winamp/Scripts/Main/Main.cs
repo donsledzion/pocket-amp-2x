@@ -4,7 +4,7 @@ using SoftAware; // For IWinampSkinApplicator and WinampSkin
 
 namespace SoftAware.PocketAmp
 {
-    public class Main : MonoBehaviour, IWinampSkinApplicator
+    public class Main : MonoBehaviour, ISkinApplicator
     {
         [Header("Component References")]
         [SerializeField] private MainTitleBar mainTitleBar;
@@ -305,17 +305,17 @@ namespace SoftAware.PocketAmp
         [SerializeField] private SpectrumVisualizer spectrumVisualizer;
         [SerializeField] private SpriteTextDisplay bitrateDisplay;
         [SerializeField] private SpriteTextDisplay sampleRateDisplay;
-        [SerializeField] private WinampTimeDisplay timeDisplay;
-        [SerializeField] private WinampStatusDisplay statusDisplay;
+        [SerializeField] private TimeDisplay timeDisplay;
+        [SerializeField] private StatusDisplay statusDisplay;
         [SerializeField] private WinampSongTitleDisplay songTitleDisplay;
         internal SpriteTextDisplay BitrateDisplay => bitrateDisplay;
         internal SpriteTextDisplay SampleRateDisplay => sampleRateDisplay;
-        internal WinampTimeDisplay TimeDisplay => timeDisplay;
-        internal WinampStatusDisplay StatusDisplay => statusDisplay;
+        internal TimeDisplay TimeDisplay => timeDisplay;
+        internal StatusDisplay StatusDisplay => statusDisplay;
         internal WinampSongTitleDisplay SongTitleDisplay => songTitleDisplay;
 
-        [SerializeField] private WinampPlaylistUI playlistUI;
-        internal WinampPlaylistUI PlaylistUI => playlistUI;
+        [SerializeField] private PlaylistUI playlistUI;
+        internal PlaylistUI PlaylistUI => playlistUI;
 
         // Windows Minimize Support
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR

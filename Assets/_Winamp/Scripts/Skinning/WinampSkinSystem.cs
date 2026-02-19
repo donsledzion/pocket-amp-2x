@@ -180,7 +180,7 @@ namespace SoftAware
     /// <summary>
     /// Interface for any UI component that needs to receive skin data
     /// </summary>
-    public interface IWinampSkinApplicator
+    public interface ISkinApplicator
     {
         /// <summary>
         /// Applies the provided skin to this component

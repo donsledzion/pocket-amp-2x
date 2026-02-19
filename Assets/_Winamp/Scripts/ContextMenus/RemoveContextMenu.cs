@@ -2,7 +2,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
-    public class RemoveContextMenu : ContextMenuButton, IWinampSkinApplicator
+    public class RemoveContextMenu : ContextMenuButton, ISkinApplicator
     {
         internal Button RemoveMiscButton => MenuButtons[0];
         internal Button RemoveAllButton => MenuButtons[1];

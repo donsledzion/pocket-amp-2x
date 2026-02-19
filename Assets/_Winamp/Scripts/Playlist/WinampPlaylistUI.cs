@@ -6,13 +6,13 @@ using TMPro;
 
 namespace SoftAware.PocketAmp
 {
-    public class WinampPlaylistUI : MonoBehaviour, IWinampSkinApplicator
+    public class PlaylistUI : MonoBehaviour, ISkinApplicator
     {
         [Header("References")]
         [SerializeField] private Main main;
         [SerializeField] private Playlist playlist;
         [SerializeField] private AudioPlayer audioPlayer;
-        [SerializeField] private GameObject trackPrefab;
+        [SerializeField] private PlaylistTrack trackPrefab;
         [SerializeField] private Transform contentContainer;
 
         [SerializeField] private ScrollRect scrollRect;
@@ -45,7 +45,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private Image scrollHandleImage;
 
 
-        private readonly List<WinampPlaylistTrack> trackUIItems = new ();
+        private readonly List<PlaylistTrack> trackUIItems = new ();
         private bool isUpdatingScroll = false;
         private bool isRemainingMode = false;
         private float lastUpdateTime = 0f;
@@ -196,14 +196,14 @@ namespace SoftAware.PocketAmp
         private void Update()
         {
             // Simple throttle for UI update
-            if (Time.time - lastUpdateTime > 0.1f)
-            {
-                UpdateCurrentTrackTime();
-                lastUpdateTime = Time.time;
-            }
+            
+            // ToDO: Reimplement to use Main Time Display
+            if (!(Time.time - lastUpdateTime > 0.1f)) return;
+            UpdateCurrentTrackTime();
+            lastUpdateTime = Time.time;
         }
 
-        public void RefreshList()
+        private void RefreshList()
         {
             if (!playlist) return;
             if (!trackPrefab)
@@ -223,13 +223,10 @@ namespace SoftAware.PocketAmp
             var songs = playlist.AllSongs;
             for (var i = 0; i < songs.Count; i++)
             {
-                var go = Instantiate(trackPrefab, contentContainer);
-                var trackUI = go.GetComponent<WinampPlaylistTrack>();
+                var trackUI = Instantiate(trackPrefab, contentContainer);
                 if (!trackUI) continue;
                 if (currentSkin != null)
-                {
                     trackUI.ApplySkin(currentSkin);
-                }
                 trackUI.Setup(i, songs[i].Title, songs[i].Duration, HandleTrackClick, HandleTrackDoubleClick);
                 trackUIItems.Add(trackUI);
             }
@@ -304,36 +301,34 @@ namespace SoftAware.PocketAmp
 
         private void UpdateTimeCounter()
         {
-            if (playlist == null) return;
+            if (!playlist) return;
 
             // 1. Total / Selection Counter (18 chars)
             var totalDuration = playlist.TotalDuration;
             var selectionDuration = playlist.SelectionDuration;
 
-            string totalStr = FormatSeconds(totalDuration, true);
-            string selStr = FormatSeconds(selectionDuration, true);
+            var totalStr = FormatSeconds(totalDuration, true);
+            var selStr = FormatSeconds(selectionDuration, true);
             
-            if (timeCounterText != null)
+            if (timeCounterText)
             {
                 // Format: "MM:SS/MM:SS" (no spaces!)
-                string combined = $"{selStr}/{totalStr}"; 
+                var combined = $"{selStr}/{totalStr}"; 
                 timeCounterText.SetText(combined);
             }
 
             // 2. Current Track Counter (6 chars, colon is baked)
-            if (currentTrackTimeText != null)
+            if (!currentTrackTimeText) return;
+            var playingIndex = playlist.CurrentIndex;
+            if (playingIndex >= 0 && playingIndex < playlist.AllSongs.Count)
             {
-                var playingIndex = playlist.CurrentIndex;
-                if (playingIndex >= 0 && playingIndex < playlist.AllSongs.Count)
-                {
-                    var duration = playlist.AllSongs[playingIndex].Duration;
-                    string durStr = FormatSeconds(duration, false);
-                    currentTrackTimeText.SetText(durStr);
-                }
-                else
-                {
-                    currentTrackTimeText.Clear();
-                }
+                var duration = playlist.AllSongs[playingIndex].Duration;
+                var durStr = FormatSeconds(duration, false);
+                currentTrackTimeText.SetText(durStr);
+            }
+            else
+            {
+                currentTrackTimeText.Clear();
             }
         }
 
@@ -354,7 +349,7 @@ namespace SoftAware.PocketAmp
 
         private void UpdateCurrentTrackTime()
         {
-            if (currentTrackTimeText == null || audioPlayer == null) return;
+            if (!currentTrackTimeText || !audioPlayer) return;
 
             if (!audioPlayer.IsPlaying && !audioPlayer.IsPaused)
             {

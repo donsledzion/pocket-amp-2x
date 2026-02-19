@@ -8,7 +8,7 @@ using SoftAware.PocketAmp;
 
 namespace SoftAware
 {
-    public class WinampPlaylistTrack : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
+    public class PlaylistTrack : MonoBehaviour, IPointerClickHandler, ISkinApplicator
     {
         [Header("References")]
         [SerializeField] private TextMeshProUGUI indexText;

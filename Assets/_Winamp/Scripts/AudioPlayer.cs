@@ -28,6 +28,8 @@ namespace SoftAware.PocketAmp
         
         private Playlist.SongInfo currentSong => playlist.CurrentSong;
         private bool isPaused = false;
+
+        public AudioSource AudioSource => audioSource;
         public bool IsPaused => isPaused;
         public bool IsPlaying => engine != null && engine.IsPlaying;
 
@@ -226,7 +228,7 @@ namespace SoftAware.PocketAmp
         private void BindSlider()
         {
             if (panelMain.ProgressSlider == null) return;
-            EventTrigger trigger = panelMain.ProgressSlider.gameObject.GetComponent<EventTrigger>() ?? panelMain.ProgressSlider.gameObject.AddComponent<EventTrigger>();
+            var trigger = panelMain.ProgressSlider.gameObject.GetComponent<EventTrigger>() ?? panelMain.ProgressSlider.gameObject.AddComponent<EventTrigger>();
 
             var entryDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
             entryDown.callback.AddListener((data) => { isDraggingSlider = true; uiController?.SetDragging(true); });

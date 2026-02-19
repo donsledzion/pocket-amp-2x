@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace SoftAware.PocketAmp
 {
-    public class VolumeController : MonoBehaviour, IWinampSkinApplicator
+    public class VolumeController : MonoBehaviour, ISkinApplicator
     {
         [Header("References")]
         [SerializeField] private Slider slider;

@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
-    public class EqualizerController : MonoBehaviour, IWinampSkinApplicator
+    public class EqualizerController : MonoBehaviour, ISkinApplicator
     {
-        [SerializeField] private Main main;
         [Header("Toggles")]
         [SerializeField] private ToggleButton onButton;
         [SerializeField] private ToggleButton autoButton;
@@ -17,7 +16,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private List<Slider> frequencyBands = new List<Slider>();
 
         [Header("Visuals")]
-        [SerializeField] private WinampEqualizerGraph graph;
+        [SerializeField] private EqualizerGraph graph;
         [SerializeField] private Image background;
         [SerializeField] private Image titleBar;
         [SerializeField] private Image graphBackground;
@@ -41,6 +40,8 @@ namespace SoftAware.PocketAmp
         public bool IsAuto => autoButton != null && autoButton.IsOn;
 
         public System.Action OnValuesChanged;
+
+        private static Main main => Refs.Main;
 
         private void Start()
         {
@@ -108,25 +109,23 @@ namespace SoftAware.PocketAmp
                 interaction.OnPointerUpAction += OnSliderPointerUp;
             }
 
-            for (int i = 0; i < frequencyBands.Count; i++)
+            for (var i = 0; i < frequencyBands.Count; i++)
             {
-                int index = i; // Bootstrap for closure
-                Slider slider = frequencyBands[i];
-                if (slider != null)
-                {
-                    slider.minValue = -20f;
-                    slider.maxValue = 20f;
-                    slider.onValueChanged.AddListener((val) => {
-                        if (SettingsManager.Instance != null) SettingsManager.Instance.SetEQBand(index, val);
-                        OnBandChanged(index, val);
-                    });
+                var index = i; // Bootstrap for closure
+                var slider = frequencyBands[i];
+                if (slider == null) continue;
+                slider.minValue = -20f;
+                slider.maxValue = 20f;
+                slider.onValueChanged.AddListener((val) => {
+                    if (SettingsManager.Instance != null) SettingsManager.Instance.SetEQBand(index, val);
+                    OnBandChanged(index, val);
+                });
                     
-                    // Attach interaction helper for Band
-                    var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
-                    string label = (index < frequencyLabels.Length) ? frequencyLabels[index] : $"BAND {index}";
-                    interaction.OnPointerDownAction += () => OnSliderPointerDown(slider, label);
-                    interaction.OnPointerUpAction += OnSliderPointerUp;
-                }
+                // Attach interaction helper for Band
+                var interaction = slider.gameObject.AddComponent<SliderInteractionHelper>();
+                string label = (index < frequencyLabels.Length) ? frequencyLabels[index] : $"BAND {index}";
+                interaction.OnPointerDownAction += () => OnSliderPointerDown(slider, label);
+                interaction.OnPointerUpAction += OnSliderPointerUp;
             }
 
             UpdateGraph();
@@ -147,7 +146,7 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        public void OnPreampChanged(float value)
+        private void OnPreampChanged(float value)
         {
             UpdateGraph();
             OnValuesChanged?.Invoke();
@@ -158,7 +157,7 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        public void OnBandChanged(int bandIndex, float value)
+        private void OnBandChanged(int bandIndex, float value)
         {
             if (bandIndex < 0 || bandIndex >= Frequencies.Length) return;
             
@@ -220,7 +219,7 @@ namespace SoftAware.PocketAmp
             if (presetsButton != null && skin.EqPresetsNormal != null)
             {
                 presetsButton.image.sprite = skin.EqPresetsNormal;
-                SpriteState ss = presetsButton.spriteState;
+                var ss = presetsButton.spriteState;
                 if (skin.EqPresetsPressed != null) ss.pressedSprite = skin.EqPresetsPressed;
                 presetsButton.spriteState = ss;
             }
@@ -228,7 +227,7 @@ namespace SoftAware.PocketAmp
             if (closeButton != null && skin.EqCloseNormal != null)
             {
                 closeButton.image.sprite = skin.EqCloseNormal;
-                SpriteState ss = closeButton.spriteState;
+                var ss = closeButton.spriteState;
                 if (skin.EqClosePressed != null) ss.pressedSprite = skin.EqClosePressed;
                 closeButton.spriteState = ss;
             }
@@ -236,17 +235,15 @@ namespace SoftAware.PocketAmp
             // 3. Sliders (Preamp + Bands)
             if (preampSlider != null)
             {
-                var visuals = preampSlider.GetComponent<WinampSliderVisuals>();
-                if (visuals != null) visuals.ApplySkin(skin);
+                if(preampSlider.TryGetComponent(out SliderVisuals visuals))
+                    if (visuals != null) visuals.ApplySkin(skin);
             }
 
             foreach (var slider in frequencyBands)
             {
-                if (slider != null)
-                {
-                    var visuals = slider.GetComponent<WinampSliderVisuals>();
-                    if (visuals != null) visuals.ApplySkin(skin);
-                }
+                if (slider == null) continue;
+                if (!slider.TryGetComponent(out SliderVisuals visuals)) continue;
+                if (visuals != null) visuals.ApplySkin(skin);
             }
 
             // 4. Graph
@@ -280,20 +277,15 @@ namespace SoftAware.PocketAmp
             UpdateGraph();
         }
 
-        public void CloseWindow()
+        private static void CloseWindow()
         {
-            if (main != null)
-            {
-                main.CloseEqualizerWindow();
-            }
+            main.CloseEqualizerWindow();
         }
 
         private void SetAllBands(float value)
         {
             foreach (var slider in frequencyBands)
-            {
                 if (slider != null) slider.value = value;
-            }
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SoftAware.PocketAmp
 {
-    public class MainControls : MonoBehaviour, IWinampSkinApplicator
+    public class MainControls : MonoBehaviour, ISkinApplicator
     {
         [Header("Transport Buttons")]
         [SerializeField] private Button prevButton;

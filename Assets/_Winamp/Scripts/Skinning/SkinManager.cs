@@ -18,7 +18,7 @@ namespace SoftAware
         
         [Header("Hierarchy References")]
         [SerializeField] private Main mainController;
-        [SerializeField] private WinampPlaylistUI playlistUI;
+        [SerializeField] private PlaylistUI playlistUI;
         
         [Header("Runtime Data")]
         [SerializeField] private WinampSkin currentSkin;

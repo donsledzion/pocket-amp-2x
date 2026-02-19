@@ -8,7 +8,7 @@ namespace SoftAware
     /// Handles the main Winamp time display (MM:SS).
     /// Supports elapsed and remaining time modes.
     /// </summary>
-    public class WinampTimeDisplay : MonoBehaviour, IPointerClickHandler, IWinampSkinApplicator
+    public class TimeDisplay : MonoBehaviour, IPointerClickHandler, ISkinApplicator
     {
         [Header("Digit Images (MM:SS)")]
         [SerializeField] private Image minTen;
@@ -60,16 +60,14 @@ namespace SoftAware
             UpdateDigit(secUnit, seconds % 10, true);
 
             // Update minus sign
-            if (minusSign != null)
-            {
-                minusSign.enabled = isRemainingMode;
-                minusSign.sprite = minusSprite;
-            }
+            if (!minusSign) return;
+            minusSign.enabled = isRemainingMode;
+            minusSign.sprite = minusSprite;
         }
 
         private void UpdateDigit(Image img, int value, bool visible)
         {
-            if (img == null) return;
+            if (!img) return;
 
             if (visible && digitSprites != null && value >= 0 && value < digitSprites.Length)
             {
@@ -106,12 +104,10 @@ namespace SoftAware
             if (!isPaused) return;
 
             blinkTimer += Time.deltaTime;
-            if (blinkTimer >= BLINK_INTERVAL)
-            {
-                blinkTimer = 0f;
-                bool isVisible = !minUnit.enabled; // Check one digit to toggle
-                SetDisplayVisibility(isVisible);
-            }
+            if (!(blinkTimer >= BLINK_INTERVAL)) return;
+            blinkTimer = 0f;
+            var isVisible = !minUnit.enabled; // Check one digit to toggle
+            SetDisplayVisibility(isVisible);
         }
 
         private void SetDisplayVisibility(bool visible)
@@ -129,7 +125,7 @@ namespace SoftAware
                 minUnit.enabled = false;
                 secTen.enabled = false;
                 secUnit.enabled = false;
-                if (minusSign != null) minusSign.enabled = false;
+                if (minusSign) minusSign.enabled = false;
             }
             else
             {
@@ -193,7 +189,7 @@ namespace SoftAware
             var allEx = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(numsExPath);
             foreach (var asset in allEx)
             {
-                if (asset is Sprite s && s.name == "Nums_ex_10")
+                if (asset is Sprite { name: "Nums_ex_10" } s)
                 {
                     minusSprite = s;
                 }

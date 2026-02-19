@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace SoftAware
 {
     [RequireComponent(typeof(CanvasRenderer))]
-    public class WinampEqualizerGraph : MaskableGraphic, IWinampSkinApplicator
+    public class EqualizerGraph : MaskableGraphic, ISkinApplicator
     {
         [Header("Assets")]
         [SerializeField] private Sprite colorsSprite;

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +8,7 @@ using UnityEditor;
 
 namespace SoftAware.PocketAmp
 {
-    public class BalanceController : MonoBehaviour, IWinampSkinApplicator
+    public class BalanceController : MonoBehaviour, ISkinApplicator
     {
         [Header("References")]
         [SerializeField] private Slider slider;
