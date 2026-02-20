@@ -70,6 +70,29 @@ namespace SoftAware
             isInitialized = true;
         }
 
+        private static readonly Dictionary<char, char> characterMap = new Dictionary<char, char>
+        {
+            // Polish
+            {'Ą', 'A'}, {'Ć', 'C'}, {'Ę', 'E'}, {'Ł', 'L'}, {'Ń', 'N'}, {'Ó', 'O'}, {'Ś', 'S'}, {'Ź', 'Z'}, {'Ż', 'Z'},
+            // German / Nordic / General European
+            {'Ä', 'A'}, {'Å', 'A'}, {'Æ', 'A'}, {'Ö', 'O'}, {'Ø', 'O'}, {'Ü', 'U'}, {'ß', 'B'},
+            // French / Spanish / Portuguese / Italian
+            {'À', 'A'}, {'Á', 'A'}, {'Â', 'A'}, {'Ã', 'A'},
+            {'Ç', 'C'},
+            {'È', 'E'}, {'É', 'E'}, {'Ê', 'E'}, {'Ë', 'E'},
+            {'Ì', 'I'}, {'Í', 'I'}, {'Î', 'I'}, {'Ï', 'I'},
+            {'Ñ', 'N'},
+            {'Ò', 'O'}, {'Ô', 'O'}, {'Õ', 'O'},
+            {'Ù', 'U'}, {'Ú', 'U'}, {'Û', 'U'},
+            {'Ý', 'Y'}, {'Ÿ', 'Y'},
+            // Czech / Slovak / Other
+            {'Č', 'C'}, {'Ď', 'D'}, {'Ě', 'E'}, {'Ň', 'N'}, {'Ř', 'R'}, {'Š', 'S'}, {'Ť', 'T'}, {'Ů', 'U'}, {'Ž', 'Z'},
+            // Romanian
+            {'Ă', 'A'}, {'Ș', 'S'}, {'Ț', 'T'},
+            // Hungarian
+            {'Ő', 'O'}, {'Ű', 'U'},
+        };
+
         /// <summary>
         /// Gets the sprite for a specific character.
         /// </summary>
@@ -84,12 +107,24 @@ namespace SoftAware
             // Convert to uppercase for consistency
             c = char.ToUpper(c);
 
+            // First try direct lookup
             if (Instance.spriteCache.TryGetValue(c, out var sprite))
             {
                 return sprite;
             }
+
+            // Try fallback mapping
+            if (characterMap.TryGetValue(c, out var mappedChar))
+            {
+                if (Instance.spriteCache.TryGetValue(mappedChar, out var mappedSprite))
+                {
+                    return mappedSprite;
+                }
+            }
+
             if(debugMissingCharacters)
                 Debug.LogWarning($"[TextSpriteProvider] Sprite not found for character: {c}");
+            
             return null;
         }
 
@@ -99,7 +134,16 @@ namespace SoftAware
         public static bool HasSprite(char c)
         {
             if (Instance == null || !Instance.isInitialized) return false;
-            return Instance.spriteCache.ContainsKey(char.ToUpper(c));
+            
+            c = char.ToUpper(c);
+            if (Instance.spriteCache.ContainsKey(c)) return true;
+            
+            if (characterMap.TryGetValue(c, out var mappedChar))
+            {
+                return Instance.spriteCache.ContainsKey(mappedChar);
+            }
+            
+            return false;
         }
 
         public void ApplySkin(Sprite[] sprites)
