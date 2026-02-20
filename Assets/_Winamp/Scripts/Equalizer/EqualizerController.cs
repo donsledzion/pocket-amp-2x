@@ -50,7 +50,7 @@ namespace SoftAware.PocketAmp
             if (allMaxButton != null) allMaxButton.onClick.AddListener(() => SetAllBands(20f));
             if (allMinButton != null) allMinButton.onClick.AddListener(() => SetAllBands(-20f));
             if (allFlatButton != null) allFlatButton.onClick.AddListener(() => SetAllBands(0f));
-            if(presetsButton != null) presetsButton.onClick.AddListener(main.SongTitleDisplay.ShowNotReadyYetMessage);
+            if (presetsButton != null) presetsButton.onClick.AddListener(() => main.OpenPresetsLibrary());
 
             InitializeSliders();
             LoadSettings();
@@ -263,8 +263,10 @@ namespace SoftAware.PocketAmp
             UpdateGraph();
         }
 
-        public void SetPreset(float[] gains)
+        public void SetPreset(float preampValue, float[] gains)
         {
+            if (preampSlider != null) preampSlider.value = preampValue;
+
             if (gains == null || gains.Length != frequencyBands.Count) return;
 
             for (int i = 0; i < gains.Length; i++)
@@ -275,6 +277,11 @@ namespace SoftAware.PocketAmp
                 }
             }
             UpdateGraph();
+        }
+
+        public void SetPreset(float[] gains)
+        {
+            SetPreset(0f, gains);
         }
 
         private static void CloseWindow()

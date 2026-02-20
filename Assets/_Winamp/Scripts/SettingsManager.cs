@@ -20,6 +20,7 @@ namespace SoftAware.PocketAmp
         private const string KEY_EQ_BAND_PREFIX = "Winamp_EQ_Band_";
         private const string KEY_LAST_INDEX = "Winamp_LastIndex";
         private const string KEY_IS_FIRST_RUN = "Winamp_IsFirstRun";
+        private const string KEY_EQ_PRESETS_BEHAVIOR = "Winamp_EQ_PresetsBehavior";
 
         [Header("Default Values")]
         [SerializeField] private bool defaultShowEQ = true;
@@ -140,6 +141,12 @@ namespace SoftAware.PocketAmp
         {
             get => PlayerPrefs.GetInt(KEY_IS_NAV_VISIBLE, 1) == 1; // Default true (Visible)
             set { if (value != IsNavigationBarVisible) { PlayerPrefs.SetInt(KEY_IS_NAV_VISIBLE, value ? 1 : 0); PlayerPrefs.Save(); } }
+        }
+
+        public int EQPresetsLoadBehavior
+        {
+            get => PlayerPrefs.GetInt(KEY_EQ_PRESETS_BEHAVIOR, 0); // 0 = RequireLoadButton, 1 = LoadOnSelection
+            set { if (value != EQPresetsLoadBehavior) { PlayerPrefs.SetInt(KEY_EQ_PRESETS_BEHAVIOR, value); PlayerPrefs.Save(); } }
         }
 
         private void Awake()

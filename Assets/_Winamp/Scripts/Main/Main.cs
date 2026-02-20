@@ -156,6 +156,7 @@ namespace SoftAware.PocketAmp
 
         [Header("System Windows")]
         [SerializeField] private GameObject skinsLibraryWindow; 
+        [SerializeField] private GameObject presetsLibraryWindow; 
         [SerializeField] private GameObject miscOptionsMenu; 
         [SerializeField] private GameObject addUrlWindow;
 
@@ -388,6 +389,19 @@ namespace SoftAware.PocketAmp
         public void CloseSkinsLibrary()
         {
             SetWindowVisibility(skinsLibraryWindow, false);
+        }
+
+        public void OpenPresetsLibrary()
+        {
+            Debug.Log($"[Main] OpenPresetsLibrary called. Window ref: {presetsLibraryWindow}");
+            if (presetsLibraryWindow == null) Debug.LogError("[Main] PresetsLibraryWindow reference is NULL!");
+            
+            SetWindowVisibility(presetsLibraryWindow, true);
+        }
+
+        public void ClosePresetsLibrary()
+        {
+            SetWindowVisibility(presetsLibraryWindow, false);
         }
 
         private void ToggleVisWindow()

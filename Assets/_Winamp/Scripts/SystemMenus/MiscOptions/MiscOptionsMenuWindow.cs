@@ -9,6 +9,7 @@ public class MiscOptionsMenuWindow : MonoBehaviour
     [SerializeField] private Button skinsLibraryButton;
     [SerializeField] private Button notificationsBarToggle;
     [SerializeField] private Button navigationBarToggle;
+    [SerializeField] private Button eqPresetsBehaviorToggle;
 
     private void Awake()
     {
@@ -16,12 +17,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         skinsLibraryButton.onClick.AddListener(OpenSkinsLibrary);
         notificationsBarToggle.onClick.AddListener(ToggleNotificationsBar);
         if (navigationBarToggle != null) navigationBarToggle.onClick.AddListener(ToggleNavigationBar);
+        if (eqPresetsBehaviorToggle != null) eqPresetsBehaviorToggle.onClick.AddListener(ToggleEQPresetsBehavior);
     }
 
     private void Start()
     {
         UpdateNotificationsButtonText();
         UpdateNavigationButtonText();
+        UpdateEQPresetsBehaviorText();
     }
 
     private void ToggleNotificationsBar()
@@ -77,6 +80,32 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         if (textRequest != null)
         {
             textRequest.text = $"Navigation bar: {(SettingsManager.Instance.IsNavigationBarVisible ? "ON" : "OFF")}";
+        }
+    }
+
+    private void ToggleEQPresetsBehavior()
+    {
+        int current = SettingsManager.Instance.EQPresetsLoadBehavior;
+        int next = current == 0 ? 1 : 0;
+        SettingsManager.Instance.EQPresetsLoadBehavior = next;
+
+        var presetsWindow = FindFirstObjectByType<SoftAware.PocketAmp.Equalizer.Presets.UI.PresetsLibraryWindow>(FindObjectsInactive.Include);
+        if (presetsWindow != null)
+        {
+            presetsWindow.SetLoadBehavior((SoftAware.PocketAmp.Equalizer.Presets.UI.PresetsLibraryWindow.LoadBehavior)next);
+        }
+
+        UpdateEQPresetsBehaviorText();
+    }
+
+    private void UpdateEQPresetsBehaviorText()
+    {
+        if (eqPresetsBehaviorToggle == null) return;
+        var textRequest = eqPresetsBehaviorToggle.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        if (textRequest != null)
+        {
+            string modeStr = SettingsManager.Instance.EQPresetsLoadBehavior == 0 ? "Require Load" : "Load on Select";
+            textRequest.text = $"EQ Presets: {modeStr}";
         }
     }
 
