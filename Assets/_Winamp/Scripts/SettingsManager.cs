@@ -155,20 +155,49 @@ namespace SoftAware.PocketAmp
             // Apply saved fullscreen setting on startup
             if (Application.platform == RuntimePlatform.Android)
             {
-                // Navigation Bar Logic:
-                // Visible -> Screen.fullScreen = false (Windowed mode, shows bars, resizes viewport)
-                // Hidden -> Screen.fullScreen = true (Immersive mode, hides bars)
-                Screen.fullScreen = !IsNavigationBarVisible;
-                
-                // Status Bar Logic:
-                // IsFullscreen (true) -> Status Bar Hidden
-                // IsFullscreen (false) -> Status Bar Visible
-                // We re-apply this AFTER setting Screen.fullScreen because Unity might reset flags
-                AndroidStatusBar.SetVisible(!IsFullscreen);
+                ResolveSystemBars();
             }
             else
             {
                 Screen.fullScreen = IsFullscreen;
+            }
+        }
+
+        public void ResolveSystemBars()
+        {
+            if (Application.platform != RuntimePlatform.Android) return;
+
+            // Navigation Bar Logic:
+            // Visible -> Screen.fullScreen = false (Windowed mode, shows bars, resizes viewport)
+            // Hidden -> Screen.fullScreen = true (Immersive mode, hides bars)
+            bool desiredFullScreen = !IsNavigationBarVisible;
+            
+            // Only change screen mode if necessary to avoid unnecessary flickers
+            if (Screen.fullScreen != desiredFullScreen)
+            {
+                Screen.fullScreen = desiredFullScreen;
+            }
+
+            // Status Bar Logic:
+            // IsFullscreen (true) -> Status Bar Hidden
+            // IsFullscreen (false) -> Status Bar Visible
+            // We start a coroutine to enforce this state multiple times because Unity/Android 
+            // love to reset these flags during orientation changes or window resizing.
+            StopAllCoroutines();
+            StartCoroutine(EnforceSystemBarsCoroutine());
+        }
+
+        private System.Collections.IEnumerator EnforceSystemBarsCoroutine()
+        {
+            // Initial forced set
+            AndroidStatusBar.SetVisible(!IsFullscreen);
+
+            // "Brute Force" Loop: 
+            // Re-apply settings 5 times with 0.2s delay to overwrite any Unity/System resets.
+            for (int i = 0; i < 5; i++)
+            {
+                yield return new WaitForSeconds(0.2f);
+                AndroidStatusBar.SetVisible(!IsFullscreen);
             }
         }
 

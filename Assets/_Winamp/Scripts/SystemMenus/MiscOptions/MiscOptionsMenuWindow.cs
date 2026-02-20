@@ -40,15 +40,7 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         
         if (Application.platform == RuntimePlatform.Android)
         {
-            // Update Screen.fullScreen based on Navigation Bar visibility
-            // Visible = Not Fullscreen (Windowed)
-            // Hidden = Fullscreen (Immersive)
-            Screen.fullScreen = !newState;
-
-            // Re-apply Status Bar State because changing Screen.fullScreen might reset it
-            // IsFullscreen (true) -> Status Bar Hidden
-            // IsFullscreen (false) -> Status Bar Visible
-            AndroidStatusBar.SetVisible(!SettingsManager.Instance.IsFullscreen);
+            SettingsManager.Instance.ResolveSystemBars();
         }
         
         UpdateNavigationButtonText();
@@ -58,11 +50,7 @@ public class MiscOptionsMenuWindow : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            // On Android, "Fullscreen" toggle specifically controls "Status Bar" visibility
-            // independent of the Navigation Bar (which controls Screen.fullScreen)
-            // Fullscreen = Status Bar HIDDEN
-            // Windowed = Status Bar VISIBLE
-            AndroidStatusBar.SetVisible(!isFullscreen); 
+            SettingsManager.Instance.ResolveSystemBars();
         }
         else
         {
