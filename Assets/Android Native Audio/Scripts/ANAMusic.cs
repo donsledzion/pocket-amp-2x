@@ -147,6 +147,8 @@ public static class ANAMusic
 
 		if (loadedCallback != null)
 			mediaPlayer.Call("setOnPreparedListener", new OnPreparedListener(loadedCallback));
+			
+		mediaPlayer.Call("setOnErrorListener", new OnErrorListener());
 
 		if (loadAsync)
 			mediaPlayer.Call("prepareAsync");

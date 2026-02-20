@@ -10,6 +10,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private Playlist playlist;
         [SerializeField] private PlaylistUI playlistUi;
         
+        [SerializeField] private UIController uIController;
         [SerializeField] private SkinManager skinManager;
         [SerializeField] private AudioPlayer audioPlayer;
 
@@ -20,6 +21,7 @@ namespace SoftAware.PocketAmp
 
         internal static SkinManager SkinManager => instance.skinManager;
         internal static AudioPlayer AudioPlayer => instance.audioPlayer;
+        internal static UIController UIController => instance.uIController;
         
         private static Refs instance { get; set; }
 

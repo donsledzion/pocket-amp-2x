@@ -85,7 +85,7 @@ namespace SoftAware.PocketAmp
             {
                 addContextMenu.OnAddDirRequested += PickFolder;
                 addContextMenu.OnAddFileRequested += PickFile;
-                addContextMenu.OnAddUrlRequested += main.SongTitleDisplay.ShowNotReadyYetMessage;
+                addContextMenu.OnAddUrlRequested += main.OpenAddUrlWindow;
             }
 
             StartCoroutine(InitializeDemoTrackCoroutine());
@@ -97,7 +97,7 @@ namespace SoftAware.PocketAmp
             {
                 addContextMenu.OnAddDirRequested -= PickFolder;
                 addContextMenu.OnAddFileRequested -= PickFile;
-                addContextMenu.OnAddUrlRequested -= main.SongTitleDisplay.ShowNotReadyYetMessage;
+                addContextMenu.OnAddUrlRequested -= main.OpenAddUrlWindow;
             }
         }
 
@@ -480,8 +480,9 @@ namespace SoftAware.PocketAmp
                 }
                 else
                 {
-                    // If no native title, use filename but mark as loaded so we don't try again
+                    // If no native title, use filename (or url) but mark as loaded so we don't try again
                     song.Title = GetCleanFileName(path);
+                    if (path.StartsWith("http://") || path.StartsWith("https://")) song.Title = path;
                     song.Artist = "";
                 }
 #else
@@ -517,6 +518,12 @@ namespace SoftAware.PocketAmp
 
             if (Application.platform == RuntimePlatform.Android)
             {
+                if (song.FilePath.StartsWith("http://") || song.FilePath.StartsWith("https://"))
+                {
+                    // Streams shouldn't be loaded as audio clips anyway (Android Native handles it directly)
+                    yield break;
+                }
+
                 if (FileBrowserHelpers.FileExists(song.FilePath))
                 {
                     finalUrl = song.FilePath; 
@@ -693,6 +700,96 @@ namespace SoftAware.PocketAmp
             
             OnPlaylistChanged?.Invoke();
             SavePlaylist();
+        }
+
+        public void AddUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return;
+            StartCoroutine(ResolveUrlCoroutine(url.Trim()));
+        }
+
+        private IEnumerator ResolveUrlCoroutine(string url)
+        {
+            Refs.UIController?.ShowLoading();
+            //main.UIController?.ShowLoading();
+
+            bool isPlaylist = false;
+            string finalUrl = url;
+
+            using (var www = UnityWebRequest.Get(url))
+            {
+                // We only want a bit of text, so a small timeout is fine. 
+                // We don't want to download a continuous stream into RAM!
+                // But UnityWebRequest.Get on a stream might freeze? 
+                // We should use SetRequestHeader to only get a few bytes, or use Head.
+                // Actually, a safer way to avoid freezing on continuous streams is to use SendWebRequest, 
+                // let it connect, read headers, and if it's an audio stream, abort.
+            }
+
+            // Instead of dealing with UnityWebRequest freezing on infinite streams,
+            // we will do a fast extension-based check or simple GET for known text formats.
+            if (url.EndsWith(".pls", StringComparison.OrdinalIgnoreCase) || 
+                url.EndsWith(".m3u", StringComparison.OrdinalIgnoreCase) || 
+                url.EndsWith(".m3u8", StringComparison.OrdinalIgnoreCase) ||
+                url.Contains("listen.pls") || url.Contains("listen.m3u"))
+            {
+                 using (var www = UnityWebRequest.Get(url))
+                 {
+                     yield return www.SendWebRequest();
+                     if (www.result == UnityWebRequest.Result.Success)
+                     {
+                         string text = www.downloadHandler.text;
+                         string streamUrl = ParsePlaylistForStream(text);
+                         if (!string.IsNullOrEmpty(streamUrl))
+                         {
+                             finalUrl = streamUrl;
+                         }
+                     }
+                 }
+            }
+
+            songs.Add(new SongInfo 
+            { 
+                Title = finalUrl, 
+                Artist = "Internet Stream",
+                FilePath = finalUrl,
+                MetadataLoaded = false
+            });
+            
+            if (currentIndex == -1 && songs.Count > 0)
+            {
+                SetCurrentClip(0);
+            }
+            
+            if (metadataScannerCoroutine != null) StopCoroutine(metadataScannerCoroutine);
+            metadataScannerCoroutine = StartCoroutine(MetadataScannerCoroutine());
+            
+            OnPlaylistChanged?.Invoke();
+            SavePlaylist();
+            
+            Refs.UIController?.HideLoading();
+        }
+
+        private string ParsePlaylistForStream(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var line in lines)
+            {
+                string t = line.Trim();
+                // PLS format: File1=http://...
+                if (t.StartsWith("File1=", StringComparison.OrdinalIgnoreCase))
+                {
+                    return t.Substring(6).Trim();
+                }
+                // M3U format: just the URL on a line not starting with #
+                if (t.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !t.StartsWith("#"))
+                {
+                    return t;
+                }
+            }
+            return null;
         }
 
         public void SelectAll()

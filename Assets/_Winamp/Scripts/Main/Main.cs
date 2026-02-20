@@ -157,6 +157,7 @@ namespace SoftAware.PocketAmp
         [Header("System Windows")]
         [SerializeField] private GameObject skinsLibraryWindow; 
         [SerializeField] private GameObject miscOptionsMenu; 
+        [SerializeField] private GameObject addUrlWindow;
 
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
@@ -408,5 +409,8 @@ namespace SoftAware.PocketAmp
 
         internal void OpenMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, true);
         internal void CloseMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, false);
+
+        internal void OpenAddUrlWindow() => SetWindowVisibility(addUrlWindow, true);
+        internal void CloseAddUrlWindow() => SetWindowVisibility(addUrlWindow, false);
     }
 }

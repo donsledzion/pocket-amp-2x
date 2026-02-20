@@ -6,7 +6,7 @@ namespace SoftAware.PocketAmp
     /// Central controller for all Winamp UI elements.
     /// Decouples UI updates from the core playback logic.
     /// </summary>
-    public class WinampUIController : MonoBehaviour
+    public class UIController : MonoBehaviour
     {
         private AudioPlayer player;
         private bool isDraggingSlider = false;
@@ -58,12 +58,14 @@ namespace SoftAware.PocketAmp
         private void UpdateProgress(float currentTime, float duration, bool isPlaying, bool isPaused)
         {
             if (!main.ProgressSlider) return;
+            
+            bool isStream = duration <= 0f;
 
-            var progress = (duration > 0) ? currentTime / duration : 0f;
+            var progress = (!isStream) ? currentTime / duration : 0f;
 
             // Knob Visibility
             if (main.ProgressSlider.handleRect)
-                main.ProgressSlider.handleRect.gameObject.SetActive(isPlaying || isPaused || isDraggingSlider);
+                main.ProgressSlider.handleRect.gameObject.SetActive((isPlaying || isPaused || isDraggingSlider) && !isStream);
 
             // Slider Value
             if ((isPlaying || isPaused) && !isDraggingSlider)
@@ -74,7 +76,7 @@ namespace SoftAware.PocketAmp
             // Time Display
             if (main.TimeDisplay)
             {
-                if (isPlaying || isPaused)
+                if ((isPlaying || isPaused) && !isStream)
                 {
                     main.TimeDisplay.SetTime(currentTime, duration);
                     main.TimeDisplay.SetPaused(isPaused);
@@ -85,7 +87,6 @@ namespace SoftAware.PocketAmp
                 }
             }
         }
-
         private void UpdateStatus(bool isPlaying, bool isPaused)
         {
             if (!main.StatusDisplay) return;
@@ -108,10 +109,17 @@ namespace SoftAware.PocketAmp
                 main.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Loading);
         }
 
+        public void HideLoading()
+        {
+            if (main.StatusDisplay)
+                main.StatusDisplay.SetStatus(StatusDisplay.WinampStatus.Stop);
+        }
+
         public void UpdateSongInfo(int index, string title, float duration)
         {
             if (main.SongTitleDisplay)
             {
+                if (duration <= 0f) duration = 0f; // Prevent weird -1 display
                 main.SongTitleDisplay.SetSongInfo(index, title, duration);
             }
 

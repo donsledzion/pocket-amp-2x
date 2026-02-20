@@ -17,7 +17,7 @@ namespace SoftAware.PocketAmp
         [Header("References")]
         [SerializeField] private Playlist playlist;
         [SerializeField] private Main panelMain;
-        [SerializeField] private WinampUIController uiController;
+        [SerializeField] private UIController uiController;
         [SerializeField] private EqualizerController eqController;
 
         private AudioSource audioSource;
@@ -296,7 +296,17 @@ namespace SoftAware.PocketAmp
 #else
             // Standard Unity Playback
             if (!currentSong.Clip && currentSong.HasNativePath)
+            {
+                if (currentSong.FilePath.StartsWith("http://") || currentSong.FilePath.StartsWith("https://"))
+                {
+                    // Fallback for editor for streams: Unity handles URLs in UnityWebRequestMultimedia natively,
+                    // but we bypass it in LoadSongClip to avoid freezing. So in Editor, URL playback is disabled.
+                    Debug.LogWarning("Stream playback via URL is only supported on Android device.");
+                    uiController?.HideLoading();
+                    yield break;
+                }
                 yield return playlist.LoadSongClip(currentSong);
+            }
 
             if (currentSong.Clip)
             {
@@ -324,8 +334,10 @@ namespace SoftAware.PocketAmp
             // Safe to call from background thread now that ANAMusic has locks.
             engine.Stop();
 
+            bool isUrl = path.StartsWith("http://") || path.StartsWith("https://");
+
             // 2. Immediate Native Load: Starts loading right away even in background.
-            ANAMusic.load(path, false, false, (id) => {
+            ANAMusic.load(path, false, isUrl, (id) => {
                 
                 // --- Background Thread (Native Callback) ---
                 
@@ -359,7 +371,7 @@ namespace SoftAware.PocketAmp
                         AndroidVisualizerBridge.Initialize(id);
                     });
                 }
-            }, true, true);
+            }, true, true); // IMPORTANT: playInBackground=true, isAbsolutePath=true for both local AND urls
 #endif
         }
 
