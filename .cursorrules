@@ -14,6 +14,9 @@
 - Avoid logic in `Update` loops if possible; prefer event-driven approach.
 - Use `TextMeshPro` instead of standard `Text`.
 
+# Terminal / Bash
+- use Windows PowerShell instead of Bash
+
 # Project Specifics
 - Implementation should be robust for Android (battery, performance).
 - `Refs.cs` is the central access point for singletons/managers.

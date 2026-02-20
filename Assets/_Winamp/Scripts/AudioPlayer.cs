@@ -460,6 +460,14 @@ namespace SoftAware.PocketAmp
             if (!engine.IsPlaying && !isPaused) return;
             if (isPaused) { Resume(); return; }
 
+            ForcePause();
+        }
+
+        private void ForcePause()
+        {
+            if (!engine.IsPlaying && !isPaused) return;
+            if (isPaused) return;
+
             isPaused = true;
             engine.Pause();
             UpdateNotification(); // Abandon Focus / Update UI
@@ -524,7 +532,7 @@ namespace SoftAware.PocketAmp
         // --------------------------------------------------------------------------
 
         public void OnNativePlay() { if (isAppPaused) Resume(); else mainThreadActions.Enqueue(Play); }
-        public void OnNativePause() { if (isAppPaused) Pause(); else mainThreadActions.Enqueue(Pause); }
+        public void OnNativePause() { if (isAppPaused) ForcePause(); else mainThreadActions.Enqueue(ForcePause); }
         public void OnNativeNext() { if (isAppPaused) PlayNextBackground(); else mainThreadActions.Enqueue(() => PlayNext()); }
         public void OnNativePrev() { if (isAppPaused) PlayPreviousBackground(); else mainThreadActions.Enqueue(PlayPrevious); }
         public void OnNativeSeek(string positionMsStr)
