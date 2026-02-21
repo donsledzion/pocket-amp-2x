@@ -85,7 +85,7 @@ namespace SoftAware.PocketAmp
             {
                 addContextMenu.OnAddDirRequested += PickFolder;
                 addContextMenu.OnAddFileRequested += PickFile;
-                addContextMenu.OnAddUrlRequested += main.OpenAddUrlWindow;
+                addContextMenu.OnAddUrlRequested += main.OverlayWindowsController.OpenAddUrlWindow;
             }
 
             StartCoroutine(InitializeDemoTrackCoroutine());
@@ -97,7 +97,7 @@ namespace SoftAware.PocketAmp
             {
                 addContextMenu.OnAddDirRequested -= PickFolder;
                 addContextMenu.OnAddFileRequested -= PickFile;
-                addContextMenu.OnAddUrlRequested -= main.OpenAddUrlWindow;
+                addContextMenu.OnAddUrlRequested -= main.OverlayWindowsController.OpenAddUrlWindow;
             }
         }
 

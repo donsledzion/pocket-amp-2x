@@ -107,8 +107,7 @@ namespace SoftAware.PocketAmp
                 Debug.Log("[WinampPlaylistUI] Binding MiscContext options...");
                 miscContextMenu.OnSortListButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnFileInfoButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
-                //miscContextMenu.OnMiscOptionsButtonClicked += main.OpenSkinsLibrary;
-                miscContextMenu.OnMiscOptionsButtonClicked += main.OpenMiscOptionsMenu;
+                miscContextMenu.OnMiscOptionsButtonClicked += main.OverlayWindowsController.OpenMiscOptionsMenu;
             }
 
             if (main != null && main.TimeDisplay != null)
@@ -153,8 +152,7 @@ namespace SoftAware.PocketAmp
                 Debug.Log("[WinampPlaylistUI] Unbinding MiscContext options");
                 miscContextMenu.OnSortListButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnFileInfoButtonClicked -= main.SongTitleDisplay.ShowNotReadyYetMessage;
-                //miscContextMenu.OnMiscOptionsButtonClicked -= main.OpenSkinsLibrary; 
-                miscContextMenu.OnMiscOptionsButtonClicked -= main.OpenMiscOptionsMenu;
+                miscContextMenu.OnMiscOptionsButtonClicked -= main.OverlayWindowsController.OpenMiscOptionsMenu;
             }
 
             if (listOptionsContextMenu != null)

@@ -149,7 +149,7 @@ namespace SoftAware.PocketAmp.Equalizer.Presets.UI
             var main = FindFirstObjectByType<Main>();
             if (main != null)
             {
-                main.ClosePresetsLibrary();
+                main.OverlayWindowsController.ClosePresetsLibrary();
             }
             else
             {

@@ -44,7 +44,7 @@ namespace SoftAware.PocketAmp
 
         private void CloseWindow()
         {
-            Refs.Main.CloseAddUrlWindow();
+            Refs.Main.OverlayWindowsController.CloseAddUrlWindow();
         }
     }
 }

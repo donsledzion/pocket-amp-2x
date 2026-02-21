@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,10 +51,20 @@ namespace SoftAware.PocketAmp
             if (allMaxButton != null) allMaxButton.onClick.AddListener(() => SetAllBands(20f));
             if (allMinButton != null) allMinButton.onClick.AddListener(() => SetAllBands(-20f));
             if (allFlatButton != null) allFlatButton.onClick.AddListener(() => SetAllBands(0f));
-            if (presetsButton != null) presetsButton.onClick.AddListener(() => main.OpenPresetsLibrary());
+            if (presetsButton != null) presetsButton.onClick.AddListener(() => main.OverlayWindowsController.OpenPresetsLibrary());
 
             InitializeSliders();
             LoadSettings();
+        }
+
+        private void OnDestroy()
+        {
+            if (closeButton != null) closeButton.onClick.RemoveListener(CloseWindow);
+
+            if (allMaxButton != null) allMaxButton.onClick.RemoveAllListeners();
+            if (allMinButton != null) allMinButton.onClick.RemoveAllListeners();
+            if (allFlatButton != null) allFlatButton.onClick.RemoveAllListeners();
+            if (presetsButton != null) presetsButton.onClick.RemoveAllListeners();
         }
 
         private void LoadSettings()

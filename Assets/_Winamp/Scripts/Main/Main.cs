@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using SoftAware; // For IWinampSkinApplicator and WinampSkin
+using SoftAware;
+using UnityEngine.Serialization; // For IWinampSkinApplicator and WinampSkin
 
 namespace SoftAware.PocketAmp
 {
@@ -9,7 +10,6 @@ namespace SoftAware.PocketAmp
         [Header("Component References")]
         [SerializeField] private MainTitleBar mainTitleBar;
         [SerializeField] private MainControls mainControls;
-        // [SerializeField] private MainIndicators mainIndicators; // Replaced by ChannelsDisplay
         
         [Header("Main Window Elements (Legacy/Direct)")]
         [SerializeField] private Image mainBackgroundImage;
@@ -155,11 +155,10 @@ namespace SoftAware.PocketAmp
         internal GameObject VisWindow => visWindow;
 
         [Header("System Windows")]
-        [SerializeField] private GameObject skinsLibraryWindow; 
-        [SerializeField] private GameObject presetsLibraryWindow; 
-        [SerializeField] private GameObject miscOptionsMenu; 
-        [SerializeField] private GameObject addUrlWindow;
+        [SerializeField] private OverlayWindowsController overlayWindowsControllerController;
 
+        internal OverlayWindowsController OverlayWindowsController => overlayWindowsControllerController;
+        
         [Header("Window App Controls")]
         [SerializeField] private Button closeButton;
         [SerializeField] private Button minimizeButton;
@@ -167,7 +166,7 @@ namespace SoftAware.PocketAmp
 
         private void Start()
         {
-            // VisWindow zawsze startuje jako wyłączony (nie zapamiętujemy stanu)
+            // VisWindow always starts closed (we're not storing is's state)
             if (visWindow != null)
             {
                 isVisWindowOpen = false;
@@ -283,21 +282,21 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        private void SetWindowVisibility(GameObject window, bool visible)
+        private static void SetWindowVisibility(GameObject window, bool visible)
         {
             if (window == null) return;
 
             // 1. Handle Visuals (alpha) and Interaction
-            CanvasGroup group = window.GetComponent<CanvasGroup>();
-            if (group == null) group = window.AddComponent<CanvasGroup>();
+            if (!window.TryGetComponent(out CanvasGroup group))
+                group = window.AddComponent<CanvasGroup>();
 
             group.alpha = visible ? 1f : 0f;
             group.interactable = visible;
             group.blocksRaycasts = visible;
 
             // 2. Handle Layout (remove from LayoutGroup if hidden)
-            LayoutElement layout = window.GetComponent<LayoutElement>();
-            if (layout == null) layout = window.AddComponent<LayoutElement>();
+            if(!window.TryGetComponent(out LayoutElement layout))
+                layout = window.AddComponent<LayoutElement>();
             layout.ignoreLayout = !visible;
 
             // 3. Ensure the object itself is active so coroutines can run
@@ -329,7 +328,7 @@ namespace SoftAware.PocketAmp
         const int SW_MINIMIZE = 6;
 #endif
 
-        public void CloseApplication()
+        private void CloseApplication()
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -338,7 +337,7 @@ namespace SoftAware.PocketAmp
 #endif
         }
 
-        public void MinimizeApplication()
+        private void MinimizeApplication()
         {
 #if UNITY_EDITOR
             Debug.Log("[Main] Minimize requested (Editor)");
@@ -378,32 +377,6 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        public void OpenSkinsLibrary()
-        {
-            Debug.Log($"[Main] OpenSkinsLibrary called. Window ref: {skinsLibraryWindow}");
-            if (skinsLibraryWindow == null) Debug.LogError("[Main] SkinsLibraryWindow reference is NULL!");
-            
-            SetWindowVisibility(skinsLibraryWindow, true);
-        }
-
-        public void CloseSkinsLibrary()
-        {
-            SetWindowVisibility(skinsLibraryWindow, false);
-        }
-
-        public void OpenPresetsLibrary()
-        {
-            Debug.Log($"[Main] OpenPresetsLibrary called. Window ref: {presetsLibraryWindow}");
-            if (presetsLibraryWindow == null) Debug.LogError("[Main] PresetsLibraryWindow reference is NULL!");
-            
-            SetWindowVisibility(presetsLibraryWindow, true);
-        }
-
-        public void ClosePresetsLibrary()
-        {
-            SetWindowVisibility(presetsLibraryWindow, false);
-        }
-
         private void ToggleVisWindow()
         {
             isVisWindowOpen = !isVisWindowOpen;
@@ -420,11 +393,5 @@ namespace SoftAware.PocketAmp
             NextButton.onClick.RemoveAllListeners();
             EjectButton.onClick.RemoveAllListeners();
         }
-
-        internal void OpenMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, true);
-        internal void CloseMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, false);
-
-        internal void OpenAddUrlWindow() => SetWindowVisibility(addUrlWindow, true);
-        internal void CloseAddUrlWindow() => SetWindowVisibility(addUrlWindow, false);
     }
 }

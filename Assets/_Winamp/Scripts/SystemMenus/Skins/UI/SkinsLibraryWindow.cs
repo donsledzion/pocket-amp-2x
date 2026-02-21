@@ -186,7 +186,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
             var main = FindAnyObjectByType<Main>(); // Inefficient but safe for now
             if (main != null)
             {
-                main.CloseSkinsLibrary();
+                main.OverlayWindowsController.CloseSkinsLibrary();
             }
             else
             {

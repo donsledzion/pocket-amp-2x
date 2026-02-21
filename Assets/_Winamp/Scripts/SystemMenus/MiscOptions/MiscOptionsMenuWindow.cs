@@ -112,8 +112,8 @@ public class MiscOptionsMenuWindow : MonoBehaviour
     private void OpenSkinsLibrary()
     {
         CloseMenu();
-        Refs.Main.OpenSkinsLibrary();
+        Refs.Main.OverlayWindowsController.OpenSkinsLibrary();
     }
 
-    internal void CloseMenu() => Refs.Main.CloseMiscOptionsMenu();
+    internal void CloseMenu() => Refs.Main.OverlayWindowsController.CloseMiscOptionsMenu();
 }
