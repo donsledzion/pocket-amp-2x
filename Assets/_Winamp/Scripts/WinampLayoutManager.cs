@@ -10,6 +10,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private RectTransform layoutRoot;
         [SerializeField] private RectTransform leftColumn;
         [SerializeField] private RectTransform rightColumn;
+        [SerializeField] private RectTransform overlayWindows;
 
         [Header("Panels")]
         [SerializeField] private RectTransform mainPanel;
@@ -229,6 +230,21 @@ namespace SoftAware.PocketAmp
             if (playlistPanel != null)
                 SetPanelStretch(playlistPanel);
 
+            // OverlayWindows - rozciągnij na pełny ekran w unscaled jednostkach, środkując kotwice
+            if (overlayWindows != null)
+            {
+                if (overlayWindows.parent != layoutRoot)
+                    overlayWindows.SetParent(layoutRoot, false);
+
+                overlayWindows.anchorMin = new Vector2(0.5f, 0.5f);
+                overlayWindows.anchorMax = new Vector2(0.5f, 0.5f);
+                overlayWindows.pivot = new Vector2(0.5f, 0.5f);
+                
+                // layoutRoot w Portrecie jest na (0.5, 1) - X jest już w środku, Y trzeba obniżyć
+                overlayWindows.anchoredPosition = new Vector2(0, -unscaledScreenHeight / 2f);
+                overlayWindows.sizeDelta = new Vector2(nativeWidth, unscaledScreenHeight);
+            }
+
             if (showDebugLogs)
                 Debug.Log($"[WinampLayout] Portrait: NextY={nextY}, PlaylistHeight={playlistHeight}");
         }
@@ -293,6 +309,26 @@ namespace SoftAware.PocketAmp
 
             if (showDebugLogs)
                 Debug.Log($"[WinampLayout] Landscape: RightColumnWidth={remainingWidthUnscaled}");
+
+            // OverlayWindows - rozciągnij na pełny ekran w unscaled jednostkach, środkując kotwice
+            if (overlayWindows != null)
+            {
+                if (overlayWindows.parent != layoutRoot)
+                    overlayWindows.SetParent(layoutRoot, false);
+
+                overlayWindows.anchorMin = new Vector2(0.5f, 0.5f);
+                overlayWindows.anchorMax = new Vector2(0.5f, 0.5f);
+                overlayWindows.pivot = new Vector2(0.5f, 0.5f);
+                
+                // layoutRoot w Landscape jest na (0, 1) - Origin jest w lewym górnym rogu.
+                // Aby trafić w środek ekranu (USW/2, -USH/2), musimy odjąć przesunięcie kotwicy (nativeWidth/2, 0)
+                float unscaledScreenWidth = screenWidth / currentScale;
+                float offsetX = (unscaledScreenWidth / 2f) - (nativeWidth / 2f);
+                float offsetY = -unscaledScreenHeight / 2f;
+                
+                overlayWindows.anchoredPosition = new Vector2(offsetX, offsetY);
+                overlayWindows.sizeDelta = new Vector2(unscaledScreenWidth, unscaledScreenHeight);
+            }
         }
 
         private void ConfigureColumn(RectTransform col, Vector2 anchor, Vector2 pivot, Vector2 pos)

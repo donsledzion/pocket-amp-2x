@@ -35,6 +35,8 @@ namespace SoftAware.PocketAmp
         private void SetWindowVisibility(GameObject window, bool state)
         {
             SetOverlayWindowBackground(state);
+            if (state)
+                window.transform.localPosition = Vector3.zero;
             window.SetActive(state);
         }
     }
