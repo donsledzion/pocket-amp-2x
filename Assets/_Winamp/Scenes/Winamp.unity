@@ -13228,6 +13228,7 @@ GameObject:
   - component: {fileID: 1375405687}
   - component: {fileID: 1375405689}
   - component: {fileID: 1375405688}
+  - component: {fileID: 1375405690}
   m_Layer: 0
   m_Name: TitleBar
   m_TagString: Untagged
@@ -13294,6 +13295,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375405686}
   m_CullTransparentMesh: 1
+--- !u!114 &1375405690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375405686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d624ee864d533b24ea787eb62ea611c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.DraggableWindow
 --- !u!1 &1394868856
 GameObject:
   m_ObjectHideFlags: 0
@@ -20531,6 +20544,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978881360}
   m_CullTransparentMesh: 1
+--- !u!1 &1985769676 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7590044645962902943, guid: 02883efd9604fb44296718a231365681, type: 3}
+  m_PrefabInstance: {fileID: 1321351163957212046}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1985769680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985769676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d624ee864d533b24ea787eb62ea611c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.DraggableWindow
 --- !u!1001 &1995414747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20705,7 +20735,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -380.70312}
   m_SizeDelta: {x: 275, y: 761.40625}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2018791940
@@ -22147,7 +22177,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7590044645962902943, guid: 02883efd9604fb44296718a231365681, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1985769680}
   m_SourcePrefab: {fileID: 100100000, guid: 02883efd9604fb44296718a231365681, type: 3}
 --- !u!222 &1361946023501753575
 CanvasRenderer:
@@ -22168,6 +22201,7 @@ GameObject:
   - component: {fileID: 5433837509022789939}
   - component: {fileID: 372153553721689695}
   - component: {fileID: 9207021682627861418}
+  - component: {fileID: 9207021682627861419}
   m_Layer: 0
   m_Name: TitleBar
   m_TagString: Untagged
@@ -22966,7 +23000,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7549220482337771564}
   m_HandleRect: {fileID: 7262807527854865560}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -23339,6 +23373,7 @@ GameObject:
   - component: {fileID: 1114870386302795116}
   - component: {fileID: 4700114749728885248}
   - component: {fileID: 4311606933964150773}
+  - component: {fileID: 5770666761404847697}
   m_Layer: 0
   m_Name: TitleBar
   m_TagString: Untagged
@@ -23346,6 +23381,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5770666761404847697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770666761404847696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d624ee864d533b24ea787eb62ea611c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DraggableWindow
 --- !u!224 &5816604852698605944
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24344,6 +24391,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9207021682627861419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442708794606983695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d624ee864d533b24ea787eb62ea611c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.DraggableWindow
 --- !u!114 &9215143392463903695
 MonoBehaviour:
   m_ObjectHideFlags: 0
