@@ -1,8 +1,8 @@
-# Winamp 2.x Android Recreation
+# PocketAmp
 
-A fan-made recreation of the classic Winamp 2.x experience for Android.
+A recreation of the classic retro media player experience for Android.
 
-This project was created out of nostalgia and appreciation for the original desktop player. It is not affiliated with, endorsed by, or associated with Llama Group or the official Winamp brand.
+This project was created out of nostalgia and appreciation for classic desktop media players.
 
 ---
 
@@ -10,9 +10,9 @@ This project was created out of nostalgia and appreciation for the original desk
 
 This is a non-commercial fan project.
 
-All trademarks, brand names, and rights related to Winamp belong to their respective owners.
+All trademarks and brand names belong to their respective owners.
 
-This repository does not include any original proprietary Winamp assets.
+This repository does not include any original proprietary assets.
 
 Users must provide their own legally obtained `.wsz` skin files.
 
@@ -20,9 +20,9 @@ Users must provide their own legally obtained `.wsz` skin files.
 
 ## 🎵 Features
 
-- Classic Winamp 2.x inspired interface
+- Classic retro media player inspired interface
 - Background audio playback
-- Support for original `.wsz` skin files
+- Support for classic `.wsz` skin files
 - Prototype visualization plugin system
 - Built with Unity
 - Android `.apk` builds included
@@ -33,11 +33,11 @@ Users must provide their own legally obtained `.wsz` skin files.
 
 The main goals of this project are:
 
-- Recreate the look and feel of Winamp 2.x
+- Recreate the look and feel of classic retro media players
 - Bring the classic desktop experience to Android
-- Support original Winamp skin format (`.wsz`)
+- Support for classic `.wsz` skin format
 - Experiment with a modular visualization system
-- Preserve the nostalgic “classic Winamp” feeling
+- Preserve the nostalgic retro feeling
 
 This project is still under active development and requires further refinement and stabilization.
 
@@ -48,7 +48,7 @@ This project is still under active development and requires further refinement a
 - Engine: Unity
 - Platform: Android
 - Language: C#
-- Custom UI layout system inspired by Winamp 2.x window behavior
+- Custom UI layout system inspired by classic window behavior
 - `.wsz` skin parsing and dynamic UI rendering
 
 ---
@@ -71,7 +71,7 @@ Areas that still require improvement:
 
 This project started as a personal experiment driven by nostalgia.
 
-Many users who grew up in the late 90s and early 2000s still feel strongly connected to the classic Winamp 2.x experience. The goal is to bring that feeling back on modern Android devices.
+Many users who grew up in the late 90s and early 2000s still feel strongly connected to the classic media player experience. The goal is to bring that feeling back on modern Android devices.
 
 ---
 

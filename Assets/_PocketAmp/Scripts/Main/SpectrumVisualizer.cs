@@ -1,0 +1,396 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+namespace SoftAware.PocketAmp
+{
+    public class SpectrumVisualizer : MonoBehaviour, IPointerClickHandler, ISkinApplicator
+    {
+        public enum VisMode { Spectrum, Waveform, None }
+
+        [Header("References")]
+        [SerializeField] private RawImage outputImage;
+
+        [Header("Settings")]
+        [SerializeField] private VisMode currentMode = VisMode.Spectrum;
+        [SerializeField] private int spectrumBars = 19; // About 19-32 bars depending on scaling, 76/4 = 19
+
+        [Header("Peaks")]
+        [SerializeField] private bool showPeaks = true;
+        [SerializeField] private float peakFallSpeed = 0.5f;
+        [SerializeField] private float peakHoldTime = 0.1f;
+        
+        public System.Action<VisMode> OnModeChanged;
+        public System.Action OnDoubleClick;
+
+        private AudioPlayer audioPlayer => Refs.AudioPlayer;
+        private AudioSource audioSource => audioPlayer.AudioSource;
+
+        private Texture2D visualizerTexture;
+        private Color[] palette;
+        private float[] spectrumData = new float[512];
+        private float[] waveformData = new float[512];
+        private float[] peakHeights;
+        private float[] peakTimers;
+        private Color colorTransparent;
+        private float _lastClickTime = 0;
+        private const float DOUBLE_CLICK_TIME = 0.3f;
+
+        private const int Width = 76;
+        private const int Height = 16;
+
+        private void Awake()
+        {
+            InitializePalette();
+            CreateTexture();
+            peakHeights = new float[spectrumBars];
+            peakTimers = new float[spectrumBars];
+        }
+
+        private void InitializePalette()
+        {
+            palette = new Color[24];
+            palette[0] = new Color(0, 0, 0, 0); // Transparent background
+            palette[1] = FromRGB(24, 33, 41);    // dots
+            palette[2] = FromRGB(239, 49, 16);   // top spect
+            palette[3] = FromRGB(206, 41, 16);
+            palette[4] = FromRGB(214, 90, 0);
+            palette[5] = FromRGB(214, 102, 0);
+            palette[6] = FromRGB(214, 115, 0);
+            palette[7] = FromRGB(198, 123, 8);
+            palette[8] = FromRGB(222, 165, 24);
+            palette[9] = FromRGB(214, 181, 33);
+            palette[10] = FromRGB(189, 222, 41);
+            palette[11] = FromRGB(148, 222, 33);
+            palette[12] = FromRGB(41, 206, 16);
+            palette[13] = FromRGB(50, 190, 16);
+            palette[14] = FromRGB(57, 181, 16);
+            palette[15] = FromRGB(49, 156, 8);
+            palette[16] = FromRGB(41, 148, 0);
+            palette[17] = FromRGB(24, 132, 8);   // bottom spect
+            palette[18] = FromRGB(255, 255, 255); // osc 1
+            palette[19] = FromRGB(214, 214, 222); // osc 2
+            palette[20] = FromRGB(181, 189, 189); // osc 3
+            palette[21] = FromRGB(160, 170, 175); // osc 4
+            palette[22] = FromRGB(148, 156, 165); // osc 5
+            palette[23] = FromRGB(150, 150, 150); // peak dots
+
+            colorTransparent = palette[0];
+        }
+
+        private static Color FromRGB(int r, int g, int b) => new Color(r / 255f, g / 255f, b / 255f);
+
+        private void CreateTexture()
+        {
+            // Use RGBA32 to support transparency
+            visualizerTexture = new Texture2D(Width, Height, TextureFormat.RGBA32, false);
+            visualizerTexture.filterMode = FilterMode.Point;
+            visualizerTexture.wrapMode = TextureWrapMode.Clamp;
+            outputImage.texture = visualizerTexture;
+            ClearTexture();
+        }
+
+        private void ClearTexture()
+        {
+            for (var x = 0; x < Width; x++)
+                for (var y = 0; y < Height; y++)
+                    visualizerTexture.SetPixel(x, y, colorTransparent);
+        }
+
+        private void Update()
+        {
+            try
+            {
+                var vol = audioPlayer.CurrentVolume;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+                if (audioPlayer != null)
+                {
+                    if (audioPlayer.IsPaused) return; // Frozen
+                    
+                    if (!audioPlayer.IsPlaying)
+                    {
+                        // Stopped
+                        ClearTexture();
+                        visualizerTexture.Apply();
+                        return;
+                    }
+                }
+#else
+                
+                var isPausedNow = audioPlayer.IsPaused;
+
+                if (!audioSource.isPlaying && !isPausedNow)
+                {
+                    // Stopped - clear texture
+                    UpdatePeaks(null, 1.0f);
+                    ClearTexture();
+                    visualizerTexture.Apply();
+                    return;
+                }
+
+                if (isPausedNow) return; // Frozen - skip draw but don't clear
+#endif
+
+                if (currentMode == VisMode.None)
+                {
+                    ClearTexture();
+                    visualizerTexture.Apply();
+                    return;
+                }
+
+                ClearTexture();
+
+                switch (currentMode)
+                {
+                    case VisMode.Spectrum:
+                        DrawSpectrum(vol);
+                        break;
+                    case VisMode.Waveform:
+                        DrawWaveform(vol);
+                        break;
+                }
+
+                visualizerTexture.Apply();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[Vis] Update ERR: {e.Message}");
+            }
+        }
+
+        // Calibrated frequency ranges for 19 bars
+        // Shifted higher thresholds to ensure "Kick" hits early bars (0-2)
+        private static readonly int[] FREQ_RANGES_HZ = {
+            100, 200, 300, 450, 600, 900, 1300, 1800, 2500, 3300, 4500, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 21000
+        };
+
+        private void DrawSpectrum(float volume)
+        {
+            var bars = new float[spectrumBars];
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Android: Get pre-processed (now with high treble boost) 19 bars
+            bars = AndroidVisualizerBridge.GetPocketAmpFFT();
+#else
+            // Desktop: Get raw FFT and group into 19 log bars
+            audioSource.GetSpectrumData(spectrumData, 0, FFTWindow.BlackmanHarris);
+            
+            var nyquist = AudioSettings.outputSampleRate / 2.0f;
+            var binWidth = nyquist / spectrumData.Length;
+            var startBin = 1;
+
+            for (var i = 0; i < spectrumBars; i++)
+            {
+                var endBin = Mathf.FloorToInt(FREQ_RANGES_HZ[i] / binWidth);
+                if (endBin <= startBin) endBin = startBin + 1;
+                if (endBin > spectrumData.Length) endBin = spectrumData.Length;
+
+                float maxVal = 0;
+                for (var b = startBin; b < endBin; b++)
+                {
+                    if (spectrumData[b] > maxVal) maxVal = spectrumData[b];
+                }
+
+                // Desktop normalization: 
+                // Unity FFT results are linear power. We use sqrt to get amplitude, 
+                // then apply a calibrated multiplier and a milder Treble Boost.
+                var amplitude = Mathf.Sqrt(maxVal); 
+                var trebleBoost = 1.0f + (i * 0.15f); // 1x to ~3.8x boost
+                bars[i] = amplitude * 3.5f * trebleBoost;
+                
+                startBin = endBin;
+            }
+#endif
+
+            // Update peaks
+            UpdatePeaks(bars, 1.0f);
+
+            var barWidth = Width / spectrumBars;
+            for (var i = 0; i < spectrumBars; i++)
+            {
+                var val = bars[i];
+                var barHeight = Mathf.Clamp(Mathf.RoundToInt(val * Height), 0, Height);
+
+                for (var y = 0; y < barHeight; y++)
+                {
+                    var colorIdx = 17 - y; 
+                    if (colorIdx < 2) colorIdx = 2;
+
+                    for (var x = 0; x < barWidth - 1; x++)
+                    {
+                        visualizerTexture.SetPixel(i * barWidth + x, y, palette[colorIdx]);
+                    }
+                }
+
+                if (!showPeaks) continue;
+                {
+                    var peakY = Mathf.Clamp(Mathf.RoundToInt(peakHeights[i] * Height), 0, Height - 1);
+                    if (peakY < 0) continue;
+                    for (var x = 0; x < barWidth - 1; x++)
+                        visualizerTexture.SetPixel(i * barWidth + x, peakY, palette[23]);
+                }
+            }
+        }
+
+        private void UpdatePeaks(float[] data, float multiplier = 1.0f)
+        {
+            for (var i = 0; i < spectrumBars; i++)
+            {
+                float val;
+                if (data == null) val = 0;
+                else if (data.Length == spectrumBars) val = data[i] * multiplier; // Exact match (Android)
+                else if (i + 1 < data.Length) val = data[i + 1] * multiplier; // Raw FFT (skip DC)
+                else val = 0;
+                
+                if (val >= peakHeights[i])
+                {
+                    peakHeights[i] = val;
+                    peakTimers[i] = peakHoldTime;
+                }
+                else
+                {
+                    if (peakTimers[i] > 0)
+                    {
+                        peakTimers[i] -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        peakHeights[i] -= peakFallSpeed * Time.deltaTime;
+                    }
+                }
+
+                peakHeights[i] = Mathf.Clamp(peakHeights[i], 0, 1f);
+            }
+        }
+
+        private void DrawWaveform(float volume)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            waveformData = AndroidVisualizerBridge.GetWaveformData(512);
+            if (waveformData == null || waveformData.Length == 0) return;
+            var baseMult = 0.8f; 
+#else
+            audioSource.GetOutputData(waveformData, 0);
+            var baseMult = 1.0f;
+#endif
+#if UNITY_ANDROID && !UNITY_EDITOR
+            var multiplier = baseMult; 
+#else
+            var sensitivity = 1.0f / Mathf.Max(volume, 0.1f);
+            var multiplier = baseMult * sensitivity;
+#endif
+
+            var centerY = Height / 2;
+            var lastY = centerY;
+            var samplesPerPixel = 512f / Width;
+
+            for (var x = 0; x < Width; x++)
+            {
+                var startIdx = Mathf.FloorToInt(x * samplesPerPixel);
+                var endIdx = Mathf.FloorToInt((x + 1) * samplesPerPixel);
+                float sum = 0;
+                var count = 0;
+
+                for (var i = startIdx; i < endIdx && i < waveformData.Length; i++)
+                {
+                    sum += waveformData[i];
+                    count++;
+                }
+
+                var avgVal = (count > 0) ? (sum / count) : 0;
+                var val = avgVal * multiplier;
+                
+                var y = Mathf.Clamp(Mathf.RoundToInt((val + 1f) * 0.5f * Height), 0, Height - 1);
+                
+                int startSeg = Mathf.Min(y, lastY);
+                var endSeg = Mathf.Max(y, lastY);
+
+                for (var ty = startSeg; ty <= endSeg; ty++)
+                {
+                    visualizerTexture.SetPixel(x, ty, palette[18]);
+                }
+                
+                lastY = y;
+            }
+        }
+
+        private void OnDisable()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidVisualizerBridge.Release();
+#endif
+        }
+
+        public void SetMode(VisMode mode)
+        {
+            currentMode = mode;
+            OnModeChanged?.Invoke(currentMode);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            var timeSinceLastClick = Time.time - _lastClickTime;
+            Debug.Log($"[Vis] Click! Delta: {timeSinceLastClick:F3}s");
+
+            if (timeSinceLastClick < DOUBLE_CLICK_TIME)
+            {
+                // Double click detected manually
+                Debug.Log("[Vis] Double Click Detected (Manual)!");
+                OnDoubleClick?.Invoke();
+                _lastClickTime = 0; // Reset to avoid triple click triggering second double click
+            }
+            else
+            {
+                // Single click
+                _lastClickTime = Time.time;
+
+                currentMode = currentMode switch
+                {
+                    // Cycle modes (Spectrum -> Waveform -> None)
+                    VisMode.Spectrum => VisMode.Waveform,
+                    VisMode.Waveform => VisMode.None,
+                    _ => VisMode.Spectrum
+                };
+
+                Debug.Log($"[Vis] Mode Cycle: {currentMode}");
+                OnModeChanged?.Invoke(currentMode);
+            }
+        }
+
+        public void ApplySkin(Skin skin)
+        {
+            if (skin == null) return;
+            
+            if (skin.VisColors == null || skin.VisColors.Length == 0)
+            {
+                Debug.Log("[SpectrumVisualizer] Skin has no VisColors defined.");
+                return;
+            }
+
+            Debug.Log($"[SpectrumVisualizer] Applying skin colors ({skin.VisColors.Length} colors)");
+
+            // PocketAmp VISCOLOR.TXT mapping to our palette
+            // Line 1: Background (Index 0)
+            // Line 2: Dots (Index 1)
+            // Line 3-18: Spectrum bars (Index 2-17)
+            // Line 19-23: Oscilloscope (Index 18-22)
+            // Line 24: Peak dots (Index 23)
+
+            for (int i = 0; i < skin.VisColors.Length && i < palette.Length; i++)
+            {
+                // We keep alpha transparency for background (Index 0) if it was already transparent,
+                // or we use the skin's color if it's meant to be solid.
+                // Standard visualizer has solid background, but we like our transparency.
+                // Let's use the skin color but keep it slightly transparent or just solid if the skin says so.
+                palette[i] = skin.VisColors[i];
+            }
+
+            colorTransparent = palette[0];
+
+            if (visualizerTexture == null) return;
+            ClearTexture();
+            visualizerTexture.Apply();
+        }
+    }
+}

@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application android:requestLegacyExternalStorage="true" android:usesCleartextTraffic="true">
-        <service android:name="com.softaware.winamp.WinampAudioService"
+        <service android:name="com.softaware.pocketamp.PocketAmpAudioService"
                  android:foregroundServiceType="mediaPlayback"
                  android:exported="false">
         </service>
