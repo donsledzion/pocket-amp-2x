@@ -576,6 +576,25 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        private void OnApplicationQuit() => AndroidMediaBridge.StopService();
+
+        private void OnApplicationQuit()
+        {
+            AndroidMediaBridge.StopService();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // CRITICAL: We MUST forcefully kill the process here on Android.
+            // Otherwise, Unity enters an Idle Loop instead of exiting due to runInBackground = true.
+            // This leaves an orphaned process that causes ANR on subsequent relaunch attempts.
+            try
+            {
+                using var process = new AndroidJavaClass("android.os.Process");
+                var pid = process.CallStatic<int>("myPid");
+                process.CallStatic("killProcess", pid);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[AudioPlayer] Failed to kill process: {e.Message}");
+            }
+#endif
+        }
     }
 }

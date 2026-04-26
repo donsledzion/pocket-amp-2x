@@ -82,8 +82,10 @@ namespace SoftAware
 
         public static void StopService()
         {
-            Initialize();
             #if UNITY_ANDROID && !UNITY_EDITOR
+            // Don't start the service just to stop it - if it was never initialized, there's nothing to stop
+            if (context == null || serviceIntent == null) return;
+
             serviceIntent.Call<AndroidJavaObject>("setAction", "STOP_SERVICE");
             context.Call<AndroidJavaObject>("startService", serviceIntent);
             #endif

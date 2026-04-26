@@ -60,8 +60,8 @@ public class PocketAmpAudioService extends Service implements AudioManager.OnAud
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (powerManager != null) {
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PocketAmp:PlaybackWakeLock");
-            wakeLock.acquire();
-            Log.d(TAG, "WakeLock acquired");
+            wakeLock.acquire(60 * 60 * 1000L); // 1 hour max - safety timeout
+            Log.d(TAG, "WakeLock acquired (with 1h timeout)");
         }
     }
 
@@ -321,6 +321,18 @@ public class PocketAmpAudioService extends Service implements AudioManager.OnAud
                 // For now, do nothing (keep playing) or pause if preferred.
                 break;
         }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.d(TAG, "onTaskRemoved - cleaning up service");
+        abandonAudioFocus();
+        stopForeground(true);
+        stopSelf();
+        super.onTaskRemoved(rootIntent);
+        
+        // Kill process to prevent it from lingering in Unity's Idle Loop
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
