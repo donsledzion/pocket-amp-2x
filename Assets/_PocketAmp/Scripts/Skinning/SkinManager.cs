@@ -21,13 +21,32 @@ namespace SoftAware
         
         // Use the new SkinFileSystem directly for setup tasks
         private SkinFileSystem skinFileSystem;
+        private CanvasGroup playerUiCanvasGroup;
 
         private static Main main => Refs.Main;
         private static PlaylistUI playlistUI => Refs.PlaylistUI;
 
         //public static SkinManager Instance { get; private set; }
 
-        private void Awake() => skinFileSystem = new SkinFileSystem();
+        private void Awake()
+        {
+            skinFileSystem = new SkinFileSystem();
+            
+            var mainInstance = Object.FindAnyObjectByType<Main>();
+            if (mainInstance != null)
+            {
+                var canvas = mainInstance.GetComponentInParent<Canvas>();
+                if (canvas != null)
+                {
+                    playerUiCanvasGroup = canvas.GetComponent<CanvasGroup>();
+                    if (playerUiCanvasGroup == null)
+                    {
+                        playerUiCanvasGroup = canvas.gameObject.AddComponent<CanvasGroup>();
+                    }
+                    playerUiCanvasGroup.alpha = 0f;
+                }
+            }
+        }
 
         private IEnumerator Start()
         {
@@ -44,6 +63,10 @@ namespace SoftAware
             // 0.5 Ensure Demo Skins
             var demoTask = skinFileSystem.EnsureDemoSkinsExist();
             yield return new WaitUntil(() => demoTask.IsCompleted);
+
+            // 0.6 Ensure Default Skin Exists (Simplicity.wsz)
+            var defaultSkinTask = skinFileSystem.EnsureDefaultSkinExists();
+            yield return new WaitUntil(() => defaultSkinTask.IsCompleted);
 
             var skinToLoad = "";
             var foundSkin = false;
@@ -72,6 +95,18 @@ namespace SoftAware
                 }
             }
 
+            // 2.5 Fallback: Default Skin (Simplicity.wsz)
+            if (!foundSkin)
+            {
+                var defaultSkinPath = System.IO.Path.Combine(Application.persistentDataPath, "skins", "Simplicity.wsz");
+                if (System.IO.File.Exists(defaultSkinPath))
+                {
+                    Debug.Log($"[PocketAmpSkinManager] Loading DEFAULT skin: {defaultSkinPath}");
+                    skinToLoad = defaultSkinPath;
+                    foundSkin = true;
+                }
+            }
+
             // 3. Fallback: Base Skin
             if (!foundSkin && useBaseSkinFallback)
             {
@@ -96,6 +131,10 @@ namespace SoftAware
             if (foundSkin && !string.IsNullOrEmpty(skinToLoad))
             {
                 var loadTask = LoadSkin(skinToLoad);
+            }
+            else
+            {
+                ShowUI();
             }
         }
 
@@ -136,6 +175,7 @@ namespace SoftAware
             if (string.IsNullOrEmpty(testSkinPath))
             {
                 Debug.LogError("Test Skin Path is empty!");
+                ShowUI();
                 return;
             }
 
@@ -143,7 +183,11 @@ namespace SoftAware
 
             // 1. Unpack
             string unpackedDir = SkinImporter.Instance.UnpackWsz(testSkinPath);
-            if (unpackedDir == null) return;
+            if (unpackedDir == null)
+            {
+                ShowUI();
+                return;
+            }
             
             string skinName = System.IO.Path.GetFileNameWithoutExtension(testSkinPath);
 
@@ -151,15 +195,14 @@ namespace SoftAware
             try
             {
                 this.currentSkin = await SkinImporter.Instance.LoadSkinAsync(skinName);
+                ApplySkinToHierarchy();
             }
             catch (System.Exception ex)
             {
                  Debug.LogError($"[PocketAmpSkinManager] CRITICAL: Failed to load skin assets: {ex.Message}\n{ex.StackTrace}");
+                 ShowUI();
                  return;
             }
-
-            // 3. Apply
-            ApplySkinToHierarchy();
         }
 
         private void ApplySkinToHierarchy()
@@ -177,6 +220,16 @@ namespace SoftAware
             // Distribute to known applicators
             main.ApplySkin(currentSkin);
             playlistUI.ApplySkin(currentSkin);
+
+            ShowUI();
+        }
+
+        private void ShowUI()
+        {
+            if (playerUiCanvasGroup != null)
+            {
+                playerUiCanvasGroup.alpha = 1f;
+            }
         }
     }
 }
