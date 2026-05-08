@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using System;
 using SoftAware.PocketAmp.SystemMenus.Core; // Added for IntPtr, Exception
 
@@ -10,31 +11,33 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
 {
     public class SkinService : IService
     {
-        private string SkinsDirectory => Path.Combine(Application.persistentDataPath, "skins");
+        private string skinsDirectory;
+        private string BaseUrl => "https://skin-library.softaware.pl/api";
 
         public SkinService()
         {
-            if (!Directory.Exists(SkinsDirectory))
+            skinsDirectory = Path.Combine(Application.persistentDataPath, "skins");
+            if (!Directory.Exists(skinsDirectory))
             {
-                Directory.CreateDirectory(SkinsDirectory);
+                Directory.CreateDirectory(skinsDirectory);
             }
         }
 
-        public Task<List<string>> GetAvailableSkinsAsync()
+        public async Awaitable<List<string>> GetAvailableSkinsAsync()
         {
-            if (!Directory.Exists(SkinsDirectory)) return Task.FromResult(new List<string>());
+            if (!Directory.Exists(skinsDirectory)) return new List<string>();
 
             // Get both .wsz and .zip files
-            var files = Directory.GetFiles(SkinsDirectory, "*.*")
+            var files = await Task.Run(() => Directory.GetFiles(skinsDirectory, "*.*")
                 .Where(s => s.ToLower().EndsWith(".wsz") || s.ToLower().EndsWith(".zip"))
                 .Select(Path.GetFileName)
                 .OrderBy(n => n)
-                .ToList();
+                .ToList());
             
-            return Task.FromResult(files);
+            return files;
         }
 
-        public async Task ImportSkinAsync(string sourcePath)
+        public async Awaitable ImportSkinAsync(string sourcePath)
         {
             var fileName = Path.GetFileName(sourcePath);
             // Fallback for content URIs if Path.GetFileName returns empty or bad name
@@ -58,12 +61,12 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                 }
             }
             
-            var destPath = Path.Combine(SkinsDirectory, fileName);
+            var destPath = Path.Combine(skinsDirectory, fileName);
 
             await CopyFileAsync(sourcePath, destPath);
         }
 
-        private async Task CopyFileAsync(string sourcePath, string destPath)
+        private async Awaitable CopyFileAsync(string sourcePath, string destPath)
         {
             // 1. Try standard File.Copy for local paths
             try
@@ -206,21 +209,121 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             return null;
         }
 
-        public async Task DeleteSkinAsync(string skinName)
+        public async Awaitable DeleteSkinAsync(string skinName)
         {
-            var path = Path.Combine(SkinsDirectory, skinName);
+            var path = Path.Combine(skinsDirectory, skinName);
             if (File.Exists(path))
             {
                 await Task.Run(() => File.Delete(path));
             }
         }
 
-        public async Task<bool> LoadSkin(string skinName)
+        public async Awaitable<bool> LoadSkin(string skinName)
         {
-            var path = Path.Combine(SkinsDirectory, skinName);
+            var path = Path.Combine(skinsDirectory, skinName);
             if (File.Exists(path))
                 return await Refs.SkinManager.LoadSkin(path);
             return false;
         }
+
+        #region Web API
+
+        public bool IsSkinDownloaded(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            var path = Path.Combine(skinsDirectory, id + ".wsz");
+            return File.Exists(path);
+        }
+
+        public async Awaitable<SkinListResponse> GetWebSkinsAsync(string query = "", int page = 1)
+        {
+            var url = $"{BaseUrl}/skins?page={page}&limit=20";
+            if (!string.IsNullOrEmpty(query))
+            {
+                url += $"&q={Uri.EscapeDataString(query)}";
+            }
+
+            using (var www = UnityWebRequest.Get(url))
+            {
+                var op = www.SendWebRequest();
+                while (!op.isDone) await Task.Yield();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    return JsonUtility.FromJson<SkinListResponse>(www.downloadHandler.text);
+                }
+                
+                Debug.LogError($"[SkinService] Failed to fetch web skins: {www.error}");
+                return null;
+            }
+        }
+
+        public async Awaitable<Texture2D> GetTextureAsync(string url, System.Threading.CancellationToken token = default)
+        {
+            if (string.IsNullOrEmpty(url)) return null;
+
+            using (var loader = UnityWebRequestTexture.GetTexture(url))
+            {
+                var op = loader.SendWebRequest();
+                while (!op.isDone)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        loader.Abort();
+                        return null;
+                    }
+                    await Awaitable.NextFrameAsync();
+                }
+
+                if (loader.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                {
+                    return DownloadHandlerTexture.GetContent(loader);
+                }
+                
+                Debug.LogError($"[SkinService] Failed to load texture from {url}: {loader.error}");
+                return null;
+            }
+        }
+
+        public async Awaitable<string> DownloadWebSkinAsync(SkinData skin, System.Threading.CancellationToken token = default)
+        {
+            var fileName = $"{skin.id}.wsz";
+            var destPath = Path.Combine(skinsDirectory, fileName);
+            
+            // Check if already downloaded
+            if (File.Exists(destPath)) return fileName;
+
+            var url = skin.download_url;
+            if (string.IsNullOrEmpty(url))
+            {
+                url = $"{BaseUrl}/skins/{skin.id}/download";
+            }
+
+            using (var www = UnityWebRequest.Get(url))
+            {
+                www.downloadHandler = new DownloadHandlerFile(destPath);
+                var op = www.SendWebRequest();
+                while (!op.isDone)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        www.Abort();
+                        // Clean up partial file if needed (DownloadHandlerFile might leave it)
+                        if (File.Exists(destPath)) File.Delete(destPath);
+                        return null;
+                    }
+                    await Awaitable.NextFrameAsync();
+                }
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    return fileName;
+                }
+                
+                return null;
+            }
+        }
+
+        #endregion
     }
 }

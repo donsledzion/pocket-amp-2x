@@ -92,10 +92,7 @@ namespace SoftAware.PocketAmp
             {
                 var eqController = eqWindow.GetComponent<EqualizerController>();
                 if (eqController != null)
-                {
-                    Debug.Log("[Main] Propagating skin to EqualizerController");
                     eqController.ApplySkin(skin);
-                }
             }
 
             // Apply Font to Text Displays (Bitrate, Samplerate, Song Title)

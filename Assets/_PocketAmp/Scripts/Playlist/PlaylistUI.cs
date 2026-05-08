@@ -103,7 +103,6 @@ namespace SoftAware.PocketAmp
 
             if (miscContextMenu != null)
             {
-                Debug.Log("[PlaylistUI] Binding MiscContext options...");
                 miscContextMenu.OnSortListButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnFileInfoButtonClicked += main.SongTitleDisplay.ShowNotReadyYetMessage;
                 miscContextMenu.OnMiscOptionsButtonClicked += main.OverlayWindowsController.OpenMiscOptionsMenu;

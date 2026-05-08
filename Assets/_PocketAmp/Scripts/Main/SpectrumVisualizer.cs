@@ -368,8 +368,6 @@ namespace SoftAware.PocketAmp
                 return;
             }
 
-            Debug.Log($"[SpectrumVisualizer] Applying skin colors ({skin.VisColors.Length} colors)");
-
             // PocketAmp VISCOLOR.TXT mapping to our palette
             // Line 1: Background (Index 0)
             // Line 2: Dots (Index 1)

@@ -36,8 +36,6 @@ namespace SoftAware
             int imageSize = ReadInt(data, 34);
             int colorsUsed = ReadInt(data, 46);
 
-            Debug.Log($"[BMPLoader] Loading BMP. HeaderSize: {headerSize}, Size: {width}x{height}, BPP: {bitsPerPixel}, Compression: {compression}, DataOffset: {dataOffset}, ColorsUsed: {colorsUsed}, ImageSize: {imageSize}");
-
             bool bottomUp = height > 0;
             int absHeight = Mathf.Abs(height);
 
