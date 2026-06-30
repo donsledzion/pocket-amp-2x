@@ -65,6 +65,128 @@ MonoBehaviour:
     m_Localized: ?:??
     m_Metadata:
       m_Items: []
+  - m_Id: 16500395073536
+    m_Localized: 'Notifications bar: ON'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16560205848576
+    m_Localized: 'Notifications bar: OFF'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16599724580864
+    m_Localized: 'Navigation bar: ON'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16667399675904
+    m_Localized: 'Navigation bar: OFF'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16702115930112
+    m_Localized: 'EQ Presets: Require Load'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16773817556992
+    m_Localized: 'EQ Presets: Load on Select'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16803601309696
+    m_Localized: Found {0} local skins
+    m_Metadata:
+      m_Items:
+      - rid: 5121551142354157906
+  - m_Id: 16874954809344
+    m_Localized: Loading more...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16907716517888
+    m_Localized: Fetching web skins...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16976498909184
+    m_Localized: 'Error: Invalid API response'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17001719259136
+    m_Localized: Showing {0} of {1} skins
+    m_Metadata:
+      m_Items:
+      - rid: 5121551142354157906
+  - m_Id: 17072074514432
+    m_Localized: Loading preview...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17116974538752
+    m_Localized: Loading local skin...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17161278971904
+    m_Localized: Loaded successfully!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17191587012608
+    m_Localized: Downloading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17251393593344
+    m_Localized: Download cancelled.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17299867164672
+    m_Localized: Downloaded! Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17327469879296
+    m_Localized: Failed to load skin.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17395887366144
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17439919169536
+    m_Localized: Download
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17477906980864
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18981233614848
+    m_Localized: Misc options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19329084022784
+    m_Localized: Add from URL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19512773566464
+    m_Localized: Enter audio source URL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19776427515904
+    m_Localized: Open URL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20078614536192
+    m_Localized: Skins library
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20370995273728
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20738563104768
+    m_Localized: Load skin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20936383258624
+    m_Localized: Import new
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21320438898688
+    m_Localized: Equalizer presets
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -79,3 +201,5 @@ MonoBehaviour:
         - id: 2028871868416
         - id: 2183360667648
         - id: 2411912486912
+        - id: 16803601309696
+        - id: 17001719259136

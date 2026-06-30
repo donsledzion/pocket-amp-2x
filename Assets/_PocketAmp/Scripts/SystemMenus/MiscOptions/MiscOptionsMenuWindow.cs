@@ -11,6 +11,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
     [SerializeField] private Button navigationBarToggle;
     [SerializeField] private Button eqPresetsBehaviorToggle;
 
+    [Header("Localization")]
+    [SerializeField] private UnityEngine.Localization.LocalizedString notificationsOnText;
+    [SerializeField] private UnityEngine.Localization.LocalizedString notificationsOffText;
+    [SerializeField] private UnityEngine.Localization.LocalizedString navigationOnText;
+    [SerializeField] private UnityEngine.Localization.LocalizedString navigationOffText;
+    [SerializeField] private UnityEngine.Localization.LocalizedString eqRequireLoadText;
+    [SerializeField] private UnityEngine.Localization.LocalizedString eqLoadOnSelectText;
+
     private void Awake()
     {
         closeButton.onClick.AddListener(CloseMenu);
@@ -66,9 +74,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         var textRequest = notificationsBarToggle.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (textRequest != null)
         {
-            // If Fullscreen is TRUE -> Notifications Bar is OFF (Hidden)
-            // If Fullscreen is FALSE -> Notifications Bar is ON (Visible)
-            textRequest.text = $"Notifications bar: {(SettingsManager.Instance.IsFullscreen ? "OFF" : "ON")}";
+            if (SettingsManager.Instance.IsFullscreen)
+            {
+                textRequest.text = (notificationsOffText != null && !notificationsOffText.IsEmpty) ? notificationsOffText.GetLocalizedString() : "Notifications bar: OFF";
+            }
+            else
+            {
+                textRequest.text = (notificationsOnText != null && !notificationsOnText.IsEmpty) ? notificationsOnText.GetLocalizedString() : "Notifications bar: ON";
+            }
         }
     }
 
@@ -79,7 +92,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         var textRequest = navigationBarToggle.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (textRequest != null)
         {
-            textRequest.text = $"Navigation bar: {(SettingsManager.Instance.IsNavigationBarVisible ? "ON" : "OFF")}";
+            if (SettingsManager.Instance.IsNavigationBarVisible)
+            {
+                textRequest.text = (navigationOnText != null && !navigationOnText.IsEmpty) ? navigationOnText.GetLocalizedString() : "Navigation bar: ON";
+            }
+            else
+            {
+                textRequest.text = (navigationOffText != null && !navigationOffText.IsEmpty) ? navigationOffText.GetLocalizedString() : "Navigation bar: OFF";
+            }
         }
     }
 
@@ -104,8 +124,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         var textRequest = eqPresetsBehaviorToggle.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (textRequest != null)
         {
-            string modeStr = SettingsManager.Instance.EQPresetsLoadBehavior == 0 ? "Require Load" : "Load on Select";
-            textRequest.text = $"EQ Presets: {modeStr}";
+            if (SettingsManager.Instance.EQPresetsLoadBehavior == 0)
+            {
+                textRequest.text = (eqRequireLoadText != null && !eqRequireLoadText.IsEmpty) ? eqRequireLoadText.GetLocalizedString() : "EQ Presets: Require Load";
+            }
+            else
+            {
+                textRequest.text = (eqLoadOnSelectText != null && !eqLoadOnSelectText.IsEmpty) ? eqLoadOnSelectText.GetLocalizedString() : "EQ Presets: Load on Select";
+            }
         }
     }
 

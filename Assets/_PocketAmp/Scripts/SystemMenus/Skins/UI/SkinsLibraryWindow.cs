@@ -37,6 +37,23 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 
         [SerializeField] private TMPro.TextMeshProUGUI statusText;
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString foundLocalSkinsText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString loadingMoreText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString fetchingWebText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString errorApiText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString showingWebSkinsText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString loadingPreviewText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString btnLoadText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString btnDownloadText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString btnCancelText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString loadingLocalText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString loadedSuccessText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString downloadingText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString downloadCancelledText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString downloadedLoadingText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString failedLoadText;
+
         private SkinService skinService;
         private string selectedSkinName;
         private SkinData selectedWebSkin;
@@ -114,7 +131,18 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
             var skins = await skinService.GetAvailableSkinsAsync();
             if (skins == null) return;
             
-            if (statusText) statusText.text = $"Found {skins.Count} local skins";
+            if (statusText) 
+            {
+                if (foundLocalSkinsText != null && !foundLocalSkinsText.IsEmpty)
+                {
+                    foundLocalSkinsText.Arguments = new object[] { skins.Count };
+                    statusText.text = foundLocalSkinsText.GetLocalizedString();
+                }
+                else
+                {
+                    statusText.text = $"Found {skins.Count} local skins";
+                }
+            }
 
             foreach (var skinName in skins)
             {
@@ -135,13 +163,19 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 
         private async Awaitable RefreshWebList(bool append = false)
         {
-            if (statusText) statusText.text = append ? "Loading more..." : "Fetching web skins...";
+            if (statusText)
+            {
+                if (append)
+                    statusText.text = (loadingMoreText != null && !loadingMoreText.IsEmpty) ? loadingMoreText.GetLocalizedString() : "Loading more...";
+                else
+                    statusText.text = (fetchingWebText != null && !fetchingWebText.IsEmpty) ? fetchingWebText.GetLocalizedString() : "Fetching web skins...";
+            }
             var query = searchField ? searchField.text : "";
             var response = await skinService.GetWebSkinsAsync(query, currentWebPage);
             
             if (response == null || response.items == null)
             {
-                if (statusText) statusText.text = "Error: Invalid API response";
+                if (statusText) statusText.text = (errorApiText != null && !errorApiText.IsEmpty) ? errorApiText.GetLocalizedString() : "Error: Invalid API response";
                 return;
             }
 
@@ -151,7 +185,15 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 
             if (statusText) 
             {
-                statusText.text = $"Showing {webSkins.Count} of {totalWebSkins} skins";
+                if (showingWebSkinsText != null && !showingWebSkinsText.IsEmpty)
+                {
+                    showingWebSkinsText.Arguments = new object[] { webSkins.Count, totalWebSkins };
+                    statusText.text = showingWebSkinsText.GetLocalizedString();
+                }
+                else
+                {
+                    statusText.text = $"Showing {webSkins.Count} of {totalWebSkins} skins";
+                }
             }
 
             foreach (var skin in response.items)
@@ -258,7 +300,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 if (previewOverlayButton) previewOverlayButton.gameObject.SetActive(true);
 
                 string originalStatus = statusText ? statusText.text : "";
-                if (statusText) statusText.text = "Loading preview...";
+                if (statusText) statusText.text = (loadingPreviewText != null && !loadingPreviewText.IsEmpty) ? loadingPreviewText.GetLocalizedString() : "Loading preview...";
 
                 try 
                 {
@@ -332,7 +374,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 loadButton.gameObject.SetActive(!isWebMode);
                 loadButton.interactable = hasSelection;
                 var text = loadButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                if (text) text.text = "Load";
+                if (text) text.text = (btnLoadText != null && !btnLoadText.IsEmpty) ? btnLoadText.GetLocalizedString() : "Load";
             }
 
             if (deleteButton)
@@ -351,7 +393,10 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 if (webDownloadButtonText && isWebMode && selectedWebSkin != null)
                 {
                     bool alreadyDownloaded = skinService.IsSkinDownloaded(selectedWebSkin.id);
-                    webDownloadButtonText.text = isDownloading ? "Cancel" : (alreadyDownloaded ? "Load" : "Download");
+                    string loadStr = (btnLoadText != null && !btnLoadText.IsEmpty) ? btnLoadText.GetLocalizedString() : "Load";
+                    string downloadStr = (btnDownloadText != null && !btnDownloadText.IsEmpty) ? btnDownloadText.GetLocalizedString() : "Download";
+                    string cancelStr = (btnCancelText != null && !btnCancelText.IsEmpty) ? btnCancelText.GetLocalizedString() : "Cancel";
+                    webDownloadButtonText.text = isDownloading ? cancelStr : (alreadyDownloaded ? loadStr : downloadStr);
                 }
             }
 
@@ -407,26 +452,28 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 
                 if (alreadyDownloaded)
                 {
-                    if (statusText) statusText.text = "Loading local skin...";
+                    if (statusText) statusText.text = (loadingLocalText != null && !loadingLocalText.IsEmpty) ? loadingLocalText.GetLocalizedString() : "Loading local skin...";
                     var fileName = $"{selectedWebSkin.id}.wsz";
                     bool result = await skinService.LoadSkin(fileName);
                     if (result)
                     {
-                        if (statusText) statusText.text = "Loaded successfully!";
+                        if (statusText) statusText.text = (loadedSuccessText != null && !loadedSuccessText.IsEmpty) ? loadedSuccessText.GetLocalizedString() : "Loaded successfully!";
                         ClosePreview();
                     }
                     else
                     {
-                        await ShowErrorAndClose("Failed to load skin.");
+                        string failStr = (failedLoadText != null && !failedLoadText.IsEmpty) ? failedLoadText.GetLocalizedString() : "Failed to load skin.";
+                        await ShowErrorAndClose(failStr);
                     }
                     return;
                 }
 
                 // Start download
                 isDownloading = true;
-                if (webDownloadButtonText) webDownloadButtonText.text = "Cancel";
+                string cancelBtnStr = (btnCancelText != null && !btnCancelText.IsEmpty) ? btnCancelText.GetLocalizedString() : "Cancel";
+                if (webDownloadButtonText) webDownloadButtonText.text = cancelBtnStr;
                 if (loadingSpinner) loadingSpinner.SetActive(true);
-                if (statusText) statusText.text = "Downloading...";
+                if (statusText) statusText.text = (downloadingText != null && !downloadingText.IsEmpty) ? downloadingText.GetLocalizedString() : "Downloading...";
                 
                 downloadCts = new CancellationTokenSource();
 
@@ -436,23 +483,24 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                     
                     if (downloadCts.Token.IsCancellationRequested)
                     {
-                        if (statusText) statusText.text = "Download cancelled.";
+                        if (statusText) statusText.text = (downloadCancelledText != null && !downloadCancelledText.IsEmpty) ? downloadCancelledText.GetLocalizedString() : "Download cancelled.";
                         ClosePreview();
                         return;
                     }
 
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        if (statusText) statusText.text = "Downloaded! Loading...";
+                        if (statusText) statusText.text = (downloadedLoadingText != null && !downloadedLoadingText.IsEmpty) ? downloadedLoadingText.GetLocalizedString() : "Downloaded! Loading...";
                         bool result = await skinService.LoadSkin(fileName);
                         if (result)
                         {
-                            if (statusText) statusText.text = "Loaded successfully!";
+                            if (statusText) statusText.text = (loadedSuccessText != null && !loadedSuccessText.IsEmpty) ? loadedSuccessText.GetLocalizedString() : "Loaded successfully!";
                             ClosePreview();
                         }
                         else
                         {
-                            await ShowErrorAndClose("Failed to load skin.");
+                            string failStr = (failedLoadText != null && !failedLoadText.IsEmpty) ? failedLoadText.GetLocalizedString() : "Failed to load skin.";
+                            await ShowErrorAndClose(failStr);
                         }
                     }
                     else
@@ -463,7 +511,8 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 finally
                 {
                     isDownloading = false;
-                    if (webDownloadButtonText) webDownloadButtonText.text = "Download";
+                    string downloadBtnStr = (btnDownloadText != null && !btnDownloadText.IsEmpty) ? btnDownloadText.GetLocalizedString() : "Download";
+                    if (webDownloadButtonText) webDownloadButtonText.text = downloadBtnStr;
                     if (loadingSpinner) loadingSpinner.SetActive(false);
                 }
             }
@@ -471,18 +520,18 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
             {
                 if (string.IsNullOrEmpty(selectedSkinName)) return;
                 
-                if (statusText != null) statusText.text = "Loading...";
+                if (statusText != null) statusText.text = (loadingLocalText != null && !loadingLocalText.IsEmpty) ? loadingLocalText.GetLocalizedString() : "Loading...";
 
                 bool result = await skinService.LoadSkin(selectedSkinName);
 
                 if (result)
                 {
-                    if (statusText != null) statusText.text = "Loaded successfully!";
+                    if (statusText != null) statusText.text = (loadedSuccessText != null && !loadedSuccessText.IsEmpty) ? loadedSuccessText.GetLocalizedString() : "Loaded successfully!";
                     RefreshList(); 
                 }
                 else
                 {
-                    if (statusText != null) statusText.text = "Failed to load skin.";
+                    if (statusText != null) statusText.text = (failedLoadText != null && !failedLoadText.IsEmpty) ? failedLoadText.GetLocalizedString() : "Failed to load skin.";
                 }
             }
         }
