@@ -260,7 +260,7 @@ namespace SoftAware.PocketAmp
                     {
                         var entryName = entry.Name.ToLower();
                         if (!entryName.EndsWith(".mp3") && !entryName.EndsWith(".wav") &&
-                            !entryName.EndsWith(".ogg")) continue;
+                            !entryName.EndsWith(".ogg") && !entryName.EndsWith(".flac")) continue;
                         validAudioFound++;
                             
                         // Unified Fast Path for ALL platforms
