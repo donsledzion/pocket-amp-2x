@@ -1,0 +1,35 @@
+{
+    "name": "ElevenLabs.TTS.Editor",
+    "rootNamespace": "ElevenLabs.Editor",
+    "references": [
+        "ElevenLabs.Runtime",
+        "ElevenLabs.Core.Editor",
+        "Unity.Localization",
+        "Unity.Localization.Editor",
+        "Unity.Localization.Addressables.Editor",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.localization",
+            "expression": "1.0.0",
+            "define": "UNITY_LOCALIZATION"
+        },
+        {
+            "name": "com.unity.addressables",
+            "expression": "1.0.0",
+            "define": "UNITY_ADDRESSABLES"
+        }
+    ],
+    "noEngineReferences": false
+}

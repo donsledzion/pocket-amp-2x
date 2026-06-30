@@ -6,6 +6,14 @@
       "source": "local-tarball",
       "dependencies": {}
     },
+    "com.softaware.localizationtools": {
+      "version": "file:com.softaware.localizationtools",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.localization": "1.0.0"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "14.0.3",
       "depth": 0,
