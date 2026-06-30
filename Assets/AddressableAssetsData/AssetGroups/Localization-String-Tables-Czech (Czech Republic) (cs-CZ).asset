@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-cs-CZ
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5ec3b6141f97a24b9e9d4a94c418334
+    m_Address: SkinImportTutorial_cs-CZ
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-cs-CZ
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 9fdedcb1d47e52f4ab9cf4410f4c49ae, type: 2}
   m_SchemaSet:

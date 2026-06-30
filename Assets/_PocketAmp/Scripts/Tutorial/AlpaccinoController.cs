@@ -1,0 +1,137 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using PrimeTween;
+
+namespace SoftAware.PocketAmp.Tutorial
+{
+    public enum ArrowDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right,
+        None
+    }
+
+    public class AlpaccinoController : MonoBehaviour
+    {
+        [Header("References")]
+        [SerializeField] private RectTransform rootRect;
+        [SerializeField] private Image alpacaImage;
+        [SerializeField] private Image arrowImage;
+        [SerializeField] private TextMeshProUGUI speechText;
+        [SerializeField] private Button dismissButton;
+
+        [Header("Sprites")]
+        [SerializeField] private Sprite alpacaIdle;
+        [SerializeField] private Sprite alpacaPointing;
+
+        [Header("Offsets")]
+        [SerializeField] private Vector2 defaultOffset = new Vector2(0, -100f);
+
+        private void Awake()
+        {
+            if (dismissButton != null)
+            {
+                dismissButton.onClick.AddListener(OnDismissClicked);
+            }
+        }
+
+        public void Show(RectTransform target, string text, ArrowDirection arrowDir)
+        {
+            gameObject.SetActive(true);
+            speechText.text = text;
+
+            // Change sprite if needed
+            if (alpacaImage != null && alpacaPointing != null)
+            {
+                alpacaImage.sprite = arrowDir != ArrowDirection.None ? alpacaPointing : alpacaIdle;
+            }
+
+            SetupArrow(arrowDir);
+            PositionNearTarget(target, arrowDir);
+
+            // Pop animation
+            rootRect.localScale = Vector3.zero;
+            Tween.Scale(rootRect, 1f, duration: 0.4f, ease: Ease.OutBack);
+        }
+
+        public void PointToTarget(RectTransform target, string text, ArrowDirection arrowDir)
+        {
+            speechText.text = text;
+            
+            if (alpacaImage != null && alpacaPointing != null)
+            {
+                alpacaImage.sprite = arrowDir != ArrowDirection.None ? alpacaPointing : alpacaIdle;
+            }
+
+            SetupArrow(arrowDir);
+            PositionNearTarget(target, arrowDir);
+        }
+
+        private void SetupArrow(ArrowDirection dir)
+        {
+            if (arrowImage == null) return;
+
+            arrowImage.gameObject.SetActive(dir != ArrowDirection.None);
+            if (dir == ArrowDirection.None) return;
+
+            // Rotate arrow based on direction
+            float angle = 0f;
+            switch (dir)
+            {
+                case ArrowDirection.Up: angle = 0f; break;
+                case ArrowDirection.Right: angle = -90f; break;
+                case ArrowDirection.Down: angle = 180f; break;
+                case ArrowDirection.Left: angle = 90f; break;
+            }
+            arrowImage.rectTransform.localEulerAngles = new Vector3(0, 0, angle);
+        }
+
+        private void PositionNearTarget(RectTransform target, ArrowDirection arrowDir)
+        {
+            if (target == null) return;
+
+            // Simple positioning logic
+            Vector3 targetPos = target.position;
+            Vector2 offset = defaultOffset;
+
+            // Adjust offset based on arrow direction so Alpaccino doesn't cover the target
+            float padding = 150f;
+            switch (arrowDir)
+            {
+                case ArrowDirection.Up: offset = new Vector2(0, -padding); break;
+                case ArrowDirection.Down: offset = new Vector2(0, padding); break;
+                case ArrowDirection.Left: offset = new Vector2(padding, 0); break;
+                case ArrowDirection.Right: offset = new Vector2(-padding, 0); break;
+            }
+
+            // Move smoothly to the new position
+            Vector3 finalPos = targetPos + (Vector3)offset;
+            Tween.Position(rootRect, finalPos, duration: 0.5f, ease: Ease.OutQuad);
+        }
+
+        public void Dismiss(RectTransform startButtonRect)
+        {
+            Vector3 targetPos = startButtonRect != null ? startButtonRect.position : rootRect.position;
+
+            Sequence.Create()
+                .Chain(Tween.Position(rootRect, targetPos, duration: 0.5f, ease: Ease.InBack))
+                .Group(Tween.Scale(rootRect, 0f, duration: 0.5f, ease: Ease.InBack))
+                .OnComplete(() => gameObject.SetActive(false));
+        }
+
+        private void OnDismissClicked()
+        {
+            if (TutorialManager.Instance != null)
+            {
+                TutorialManager.Instance.Dismiss();
+            }
+            else
+            {
+                Dismiss(null);
+            }
+        }
+    }
+}

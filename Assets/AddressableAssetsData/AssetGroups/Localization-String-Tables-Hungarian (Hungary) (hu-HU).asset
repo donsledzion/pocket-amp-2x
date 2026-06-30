@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-hu-HU
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6723e5739a5449b4e99f57bc3ef34e4e
+    m_Address: SkinImportTutorial_hu-HU
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-hu-HU
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 9fdedcb1d47e52f4ab9cf4410f4c49ae, type: 2}
   m_SchemaSet:

@@ -95,6 +95,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
             RefreshList();
             UpdateButtonsState();
             ClearStatus();
+            
+            if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+            {
+                SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToWebToggle();
+            }
         }
 
         private void ClearStatus() => statusText.text = "";
@@ -118,6 +123,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 currentWebPage = 1;
                 webSkins.Clear();
                 await RefreshWebList(false);
+                
+                if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+                {
+                    SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToSearch();
+                }
             }
             else
             {
@@ -210,6 +220,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
 
             UpdateButtonsState();
             UpdateLoadMoreButtonVisibility();
+
+            if (currentItems.Count > 0 && SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+            {
+                SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToSelectSkin();
+            }
         }
 
         public async void LoadNextPage()
@@ -271,6 +286,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 // Update visuals IMMEDIATELY
                 UpdateSelectionVisuals();
                 UpdateButtonsState();
+
+                if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+                {
+                    SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToDownload();
+                }
 
                 await UpdatePreview(previewCts.Token);
             }
@@ -475,6 +495,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                 if (loadingSpinner) loadingSpinner.SetActive(true);
                 if (statusText) statusText.text = (downloadingText != null && !downloadingText.IsEmpty) ? downloadingText.GetLocalizedString() : "Downloading...";
                 
+                if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+                {
+                    SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToWait();
+                }
+
                 downloadCts = new CancellationTokenSource();
 
                 try 
@@ -496,6 +521,11 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                         {
                             if (statusText) statusText.text = (loadedSuccessText != null && !loadedSuccessText.IsEmpty) ? loadedSuccessText.GetLocalizedString() : "Loaded successfully!";
                             ClosePreview();
+                            
+                            if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+                            {
+                                SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToClose();
+                            }
                         }
                         else
                         {

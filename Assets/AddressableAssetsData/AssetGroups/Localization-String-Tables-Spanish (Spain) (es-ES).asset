@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Spanish (Spain) (es-ES)
   m_GUID: 1335269c30e2c454e8d722bb1142c853
   m_SerializeEntries:
+  - m_GUID: 2f0dbaf9dd013554baa2025f64223daa
+    m_Address: SkinImportTutorial_es-ES
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-es-ES
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f11234c6ef5769c4eb9c70dbe2d17771
     m_Address: MainWindow_es-ES
     m_ReadOnly: 1

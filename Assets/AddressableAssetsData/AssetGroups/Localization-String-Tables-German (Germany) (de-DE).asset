@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-German (Germany) (de-DE)
   m_GUID: 9d8206d1deeb16743b78f9ed086e162f
   m_SerializeEntries:
+  - m_GUID: 8ec14a3614bc5e74196c626f898ee8c9
+    m_Address: SkinImportTutorial_de-DE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de-DE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfcf1aafe4462e54c8a5ddf3654bfd41
     m_Address: MainWindow_de-DE
     m_ReadOnly: 1

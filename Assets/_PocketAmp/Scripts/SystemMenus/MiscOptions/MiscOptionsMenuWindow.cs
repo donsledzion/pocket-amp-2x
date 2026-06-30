@@ -35,6 +35,14 @@ public class MiscOptionsMenuWindow : MonoBehaviour
         UpdateEQPresetsBehaviorText();
     }
 
+    private void OnEnable()
+    {
+        if (SoftAware.PocketAmp.Tutorial.TutorialManager.Instance != null)
+        {
+            SoftAware.PocketAmp.Tutorial.TutorialManager.Instance.AdvanceToSkinsLibraryButton();
+        }
+    }
+
     private void ToggleNotificationsBar()
     {
         bool newFullscreenState = !SettingsManager.Instance.IsFullscreen;

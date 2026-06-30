@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Italian (Italy) (it-IT)
   m_GUID: c61438b871794914eb59930debf9e0b1
   m_SerializeEntries:
+  - m_GUID: 3bb9264afc800d94088950bf44d425b0
+    m_Address: SkinImportTutorial_it-IT
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-it-IT
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc7c139670988a549ada7d995cbf07e3
     m_Address: MainWindow_it-IT
     m_ReadOnly: 1

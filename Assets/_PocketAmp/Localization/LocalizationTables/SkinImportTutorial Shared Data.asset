@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: SkinImportTutorial Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: SkinImportTutorial
+  m_TableCollectionNameGuidString: 7d89c2291a3249945ab40960971e5c35
+  m_Entries:
+  - m_Id: 9046056960
+    m_Key: alpaccino-close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Key: tutorial-alpaccino-dismiss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Key: tutorial-step-options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Key: tutorial-step-skins-lib
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Key: tutorial-step-web-toggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Key: tutorial-step-search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Key: tutorial-step-select-skin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Key: tutorial-step-download
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Key: tutorial-step-wait
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Key: tutorial-step-close
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5121551142354157926
+  references:
+    version: 2
+    RefIds:
+    - rid: 5121551142354157926
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1782853558928

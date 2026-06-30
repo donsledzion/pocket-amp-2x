@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: SkinImportTutorial_en-US
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-US
+  m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: Shoo away!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: Shoo!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: Click here to open options!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: Choose 'Open Skins Library'!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: Switch to the online skins browser!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: Type here e.g. 'Classic' to find something cool!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: Oh! Select this skin from the list!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: Now click Download!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: Downloading... wait a second!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: Great! Your skin is loaded. Click here to close the window.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
