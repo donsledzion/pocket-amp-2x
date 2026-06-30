@@ -9,4 +9,6 @@ EditorBuildSettings:
     path: Assets/_PocketAmp/Scenes/PocketAmp.unity
     guid: 4b0b41f78e02d794eb0b9bd341c330b2
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 81859049dbdaa584da88edf0a8c755f4, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: 1326ad6295de4ad4fa74183116d774ed, type: 2}

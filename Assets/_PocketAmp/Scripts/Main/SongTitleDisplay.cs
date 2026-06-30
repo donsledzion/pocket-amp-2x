@@ -16,7 +16,23 @@ namespace SoftAware
         [SerializeField] private float scrollSpeed = 0.25f; // Seconds per character shift
         [SerializeField] private int maxVisibleChars = 30; // Capacity of the UI display
         [SerializeField] private string scrollerSeparator = "  ***  "; // Two spaces, three stars, two spaces
-        private static string defaultText => "PocketAmp " + Application.version;
+        
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString defaultTickerText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString notReadyText;
+
+        private string defaultText 
+        {
+            get 
+            {
+                if (defaultTickerText != null && !defaultTickerText.IsEmpty)
+                {
+                    defaultTickerText.Arguments = new object[] { Application.version };
+                    return defaultTickerText.GetLocalizedString();
+                }
+                return "PocketAmp " + Application.version;
+            }
+        }
 
         private string fullText;
         private string scrollBuffer;
@@ -98,7 +114,17 @@ namespace SoftAware
             StartCoroutine(TemporaryMessageCoroutine(message, duration));
         }
 
-        public void ShowNotReadyYetMessage() => ShowTemporaryMessage("Not ready yet! :(");
+        public void ShowNotReadyYetMessage() 
+        {
+            if (notReadyText != null && !notReadyText.IsEmpty)
+            {
+                ShowTemporaryMessage(notReadyText.GetLocalizedString());
+            }
+            else
+            {
+                ShowTemporaryMessage("Not ready yet! :(");
+            }
+        }
 
         private IEnumerator TemporaryMessageCoroutine(string message, float duration)
         {

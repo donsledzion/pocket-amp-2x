@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: MainWindow Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: MainWindow
+  m_TableCollectionNameGuidString: 3c8a5a28dfbcb0843b395df57e9c2691
+  m_Entries:
+  - m_Id: 11155791872
+    m_Key: main-volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1780485185536
+    m_Key: main-balance-center
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980582846464
+    m_Key: main-balance-left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2028871868416
+    m_Key: main-balance-right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2110438498304
+    m_Key: main-eq-band
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2183360667648
+    m_Key: main-seek-to
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2281750650880
+    m_Key: main-not-ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2328772993024
+    m_Key: main-coming-soon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2411912486912
+    m_Key: main-default-ticker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2465582800896
+    m_Key: playlist-duration-unknown
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5121551142354157901
+  references:
+    version: 2
+    RefIds:
+    - rid: 5121551142354157901
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1782837966092

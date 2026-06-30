@@ -182,12 +182,23 @@ namespace SoftAware.PocketAmp
             }
         }
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString eqBandText;
+
         private void UpdateTitleDisplay(float value, string label)
         {
             if (main != null && main.SongTitleDisplay != null)
             {
                 string sign = (value > 0) ? "+" : "";
-                main.SongTitleDisplay.SetOverrideText($"EQ: {label}: {sign}{value:F1} DB");
+                if (eqBandText != null && !eqBandText.IsEmpty)
+                {
+                    eqBandText.Arguments = new object[] { label, sign, value.ToString("F1") };
+                    main.SongTitleDisplay.SetOverrideText(eqBandText.GetLocalizedString());
+                }
+                else
+                {
+                    main.SongTitleDisplay.SetOverrideText($"EQ: {label}: {sign}{value:F1} DB");
+                }
             }
         }
 

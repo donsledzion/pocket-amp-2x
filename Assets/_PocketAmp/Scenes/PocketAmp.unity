@@ -3053,6 +3053,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25feae2acb07d284d9f027008170aab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.WinampUIController
+  seekToText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 2183360667648
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &364309605
 Transform:
   m_ObjectHideFlags: 0
@@ -5326,6 +5338,18 @@ MonoBehaviour:
   allMinButton: {fileID: 1951695023}
   allFlatButton: {fileID: 911129509}
   defaultGain: 0
+  eqBandText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 2110438498304
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &708628151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13617,6 +13641,27 @@ MonoBehaviour:
   scrollSpeed: 0.25
   maxVisibleChars: 30
   scrollerSeparator: '  ***  '
+  defaultTickerText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 2411912486912
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  notReadyText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 2281750650880
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1415876160
 GameObject:
   m_ObjectHideFlags: 0
@@ -14662,6 +14707,18 @@ MonoBehaviour:
   - {fileID: 411880723, guid: 6e1030e9dda87e149a75f3d8138c883f, type: 3}
   spriteSheet: {fileID: 2800000, guid: 6e1030e9dda87e149a75f3d8138c883f, type: 3}
   spriteNamePrefix: VOLUME_BG
+  volumeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 11155791872
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1530221524
 GameObject:
   m_ObjectHideFlags: 0
@@ -18567,6 +18624,36 @@ MonoBehaviour:
   - {fileID: 150449611, guid: 92e195342ffc32643b055b161426f613, type: 3}
   spriteSheet: {fileID: 2800000, guid: 92e195342ffc32643b055b161426f613, type: 3}
   spriteNamePrefix: BALANCE_BG
+  balanceCenterText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 1780485185536
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  balanceLeftText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 1980582846464
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  balanceRightText:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c8a5a28dfbcb0843b395df57e9c2691
+    m_TableEntryReference:
+      m_KeyId: 2028871868416
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1822013712
 GameObject:
   m_ObjectHideFlags: 0

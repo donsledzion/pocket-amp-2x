@@ -105,10 +105,21 @@ namespace SoftAware.PocketAmp
                 UpdateTitleDisplay(value);
         }
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString volumeText;
+
         private void UpdateTitleDisplay(float value)
         {
             var percent = Mathf.RoundToInt(value * 100f);
-            main.SongTitleDisplay.SetOverrideText($"VOLUME: {percent}%");
+            if (volumeText != null && !volumeText.IsEmpty)
+            {
+                volumeText.Arguments = new object[] { percent };
+                main.SongTitleDisplay.SetOverrideText(volumeText.GetLocalizedString());
+            }
+            else
+            {
+                main.SongTitleDisplay.SetOverrideText($"VOLUME: {percent}%");
+            }
         }
 
 #if UNITY_EDITOR

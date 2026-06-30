@@ -83,12 +83,16 @@ namespace SoftAware.PocketAmp
             StartCoroutine(RefreshDisplayCoroutine(duration));
         }
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString unknownDurationText;
+
         private IEnumerator RefreshDisplayCoroutine(float duration)
         {
             if (indexText != null) indexText.text = $"{index + 1}.";
             if (durationText != null)
             {
-                durationText.text = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : "?:??";
+                var unknownText = (unknownDurationText != null && !unknownDurationText.IsEmpty) ? unknownDurationText.GetLocalizedString() : "?:??";
+                durationText.text = duration > 0 ? AudioMetadataUtils.FormatTime(duration) : unknownText;
             }
 
             if (titleText == null) yield break;

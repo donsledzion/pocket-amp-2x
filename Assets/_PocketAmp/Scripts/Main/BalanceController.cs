@@ -135,41 +135,54 @@ namespace SoftAware.PocketAmp
             }
         }
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString balanceCenterText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString balanceLeftText;
+        [SerializeField] private UnityEngine.Localization.LocalizedString balanceRightText;
+
         private void UpdateTitleDisplay(float value)
         {
             if (main == null || main.SongTitleDisplay == null) return;
-            // Logic:
-            // 0% - 48% (approx < 0.48): LEFT
-            // 48% - 52% (approx > 0.48 && < 0.52): CENTER
-            // 52% - 100% (approx > 0.52): RIGHT
-                
-            // PocketAmp logic is slightly different:
-            // It shows "BALANCE: CENTER" for a range.
-            // It shows "BALANCE: XX% LEFT" or "RIGHT".
-                
+            
             var text = "";
             var dist = value - 0.5f; // -0.5 to 0.5
             
-            // Let's use a small epsilon for display "center"
             if (Mathf.Abs(dist) < 0.04f) // +/- 4%
             {
-                text = "BALANCE: CENTER";
+                if (balanceCenterText != null && !balanceCenterText.IsEmpty)
+                {
+                    text = balanceCenterText.GetLocalizedString();
+                }
+                else
+                {
+                    text = "BALANCE: CENTER";
+                }
             }
             else if (dist < 0)
             {
-                // Left
-                // Map -0.5...-0.04 to 100%...0%
-                // actually displays simplified percentage. 
-                // If slider is 0 (Left), it is 100% Left.
-                // If slider is 0.25, it is 50% Left.
                 float percent = (Mathf.Abs(dist) / 0.5f) * 100f;
-                text = $"BALANCE: {Mathf.RoundToInt(percent)}% LEFT";
+                if (balanceLeftText != null && !balanceLeftText.IsEmpty)
+                {
+                    balanceLeftText.Arguments = new object[] { Mathf.RoundToInt(percent) };
+                    text = balanceLeftText.GetLocalizedString();
+                }
+                else
+                {
+                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% LEFT";
+                }
             }
             else
             {
-                // Right
                 float percent = (dist / 0.5f) * 100f;
-                text = $"BALANCE: {Mathf.RoundToInt(percent)}% RIGHT";
+                if (balanceRightText != null && !balanceRightText.IsEmpty)
+                {
+                    balanceRightText.Arguments = new object[] { Mathf.RoundToInt(percent) };
+                    text = balanceRightText.GetLocalizedString();
+                }
+                else
+                {
+                    text = $"BALANCE: {Mathf.RoundToInt(percent)}% RIGHT";
+                }
             }
 
             main.SongTitleDisplay.SetOverrideText(text);

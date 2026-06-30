@@ -30,6 +30,9 @@ namespace SoftAware.PocketAmp
             }
         }
 
+        [Header("Localization")]
+        [SerializeField] private UnityEngine.Localization.LocalizedString seekToText;
+
         public void HandleSliderDrag(float normalizedValue, float duration)
         {
             if (main.SongTitleDisplay == null) return;
@@ -45,7 +48,15 @@ namespace SoftAware.PocketAmp
 
             int percent = Mathf.RoundToInt(normalizedValue * 100f);
 
-            main.SongTitleDisplay.SetOverrideText($"SEEK TO: {currentTimeStr}/{totalTimeStr} ({percent}%)");
+            if (seekToText != null && !seekToText.IsEmpty)
+            {
+                seekToText.Arguments = new object[] { currentTimeStr, totalTimeStr, percent };
+                main.SongTitleDisplay.SetOverrideText(seekToText.GetLocalizedString());
+            }
+            else
+            {
+                main.SongTitleDisplay.SetOverrideText($"SEEK TO: {currentTimeStr}/{totalTimeStr} ({percent}%)");
+            }
         }
 
         public void UpdateUI(float currentTime, float duration, bool isPlaying, bool isPaused)
