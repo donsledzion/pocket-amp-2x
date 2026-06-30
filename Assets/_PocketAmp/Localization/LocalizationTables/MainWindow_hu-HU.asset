@@ -10,227 +10,227 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: MainWindow_en-US
+  m_Name: MainWindow_hu-HU
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
   m_LocaleId:
-    m_Code: en-US
+    m_Code: hu-HU
   m_SharedData: {fileID: 11400000, guid: 3c8a5a28dfbcb0843b395df57e9c2691, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 5121551142354157906
+    - rid: 5121551142354157916
   m_TableData:
   - m_Id: 11155791872
-    m_Localized: 'VOLUME: {0}%'
+    m_Localized: 'HANGERO: {0}%'
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
-  - m_Id: 1780485185536
-    m_Localized: 'BALANCE: CENTER'
-    m_Metadata:
-      m_Items: []
+      - rid: 5121551142354157916
   - m_Id: 1980582846464
-    m_Localized: 'BALANCE: {0}% LEFT'
+    m_Localized: 'BALANSZ: {0}% BAL'
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
+      - rid: 5121551142354157916
   - m_Id: 2028871868416
-    m_Localized: 'BALANCE: {0}% RIGHT'
+    m_Localized: 'BALANSZ: {0}% JOBB'
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
+      - rid: 5121551142354157916
   - m_Id: 2110438498304
     m_Localized: 'EQ: {0}: {1}{2} DB'
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
+      - rid: 5121551142354157916
   - m_Id: 2183360667648
-    m_Localized: 'SEEK TO: {0}/{1} ({2}%)'
+    m_Localized: "KERES\xC9S: {0}/{1} ({2}%)"
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
-  - m_Id: 2281750650880
-    m_Localized: Not ready yet! :(
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2328772993024
-    m_Localized: Coming Soon
-    m_Metadata:
-      m_Items: []
+      - rid: 5121551142354157916
   - m_Id: 2411912486912
     m_Localized: PocketAmp {0}
     m_Metadata:
       m_Items:
-      - rid: 5121551142354157906
+      - rid: 5121551142354157916
+  - m_Id: 16803601309696
+    m_Localized: "{0} helyi fel\xFClet tal\xE1lhat\xF3"
+    m_Metadata:
+      m_Items:
+      - rid: 5121551142354157916
+  - m_Id: 17001719259136
+    m_Localized: "{0}/{1} fel\xFClet megjelen\xEDtve"
+    m_Metadata:
+      m_Items:
+      - rid: 5121551142354157916
+  - m_Id: 1780485185536
+    m_Localized: "BALANSZ: K\xD6Z\xC9P"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2281750650880
+    m_Localized: "M\xE9g nem k\xE9sz! :("
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2328772993024
+    m_Localized: Hamarosan
+    m_Metadata:
+      m_Items: []
   - m_Id: 2465582800896
     m_Localized: ?:??
     m_Metadata:
       m_Items: []
   - m_Id: 16500395073536
-    m_Localized: 'Notifications bar: ON'
+    m_Localized: "\xC9rtes\xEDt\xE9si s\xE1v: BE"
     m_Metadata:
       m_Items: []
   - m_Id: 16560205848576
-    m_Localized: 'Notifications bar: OFF'
+    m_Localized: "\xC9rtes\xEDt\xE9si s\xE1v: KI"
     m_Metadata:
       m_Items: []
   - m_Id: 16599724580864
-    m_Localized: 'Navigation bar: ON'
+    m_Localized: "Navig\xE1ci\xF3s s\xE1v: BE"
     m_Metadata:
       m_Items: []
   - m_Id: 16667399675904
-    m_Localized: 'Navigation bar: OFF'
+    m_Localized: "Navig\xE1ci\xF3s s\xE1v: KI"
     m_Metadata:
       m_Items: []
   - m_Id: 16702115930112
-    m_Localized: 'EQ Presets: Require Load'
+    m_Localized: "EQ El\u0151be\xE1ll\xEDt\xE1sok: Bet\xF6lt\xE9s sz\xFCks\xE9ges"
     m_Metadata:
       m_Items: []
   - m_Id: 16773817556992
-    m_Localized: 'EQ Presets: Load on Select'
+    m_Localized: "EQ El\u0151be\xE1ll\xEDt\xE1sok: Bet\xF6lt\xE9s kiv\xE1laszt\xE1skor"
     m_Metadata:
       m_Items: []
-  - m_Id: 16803601309696
-    m_Localized: Found {0} local skins
-    m_Metadata:
-      m_Items:
-      - rid: 5121551142354157906
   - m_Id: 16874954809344
-    m_Localized: Loading more...
+    m_Localized: "Tov\xE1bbiak bet\xF6lt\xE9se..."
     m_Metadata:
       m_Items: []
   - m_Id: 16907716517888
-    m_Localized: Fetching web skins...
+    m_Localized: "Webes fel\xFCletek lek\xE9r\xE9se..."
     m_Metadata:
       m_Items: []
   - m_Id: 16976498909184
-    m_Localized: 'Error: Invalid API response'
+    m_Localized: "Hiba: \xC9rv\xE9nytelen API v\xE1lasz"
     m_Metadata:
       m_Items: []
-  - m_Id: 17001719259136
-    m_Localized: Showing {0} of {1} skins
-    m_Metadata:
-      m_Items:
-      - rid: 5121551142354157906
   - m_Id: 17072074514432
-    m_Localized: Loading preview...
+    m_Localized: "El\u0151n\xE9zet bet\xF6lt\xE9se..."
     m_Metadata:
       m_Items: []
   - m_Id: 17116974538752
-    m_Localized: Loading local skin...
+    m_Localized: "Helyi fel\xFClet bet\xF6lt\xE9se..."
     m_Metadata:
       m_Items: []
   - m_Id: 17161278971904
-    m_Localized: Loaded successfully!
+    m_Localized: "Sikeresen bet\xF6ltve!"
     m_Metadata:
       m_Items: []
   - m_Id: 17191587012608
-    m_Localized: Downloading...
+    m_Localized: "Let\xF6lt\xE9s..."
     m_Metadata:
       m_Items: []
   - m_Id: 17251393593344
-    m_Localized: Download cancelled.
+    m_Localized: "Let\xF6lt\xE9s megszak\xEDtva."
     m_Metadata:
       m_Items: []
   - m_Id: 17299867164672
-    m_Localized: Downloaded! Loading...
+    m_Localized: "Let\xF6ltve! Bet\xF6lt\xE9s..."
     m_Metadata:
       m_Items: []
   - m_Id: 17327469879296
-    m_Localized: Failed to load skin.
+    m_Localized: "Nem siker\xFClt bet\xF6lteni a fel\xFCletet."
     m_Metadata:
       m_Items: []
   - m_Id: 17395887366144
-    m_Localized: Load
+    m_Localized: "Bet\xF6lt\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 17439919169536
-    m_Localized: Download
+    m_Localized: "Let\xF6lt\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 17477906980864
-    m_Localized: Cancel
+    m_Localized: "M\xE9gse"
     m_Metadata:
       m_Items: []
   - m_Id: 18981233614848
-    m_Localized: Misc options
+    m_Localized: "Egy\xE9b be\xE1ll\xEDt\xE1sok"
     m_Metadata:
       m_Items: []
   - m_Id: 19329084022784
-    m_Localized: Add from URL
+    m_Localized: "Hozz\xE1ad\xE1s URL-r\u0151l"
     m_Metadata:
       m_Items: []
   - m_Id: 19512773566464
-    m_Localized: Enter audio source URL
+    m_Localized: "Adja meg az audioforr\xE1s URL-j\xE9t"
     m_Metadata:
       m_Items: []
   - m_Id: 19776427515904
-    m_Localized: Open URL
+    m_Localized: "URL megnyit\xE1sa"
     m_Metadata:
       m_Items: []
   - m_Id: 20078614536192
-    m_Localized: Skins library
+    m_Localized: "Fel\xFCletk\xF6nyvt\xE1r"
     m_Metadata:
       m_Items: []
   - m_Id: 20370995273728
-    m_Localized: Delete
+    m_Localized: "T\xF6rl\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 20738563104768
-    m_Localized: Load skin
+    m_Localized: "Fel\xFClet bet\xF6lt\xE9se"
     m_Metadata:
       m_Items: []
   - m_Id: 20936383258624
-    m_Localized: Import new
+    m_Localized: "\xDAj import\xE1l\xE1sa"
     m_Metadata:
       m_Items: []
   - m_Id: 21320438898688
-    m_Localized: Equalizer presets
+    m_Localized: "Hangsz\xEDnszab\xE1lyz\xF3 el\u0151be\xE1ll\xEDt\xE1sok"
     m_Metadata:
       m_Items: []
   - m_Id: 23500638117888
-    m_Localized: Open skins library
+    m_Localized: "Fel\xFCletk\xF6nyvt\xE1r megnyit\xE1sa"
     m_Metadata:
       m_Items: []
   - m_Id: 24163434618880
-    m_Localized: Delete
+    m_Localized: "T\xF6rl\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 24390849781760
-    m_Localized: Import
+    m_Localized: "Import\xE1l\xE1s"
     m_Metadata:
       m_Items: []
   - m_Id: 25080569520128
-    m_Localized: Local skins
+    m_Localized: "Helyi fel\xFCletek"
     m_Metadata:
       m_Items: []
   - m_Id: 25156553531392
-    m_Localized: Online skins
+    m_Localized: "Online fel\xFCletek"
     m_Metadata:
       m_Items: []
   - m_Id: 25572397801472
-    m_Localized: Search online skins
+    m_Localized: "Online fel\xFCletek keres\xE9se"
     m_Metadata:
       m_Items: []
   - m_Id: 26679954104320
-    m_Localized: Downloading error
+    m_Localized: "Let\xF6lt\xE9si hiba"
     m_Metadata:
       m_Items: []
   - m_Id: 21544813191168
-    m_Localized: Load
+    m_Localized: "Bet\xF6lt\xE9s"
     m_Metadata:
       m_Items: []
   references:
     version: 2
     RefIds:
-    - rid: 5121551142354157906
+    - rid: 5121551142354157916
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
         m_Entries: 
         m_SharedEntries:
         - id: 11155791872
         - id: 1980582846464
-        - id: 2110438498304
         - id: 2028871868416
+        - id: 2110438498304
         - id: 2183360667648
         - id: 2411912486912
         - id: 16803601309696
