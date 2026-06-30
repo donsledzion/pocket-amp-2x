@@ -179,6 +179,34 @@ MonoBehaviour:
     m_Key: eq-presets-window-load-btn
     m_Metadata:
       m_Items: []
+  - m_Id: 23500638117888
+    m_Key: misc-opts-open-skins-library-btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24163434618880
+    m_Key: eq-presets-window-delete-btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24390849781760
+    m_Key: eq-presets-window-import-new-btn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25080569520128
+    m_Key: skins-library-window-toggle-local-skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25156553531392
+    m_Key: skins-library-window-toggle-online-skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25572397801472
+    m_Key: skins-library-windows-search-bar-placeholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26679954104320
+    m_Key: skins-library-windows-downloading-error-title
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
