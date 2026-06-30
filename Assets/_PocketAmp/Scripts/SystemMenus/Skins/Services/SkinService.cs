@@ -320,10 +320,94 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
                     return fileName;
                 }
                 
+                if (url.Contains("archive.org/download/"))
+                {
+                    try 
+                    {
+                        var uri = new Uri(url);
+                        var parts = uri.AbsolutePath.Split('/');
+                        if (parts.Length >= 3)
+                        {
+                            string itemId = parts[2];
+                            string metaUrl = $"https://archive.org/metadata/{itemId}";
+                            using (var metaWww = UnityWebRequest.Get(metaUrl))
+                            {
+                                var metaOp = metaWww.SendWebRequest();
+                                while (!metaOp.isDone)
+                                {
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        metaWww.Abort();
+                                        if (File.Exists(destPath)) File.Delete(destPath);
+                                        return null;
+                                    }
+                                    await Awaitable.NextFrameAsync();
+                                }
+
+                                if (metaWww.result == UnityWebRequest.Result.Success)
+                                {
+                                    var metaData = JsonUtility.FromJson<ArchiveMetadataResponse>(metaWww.downloadHandler.text);
+                                    if (metaData != null && metaData.files != null)
+                                    {
+                                        var validFile = metaData.files.FirstOrDefault(f => f.name.EndsWith(".wsz", StringComparison.OrdinalIgnoreCase) || f.name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase));
+                                        if (validFile != null && !string.IsNullOrEmpty(validFile.name))
+                                        {
+                                            string newUrl = $"https://archive.org/download/{itemId}/{validFile.name}";
+                                            using (var retryWww = UnityWebRequest.Get(newUrl))
+                                            {
+                                                retryWww.downloadHandler = new DownloadHandlerFile(destPath);
+                                                var retryOp = retryWww.SendWebRequest();
+                                                while (!retryOp.isDone)
+                                                {
+                                                    if (token.IsCancellationRequested)
+                                                    {
+                                                        retryWww.Abort();
+                                                        if (File.Exists(destPath)) File.Delete(destPath);
+                                                        return null;
+                                                    }
+                                                    await Awaitable.NextFrameAsync();
+                                                }
+
+                                                if (retryWww.result == UnityWebRequest.Result.Success)
+                                                {
+                                                    Debug.Log($"[SkinService] Successfully downloaded using fallback URL: {newUrl}");
+                                                    return fileName;
+                                                }
+                                                else
+                                                {
+                                                    Debug.LogError($"[SkinService] Fallback download failed for {newUrl}: {retryWww.error}");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"[SkinService] Fallback metadata fetch failed: {ex.Message}");
+                    }
+                }
+
+                Debug.LogError($"[SkinService] Failed to download skin {skin.id} from {url}: {www.error}");
+                if (File.Exists(destPath)) File.Delete(destPath);
                 return null;
             }
         }
 
         #endregion
+    }
+
+    [Serializable]
+    public class ArchiveMetadataResponse
+    {
+        public ArchiveFileInfo[] files;
+    }
+
+    [Serializable]
+    public class ArchiveFileInfo
+    {
+        public string name;
     }
 }
