@@ -21,6 +21,45 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             {
                 Directory.CreateDirectory(skinsDirectory);
             }
+            CleanupBrokenRemnants();
+        }
+
+        private void CleanupBrokenRemnants()
+        {
+            try
+            {
+                // Clean up corrupted zip files
+                var files = Directory.GetFiles(skinsDirectory, "*.*").Where(s => s.ToLower().EndsWith(".wsz") || s.ToLower().EndsWith(".zip"));
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        using (var zip = System.IO.Compression.ZipFile.OpenRead(file))
+                        {
+                            // If it opens successfully, it's a valid ZIP structure.
+                        }
+                    }
+                    catch
+                    {
+                        Debug.LogWarning($"[SkinService] Removing corrupted skin file: {file}");
+                        File.Delete(file);
+                    }
+                }
+
+                // Clean up empty directories
+                var dirs = Directory.GetDirectories(skinsDirectory);
+                foreach (var dir in dirs)
+                {
+                    if (Directory.GetFileSystemEntries(dir).Length == 0)
+                    {
+                        Directory.Delete(dir);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[SkinService] Cleanup of broken remnants failed: {ex.Message}");
+            }
         }
 
         public async Awaitable<List<string>> GetAvailableSkinsAsync()
