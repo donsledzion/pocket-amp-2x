@@ -17,7 +17,63 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: "\xA1Despedir!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: "\xA1Genial! Tu skin ha sido cargado. Haz clic aqu\xED para cerrar
+      la ventana."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: "Descargando... \xA1espera un momento!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: "\xA1Ahora aplica el skin!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: "\xA1Oh! \xA1Selecciona este skin de la lista!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: "Escribe aqu\xED, por ejemplo, 'Classic', para encontrar tu skin
+      favorito."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: "\xA1Cambia al navegador de skins online!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: "\xA1Selecciona 'Abrir biblioteca de skins'!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: "\xA1Haz clic aqu\xED para abrir las opciones!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: "\xA1Despedir!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: "Soy Alpaccino y te ayudar\xE9 a cambiar el skin por algo m\xE1s
+      interesante."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: "En cualquier momento puedes deshacerte de m\xED con el bot\xF3n
+      de abajo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: "Ups, \xBFquieres intentarlo de nuevo?"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

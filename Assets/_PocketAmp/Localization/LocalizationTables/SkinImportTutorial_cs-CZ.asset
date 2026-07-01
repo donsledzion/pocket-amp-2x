@@ -17,7 +17,62 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: "Ode\u017Ee\u0148!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: "Skv\u011Bl\xE9! V\xE1\u0161 skin byl nahr\xE1n. Klikn\u011Bte sem
+      pro zav\u0159en\xED okna."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: "Stahuji... chvilku po\u010Dkejte!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: "Nyn\xED pou\u017Eijte skin!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: "\xD3! Vyberte tento skin ze seznamu!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: "Zde zadejte nap\u0159. 'Classic', abyste na\u0161li sv\u016Fj obl\xEDben\xFD
+      skin!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: "P\u0159epn\u011Bte se na online prohl\xED\u017Ee\u010D skin\u016F!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: "Vyberte 'Otev\u0159\xEDt knihovnu skin\u016F'!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: "Klikn\u011Bte sem pro otev\u0159en\xED mo\u017Enost\xED!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: "Ode\u017Ee\u0148!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: "Jsem Alpaccino a pom\u016F\u017Eu v\xE1m zm\u011Bnit skin na n\u011Bco
+      zaj\xEDmav\u011Bj\u0161\xEDho."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: "Kdykoli se m\u011B m\u016F\u017Eete zbavit tla\u010D\xEDtkem n\xED\u017Ee."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: Jejda, chcete to zkusit znovu?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

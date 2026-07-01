@@ -17,7 +17,62 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: Hajtsd el!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: "Remek! A fel\xFClet bet\xF6lt\u0151d\xF6tt. Kattints ide az ablak
+      bez\xE1r\xE1s\xE1hoz."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: "Let\xF6lt\xE9s... k\xE9rlek, v\xE1rj egy pillanatot!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: "Most alkalmazd a fel\xFCletet!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: "\xD3! V\xE1laszd ki ezt a fel\xFCletet a list\xE1b\xF3l!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: "\xCDrd be ide p\xE9ld\xE1ul, hogy 'Classic', hogy megtal\xE1ld
+      a kedvenc fel\xFCletedet!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: "V\xE1lts az online fel\xFCletb\xF6ng\xE9sz\u0151re!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: "V\xE1laszd az 'Open Skins Library' lehet\u0151s\xE9get!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: "Kattints ide az opci\xF3k megnyit\xE1s\xE1hoz!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: Hajtsd el!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: "Alpaccino vagyok, \xE9s seg\xEDtek neked valami \xE9rdekesebbre
+      cser\xE9lni a fel\xFCletet."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: "B\xE1rmikor megszabadulhatsz t\u0151lem az al\xE1bbi gombbal."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: "Upsz, szeretn\xE9d \xFAjra megpr\xF3b\xE1lni?"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

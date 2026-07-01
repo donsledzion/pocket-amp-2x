@@ -17,7 +17,61 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: Scaccia via!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: "Ottimo! La tua skin \xE8 stata caricata. Clicca qui per chiudere
+      la finestra."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: Sto scaricando... attendi un momento!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: Ora applica la skin!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: Oh! Seleziona questa skin dalla lista!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: Digita qui, ad esempio 'Classic', per trovare la tua skin preferita!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: Passa al browser di skin online!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: Seleziona 'Apri Libreria Skin'!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: Clicca qui per aprire le opzioni!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: Scaccia via!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: "Sono Alpaccino e ti aiuter\xF2 a cambiare la skin con qualcosa
+      di pi\xF9 interessante."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: In qualsiasi momento puoi mandarmi via con il pulsante qui sotto.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: Ops, vuoi riprovare?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -17,7 +17,61 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 7d89c2291a3249945ab40960971e5c35, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 9046056960
+    m_Localized: Vertreib mich!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3465949470720
+    m_Localized: "Super! Dein Skin wurde geladen. Klicke hier, um das Fenster zu
+      schlie\xDFen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3417010331648
+    m_Localized: Lade herunter... bitte warte einen Moment!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3364883521536
+    m_Localized: Wende den Skin jetzt an!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3308566601728
+    m_Localized: "Oh! W\xE4hle diesen Skin aus der Liste!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3246323130368
+    m_Localized: Gib hier z.B. 'Classic' ein, um deinen Lieblings-Skin zu finden!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3190081708032
+    m_Localized: Wechsle zum Online-Skin-Browser!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3125799804928
+    m_Localized: "W\xE4hle 'Open Skins Library'!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3067213766656
+    m_Localized: "Klicke hier, um die Optionen zu \xF6ffnen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000075542528
+    m_Localized: Vertreib mich!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: Ich bin Alpaccino und helfe dir, deinen Skin in etwas Interessanteres
+      zu verwandeln.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: Du kannst mich jederzeit mit dem Button unten loswerden.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: "Ups, m\xF6chtest du es noch einmal versuchen?"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
