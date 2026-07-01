@@ -219,8 +219,17 @@ namespace SoftAware.PocketAmp.Tutorial
                 }
                 else if (IsTutorialActive && target.TargetType == GetTargetTypeForStep(currentStep))
                 {
-                    Debug.Log($"[TUTORIAL LOG] Wymagany cel {target.TargetType} zniknął na kroku {currentStep}. Restartuję samouczek.");
-                    RestartTutorialFromOops();
+                    if (currentStep == 6 && target.TargetType == TutorialTargetType.DownloadButton)
+                    {
+                        Debug.Log("[TUTORIAL LOG] Zamknięto podgląd skórki (DownloadButton zniknął). Wracam do kroku 5 (Wybór z listy).");
+                        currentStep = 4; // Reset so AdvanceToSelectSkin passes the check
+                        AdvanceToSelectSkin(lastSkinTarget);
+                    }
+                    else
+                    {
+                        Debug.Log($"[TUTORIAL LOG] Wymagany cel {target.TargetType} zniknął na kroku {currentStep}. Restartuję samouczek.");
+                        RestartTutorialFromOops();
+                    }
                 }
             }
         }
@@ -372,6 +381,8 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
+        private RectTransform lastSkinTarget;
+
         private void HandleSkinsLoaded()
         {
             if (!IsTutorialActive || currentStep > 5) return;
@@ -415,6 +426,7 @@ namespace SoftAware.PocketAmp.Tutorial
             }
 
             Canvas.ForceUpdateCanvases();
+            lastSkinTarget = targetRect;
             AdvanceToSelectSkin(targetRect);
         }
 

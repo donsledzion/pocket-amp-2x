@@ -108,6 +108,17 @@ namespace SoftAware.PocketAmp.Tutorial
             
             Vector3 finalPos = spawnPoint != null ? spawnPoint.position : targetRect.position;
 
+            if ((finalPos - targetRect.position).sqrMagnitude < 0.01f && arrowDir != ArrowDirection.None)
+            {
+                float offsetX = (targetRect.rect.width * 0.5f + 150f) * targetRect.lossyScale.x;
+                float offsetY = (targetRect.rect.height * 0.5f + 150f) * targetRect.lossyScale.y;
+
+                if (arrowDir == ArrowDirection.Left) finalPos += Vector3.right * offsetX;
+                else if (arrowDir == ArrowDirection.Right) finalPos += Vector3.left * offsetX;
+                else if (arrowDir == ArrowDirection.Up) finalPos += Vector3.down * offsetY;
+                else if (arrowDir == ArrowDirection.Down) finalPos += Vector3.up * offsetY;
+            }
+
             if (arrowDir != ArrowDirection.None && arrowImage != null)
             {
                 Transform parent = rootRect.parent;
