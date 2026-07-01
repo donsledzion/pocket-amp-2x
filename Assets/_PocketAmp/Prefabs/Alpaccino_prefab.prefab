@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2139559359167981789}
   - component: {fileID: 8152703759681066138}
   - component: {fileID: 8539488074074231333}
+  - component: {fileID: 4896779423646411641}
   m_Layer: 0
   m_Name: SpeechBubble
   m_TagString: Untagged
@@ -76,6 +77,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &4896779423646411641
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124263336095428012}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &622921081939078985
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +145,7 @@ MonoBehaviour:
   alpacaImage: {fileID: 3445537042859078400}
   arrowImage: {fileID: 3573080483666260931}
   speechText: {fileID: 798223487267717103}
+  bubbleCanvasGroup: {fileID: 4896779423646411641}
   dismissButton: {fileID: 828443080110241379}
   alpacaIdle: {fileID: 21300000, guid: 7cff6e38b00529a4a8cef524bda75500, type: 3}
   alpacaPointing: {fileID: 21300000, guid: 7cff6e38b00529a4a8cef524bda75500, type: 3}

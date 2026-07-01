@@ -21,11 +21,14 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private Image alpacaImage;
         [SerializeField] private Image arrowImage;
         [SerializeField] private TextMeshProUGUI speechText;
+        [SerializeField] private CanvasGroup bubbleCanvasGroup;
         [SerializeField] private Button dismissButton;
 
         [Header("Sprites")]
         [SerializeField] private Sprite alpacaIdle;
         [SerializeField] private Sprite alpacaPointing;
+
+        private Sequence currentFadeSeq;
 
         private void Awake()
         {
@@ -56,15 +59,29 @@ namespace SoftAware.PocketAmp.Tutorial
 
         public void PointToTarget(RectTransform target, RectTransform spawnPoint, string text, ArrowDirection arrowDir)
         {
-            speechText.text = text;
-            
-            if (alpacaImage != null && alpacaPointing != null)
+            if (bubbleCanvasGroup != null && gameObject.activeInHierarchy)
             {
-                alpacaImage.sprite = arrowDir != ArrowDirection.None ? alpacaPointing : alpacaIdle;
+                currentFadeSeq.Stop();
+                currentFadeSeq = Sequence.Create()
+                    .Chain(Tween.Alpha(bubbleCanvasGroup, 0f, 0.15f))
+                    .ChainCallback(() => 
+                    {
+                        speechText.text = text;
+                        if (alpacaImage != null && alpacaPointing != null)
+                            alpacaImage.sprite = arrowDir != ArrowDirection.None ? alpacaPointing : alpacaIdle;
+                        SetupArrow(arrowDir);
+                        PositionNearTarget(target, spawnPoint, arrowDir);
+                    })
+                    .Chain(Tween.Alpha(bubbleCanvasGroup, 1f, 0.2f));
             }
-
-            SetupArrow(arrowDir);
-            PositionNearTarget(target, spawnPoint, arrowDir);
+            else
+            {
+                speechText.text = text;
+                if (alpacaImage != null && alpacaPointing != null)
+                    alpacaImage.sprite = arrowDir != ArrowDirection.None ? alpacaPointing : alpacaIdle;
+                SetupArrow(arrowDir);
+                PositionNearTarget(target, spawnPoint, arrowDir);
+            }
         }
 
         private void SetupArrow(ArrowDirection dir)

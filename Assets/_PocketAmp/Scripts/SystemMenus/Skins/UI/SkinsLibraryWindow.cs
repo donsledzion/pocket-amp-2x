@@ -74,6 +74,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
         public event System.Action OnWebSkinsLoaded;
         public event System.Action<string> OnSkinSelectedEvent;
         public event System.Action OnDownloadStarted;
+        public event System.Action OnPreviewLoaded;
         public event System.Action OnSkinLoadedSuccessfully;
 
         public System.Collections.Generic.IReadOnlyList<SkinItemView> CurrentItems => currentItems;
@@ -340,6 +341,8 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                     // Re-enable buttons
                     if (closePreviewButton) closePreviewButton.interactable = true;
                     if (webDownloadButton) webDownloadButton.interactable = true;
+                    
+                    OnPreviewLoaded?.Invoke();
                 }
                 catch (System.OperationCanceledException)
                 {

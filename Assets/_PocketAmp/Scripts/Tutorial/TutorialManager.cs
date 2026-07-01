@@ -76,7 +76,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 skinsWindow.OnWindowOpened += AdvanceToWebToggle;
                 skinsWindow.OnWebModeActivated += AdvanceToSearch;
                 skinsWindow.OnWebSkinsLoaded += HandleSkinsLoaded;
-                skinsWindow.OnSkinSelectedEvent += (id) => AdvanceToDownload();
+                skinsWindow.OnPreviewLoaded += AdvanceToDownload;
                 skinsWindow.OnDownloadStarted += AdvanceToWait;
                 skinsWindow.OnSkinLoadedSuccessfully += AdvanceToClose;
             }
@@ -92,7 +92,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 skinsWindow.OnWindowOpened -= AdvanceToWebToggle;
                 skinsWindow.OnWebModeActivated -= AdvanceToSearch;
                 skinsWindow.OnWebSkinsLoaded -= HandleSkinsLoaded;
-                skinsWindow.OnSkinSelectedEvent -= (id) => AdvanceToDownload();
+                skinsWindow.OnPreviewLoaded -= AdvanceToDownload;
                 skinsWindow.OnDownloadStarted -= AdvanceToWait;
                 skinsWindow.OnSkinLoadedSuccessfully -= AdvanceToClose;
             }
