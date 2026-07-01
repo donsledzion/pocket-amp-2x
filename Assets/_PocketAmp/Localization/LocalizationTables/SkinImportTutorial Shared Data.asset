@@ -55,6 +55,14 @@ MonoBehaviour:
     m_Key: tutorial-step-close
     m_Metadata:
       m_Items: []
+  - m_Id: 151782457073664
+    m_Key: tutorial-alpaccino-introduce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Key: tutorial-alpacino-how-to-shoo-away
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 9046056960
-    m_Localized: Shoo away!
+    m_Localized: Shoo!
     m_Metadata:
       m_Items: []
   - m_Id: 3000075542528
@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3364883521536
-    m_Localized: Now click Download!
+    m_Localized: Now aplly the skin!
     m_Metadata:
       m_Items: []
   - m_Id: 3417010331648
@@ -56,6 +56,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3465949470720
     m_Localized: Great! Your skin is loaded. Click here to close the window.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: I'm Alpaccino and I'll help you change the skin to something more
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: You can get rid of me at any time using the button below.
     m_Metadata:
       m_Items: []
   references:

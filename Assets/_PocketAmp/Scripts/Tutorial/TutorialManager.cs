@@ -11,9 +11,12 @@ namespace SoftAware.PocketAmp.Tutorial
     {
         public static TutorialManager Instance { get; private set; }
 
-        [Header("References")]
+        [Header("Alpaccino Setup")]
         [SerializeField] private AlpaccinoController alpaccinoPrefab;
         [SerializeField] private Transform alpaccinoParent;
+        [SerializeField] private RectTransform introSpawnPoint;
+
+        [Header("References")]
         [SerializeField] private RectTransform initialOptionsButton;
         [SerializeField] private RectTransform initialOptionsSpawnPoint;
         [SerializeField] private SoftAware.PocketAmp.SystemMenus.Skins.UI.SkinsLibraryWindow skinsWindow;
@@ -21,6 +24,8 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private float startupDelay = 2.0f;
 
         [Header("Localization Texts")]
+        [SerializeField] private LocalizedString textIntro1;
+        [SerializeField] private LocalizedString textIntro2;
         [SerializeField] private LocalizedString textOptions;
         [SerializeField] private LocalizedString textSkinsLib;
         [SerializeField] private LocalizedString textWebToggle;
@@ -34,7 +39,7 @@ namespace SoftAware.PocketAmp.Tutorial
         private Dictionary<TutorialTargetType, TutorialTarget> targets = new Dictionary<TutorialTargetType, TutorialTarget>();
         
         public bool IsTutorialActive { get; private set; }
-        private int currentStep = -1;
+        private int currentStep = -2;
 
 #if UNITY_EDITOR
         private const string EditorPrefKey = "PocketAmp_ShowTutorial";
@@ -117,15 +122,44 @@ namespace SoftAware.PocketAmp.Tutorial
         public void StartTutorial()
         {
             if (IsTutorialActive) return;
-            IsTutorialActive = true;
             Debug.Log("[TUTORIAL LOG] StartTutorial called. Tutorial is now ACTIVE.");
+            IsTutorialActive = true;
+            AdvanceToIntro1();
+        }
 
+        private void InstantiateAlpaccino()
+        {
             if (alpaccinoPrefab != null)
             {
                 activeAlpaccino = Instantiate(alpaccinoPrefab, alpaccinoParent != null ? alpaccinoParent : transform);
             }
+        }
 
-            AdvanceToOptions();
+        private async void AdvanceToIntro1()
+        {
+            currentStep = -1;
+            if (activeAlpaccino == null) InstantiateAlpaccino();
+            if (activeAlpaccino != null)
+            {
+                string text = textIntro1 != null ? textIntro1.GetLocalizedString() : "";
+                if (string.IsNullOrEmpty(text)) text = "Jestem Alpaccino i pomogę zmienić skórkę na coś ciekawszego.";
+                activeAlpaccino.Show(null, introSpawnPoint, text, ArrowDirection.None);
+            }
+            await UnityEngine.Awaitable.WaitForSecondsAsync(4f);
+            if (IsTutorialActive && currentStep == -1) AdvanceToIntro2();
+        }
+
+        private async void AdvanceToIntro2()
+        {
+            currentStep = 0;
+            if (activeAlpaccino != null)
+            {
+                string text = textIntro2 != null ? textIntro2.GetLocalizedString() : "";
+                if (string.IsNullOrEmpty(text)) text = "W każdej chwili możesz się mnie pozbyć przyciskiem poniżej.";
+                activeAlpaccino.PointToTarget(null, introSpawnPoint, text, ArrowDirection.None);
+            }
+            await UnityEngine.Awaitable.WaitForSecondsAsync(4f);
+            if (IsTutorialActive && currentStep == 0) AdvanceToOptions();
         }
 
         public void RegisterTarget(TutorialTarget target)

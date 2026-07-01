@@ -92,16 +92,26 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
-        private void PositionNearTarget(RectTransform target, RectTransform spawnPoint, ArrowDirection arrowDir)
+        private void PositionNearTarget(RectTransform targetRect, RectTransform spawnPoint, ArrowDirection arrowDir)
         {
-            if (target == null) return;
-
-            Vector3 finalPos = spawnPoint != null ? spawnPoint.position : target.position;
+            if (targetRect == null && spawnPoint != null)
+            {
+                rootRect.position = spawnPoint.position;
+                if (arrowImage != null) arrowImage.gameObject.SetActive(false);
+                return;
+            }
+            else if (targetRect == null) 
+            {
+                if (arrowImage != null) arrowImage.gameObject.SetActive(false);
+                return; // Default position
+            }
+            
+            Vector3 finalPos = spawnPoint != null ? spawnPoint.position : targetRect.position;
 
             if (arrowDir != ArrowDirection.None && arrowImage != null)
             {
                 Transform parent = rootRect.parent;
-                Vector3 localTarget = parent.InverseTransformPoint(target.position);
+                Vector3 localTarget = parent.InverseTransformPoint(targetRect.position);
                 Vector3 localFinal = parent.InverseTransformPoint(finalPos);
 
                 Vector3 direction = localTarget - localFinal;

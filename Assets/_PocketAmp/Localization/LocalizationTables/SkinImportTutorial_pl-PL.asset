@@ -32,7 +32,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3364883521536
-    m_Localized: Teraz kliknij Pobierz!
+    m_Localized: "Teraz zastosuj sk\xF3rk\u0119!"
     m_Metadata:
       m_Items: []
   - m_Id: 3308566601728
@@ -59,6 +59,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3000075542528
     m_Localized: "Przep\u0119d\u017A!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151782457073664
+    m_Localized: "Jestem Alpaccino i pomog\u0119 zmieni\u0107 sk\xF3rk\u0119 na co\u015B
+      ciekawszego."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 151828212736000
+    m_Localized: "W ka\u017Cdej chwili mo\u017Cesz si\u0119 mnie pozby\u0107 przyciskiem
+      poni\u017Cej."
     m_Metadata:
       m_Items: []
   references:

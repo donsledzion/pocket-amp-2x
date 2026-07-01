@@ -9197,11 +9197,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialManager
   alpaccinoPrefab: {fileID: 6267242804708124877, guid: 0c0e9b4e8a71e664d83766df2314ea28, type: 3}
   alpaccinoParent: {fileID: 2018791939}
+  introSpawnPoint: {fileID: 1857500083}
   initialOptionsButton: {fileID: 350376679}
   initialOptionsSpawnPoint: {fileID: 1857500083}
   skinsWindow: {fileID: 1498955846}
   expectedSkinName: 'Winamp Classic [CM]'
   startupDelay: 3
+  textIntro1:
+    m_TableReference:
+      m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
+    m_TableEntryReference:
+      m_KeyId: 151782457073664
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  textIntro2:
+    m_TableReference:
+      m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
+    m_TableEntryReference:
+      m_KeyId: 151828212736000
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   textOptions:
     m_TableReference:
       m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
