@@ -478,6 +478,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
                     {
                         if (statusText) statusText.text = (loadedSuccessText != null && !loadedSuccessText.IsEmpty) ? loadedSuccessText.GetLocalizedString() : "Loaded successfully!";
                         ClosePreview();
+                        OnSkinLoadedSuccessfully?.Invoke();
                     }
                     else
                     {
