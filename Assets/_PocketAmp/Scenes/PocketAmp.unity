@@ -9339,6 +9339,15 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  textOops:
+    m_TableReference:
+      m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
+    m_TableEntryReference:
+      m_KeyId: 159899135762432
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   textOptions:
     m_TableReference:
       m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35

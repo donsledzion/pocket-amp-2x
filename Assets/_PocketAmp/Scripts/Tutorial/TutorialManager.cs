@@ -26,6 +26,7 @@ namespace SoftAware.PocketAmp.Tutorial
         [Header("Localization Texts")]
         [SerializeField] private LocalizedString textIntro1;
         [SerializeField] private LocalizedString textIntro2;
+        [SerializeField] private LocalizedString textOops;
         [SerializeField] private LocalizedString textOptions;
         [SerializeField] private LocalizedString textSkinsLib;
         [SerializeField] private LocalizedString textWebToggle;
@@ -175,6 +176,35 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
+        private TutorialTargetType GetTargetTypeForStep(int step)
+        {
+            switch (step)
+            {
+                case 1: return TutorialTargetType.OptionsButton;
+                case 2: return TutorialTargetType.SkinsLibraryButton;
+                case 3: return TutorialTargetType.WebToggle;
+                case 4: return TutorialTargetType.SearchField;
+                case 5: return TutorialTargetType.FirstSkinItem;
+                case 6: return TutorialTargetType.DownloadButton;
+                case 7: return TutorialTargetType.DownloadButton;
+                case 8: return TutorialTargetType.CloseButton;
+                default: return TutorialTargetType.None;
+            }
+        }
+
+        private async void RestartTutorialFromOops()
+        {
+            currentStep = -99;
+            if (activeAlpaccino != null)
+            {
+                string text = textOops != null ? textOops.GetLocalizedString() : "";
+                if (string.IsNullOrEmpty(text)) text = "Ups, chcesz spróbować jeszcze raz?";
+                activeAlpaccino.Show(null, introSpawnPoint, text, ArrowDirection.None);
+            }
+            await UnityEngine.Awaitable.WaitForSecondsAsync(3.5f);
+            if (IsTutorialActive && currentStep == -99) AdvanceToOptions();
+        }
+
         public void UnregisterTarget(TutorialTarget target)
         {
             if (target != null && targets.ContainsKey(target.TargetType) && targets[target.TargetType] == target)
@@ -186,6 +216,11 @@ namespace SoftAware.PocketAmp.Tutorial
                 {
                     Debug.Log("[TUTORIAL LOG] Ostatni cel (CloseButton) zniknął (okno zamknięte). Automatycznie kończę samouczek.");
                     Dismiss();
+                }
+                else if (IsTutorialActive && target.TargetType == GetTargetTypeForStep(currentStep))
+                {
+                    Debug.Log($"[TUTORIAL LOG] Wymagany cel {target.TargetType} zniknął na kroku {currentStep}. Restartuję samouczek.");
+                    RestartTutorialFromOops();
                 }
             }
         }

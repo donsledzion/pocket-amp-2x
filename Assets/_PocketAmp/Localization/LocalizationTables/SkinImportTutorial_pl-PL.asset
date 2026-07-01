@@ -71,6 +71,10 @@ MonoBehaviour:
       poni\u017Cej."
     m_Metadata:
       m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: "Ups, chcesz spr\xF3bowa\u0107 jeszcze raz?"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -63,6 +63,10 @@ MonoBehaviour:
     m_Key: tutorial-alpacino-how-to-shoo-away
     m_Metadata:
       m_Items: []
+  - m_Id: 159899135762432
+    m_Key: tutorial-oops
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

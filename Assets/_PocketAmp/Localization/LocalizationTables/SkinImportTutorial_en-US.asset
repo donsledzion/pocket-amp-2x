@@ -66,6 +66,10 @@ MonoBehaviour:
     m_Localized: You can get rid of me at any time using the button below.
     m_Metadata:
       m_Items: []
+  - m_Id: 159899135762432
+    m_Localized: Oops, want to try again?
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
