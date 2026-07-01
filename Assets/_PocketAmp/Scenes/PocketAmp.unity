@@ -3078,6 +3078,7 @@ GameObject:
   - component: {fileID: 350376682}
   - component: {fileID: 350376681}
   - component: {fileID: 350376680}
+  - component: {fileID: 350376683}
   m_Layer: 5
   m_Name: MainOptionsButton
   m_TagString: Untagged
@@ -3096,7 +3097,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1857500083}
   m_Father: {fileID: 996247204}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3182,10 +3184,36 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 350376680}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2018791944}
+        m_TargetAssemblyTypeName: SoftAware.PocketAmp.OverlayWindowsController, Assembly-CSharp
+        m_MethodName: OpenMiscOptionsMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &350376683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350376678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 1
+  spawnPoint: {fileID: 1857500083}
 --- !u!1 &364309603
 GameObject:
   m_ObjectHideFlags: 0
@@ -3545,6 +3573,7 @@ GameObject:
   - component: {fileID: 432774820}
   - component: {fileID: 432774819}
   - component: {fileID: 432774818}
+  - component: {fileID: 432774821}
   m_Layer: 0
   m_Name: SkinsLibraryButton
   m_TagString: Untagged
@@ -3565,6 +3594,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1179188479}
+  - {fileID: 2083298485}
   m_Father: {fileID: 3903772226343221050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -3654,6 +3684,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432774816}
   m_CullTransparentMesh: 1
+--- !u!114 &432774821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432774816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 2
+  spawnPoint: {fileID: 2083298485}
 --- !u!1 &441488167
 GameObject:
   m_ObjectHideFlags: 0
@@ -9152,8 +9196,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialManager
   alpaccinoPrefab: {fileID: 6267242804708124877, guid: 0c0e9b4e8a71e664d83766df2314ea28, type: 3}
-  alpaccinoParent: {fileID: 776791690}
+  alpaccinoParent: {fileID: 2018791939}
   initialOptionsButton: {fileID: 350376679}
+  initialOptionsSpawnPoint: {fileID: 1857500083}
+  skinsWindow: {fileID: 1498955846}
+  expectedSkinName: 'Winamp Classic [CM]'
+  startupDelay: 3
   textOptions:
     m_TableReference:
       m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
@@ -14861,6 +14909,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8288634473155255130, guid: 02883efd9604fb44296718a231365681, type: 3}
   m_PrefabInstance: {fileID: 1321351163957212046}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1498955846 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7157232519325531129, guid: 02883efd9604fb44296718a231365681, type: 3}
+  m_PrefabInstance: {fileID: 1321351163957212046}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498955844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6406812258fcaa44ebf4f621cef2c8e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.Winamp.SystemMenus.Skins.UI.SkinsLibraryWindow
 --- !u!1 &1505739993
 GameObject:
   m_ObjectHideFlags: 0
@@ -19431,6 +19490,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1856780224}
   m_CullTransparentMesh: 1
+--- !u!1 &1857500082
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1857500083}
+  m_Layer: 5
+  m_Name: 01 MainOptions TutorialTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1857500083
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857500082}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 350376679}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -127.9, y: -1.1}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1869314746
 GameObject:
   m_ObjectHideFlags: 0
@@ -21844,6 +21938,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054157185}
   m_CullTransparentMesh: 1
+--- !u!1 &2083298484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2083298485}
+  m_Layer: 0
+  m_Name: 02 TutorialTarget SkinsLibraryButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2083298485
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083298484}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 432774817}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 18.8, y: -75.9}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2089423108
 GameObject:
   m_ObjectHideFlags: 0
@@ -22506,6 +22635,22 @@ PrefabInstance:
     - target: {fileID: 2443162738750597443, guid: 02883efd9604fb44296718a231365681, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3027144636070536760, guid: 02883efd9604fb44296718a231365681, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 2083298485}
+    - target: {fileID: 3035020612856950400, guid: 02883efd9604fb44296718a231365681, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 2083298485}
+    - target: {fileID: 4291889668081148840, guid: 02883efd9604fb44296718a231365681, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 2083298485}
+    - target: {fileID: 6554497813044632022, guid: 02883efd9604fb44296718a231365681, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7313207298915273981, guid: 02883efd9604fb44296718a231365681, type: 3}
       propertyPath: m_IsActive

@@ -15,6 +15,10 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private AlpaccinoController alpaccinoPrefab;
         [SerializeField] private Transform alpaccinoParent;
         [SerializeField] private RectTransform initialOptionsButton;
+        [SerializeField] private RectTransform initialOptionsSpawnPoint;
+        [SerializeField] private SoftAware.PocketAmp.SystemMenus.Skins.UI.SkinsLibraryWindow skinsWindow;
+        [SerializeField] private string expectedSkinName;
+        [SerializeField] private float startupDelay = 2.0f;
 
         [Header("Localization Texts")]
         [SerializeField] private LocalizedString textOptions;
@@ -65,9 +69,33 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
-        private void Start()
+        private async void Start()
         {
+            if (skinsWindow != null)
+            {
+                skinsWindow.OnWindowOpened += AdvanceToWebToggle;
+                skinsWindow.OnWebModeActivated += AdvanceToSearch;
+                skinsWindow.OnWebSkinsLoaded += HandleSkinsLoaded;
+                skinsWindow.OnSkinSelectedEvent += (id) => AdvanceToDownload();
+                skinsWindow.OnDownloadStarted += AdvanceToWait;
+                skinsWindow.OnSkinLoadedSuccessfully += AdvanceToClose;
+            }
+
+            await Awaitable.WaitForSecondsAsync(startupDelay);
             CheckAndStartTutorial();
+        }
+
+        private void OnDestroy()
+        {
+            if (skinsWindow != null)
+            {
+                skinsWindow.OnWindowOpened -= AdvanceToWebToggle;
+                skinsWindow.OnWebModeActivated -= AdvanceToSearch;
+                skinsWindow.OnWebSkinsLoaded -= HandleSkinsLoaded;
+                skinsWindow.OnSkinSelectedEvent -= (id) => AdvanceToDownload();
+                skinsWindow.OnDownloadStarted -= AdvanceToWait;
+                skinsWindow.OnSkinLoadedSuccessfully -= AdvanceToClose;
+            }
         }
 
         private void CheckAndStartTutorial()
@@ -90,6 +118,7 @@ namespace SoftAware.PocketAmp.Tutorial
         {
             if (IsTutorialActive) return;
             IsTutorialActive = true;
+            Debug.Log("[TUTORIAL LOG] StartTutorial called. Tutorial is now ACTIVE.");
 
             if (alpaccinoPrefab != null)
             {
@@ -103,6 +132,7 @@ namespace SoftAware.PocketAmp.Tutorial
         {
             if (target == null || target.TargetType == TutorialTargetType.None) return;
             targets[target.TargetType] = target;
+            Debug.Log($"[TUTORIAL LOG] Target Registered: {target.TargetType}");
 
             // If a target registers that we are waiting for, update immediately
             if (IsTutorialActive)
@@ -116,19 +146,33 @@ namespace SoftAware.PocketAmp.Tutorial
             if (target != null && targets.ContainsKey(target.TargetType) && targets[target.TargetType] == target)
             {
                 targets.Remove(target.TargetType);
+                Debug.Log($"[TUTORIAL LOG] Target Unregistered: {target.TargetType}");
             }
         }
 
-        private RectTransform GetTargetRect(TutorialTargetType type)
+        private void GetTargetInfo(TutorialTargetType type, out RectTransform targetRect, out RectTransform spawnPoint)
         {
-            if (type == TutorialTargetType.OptionsButton) return initialOptionsButton;
-            if (targets.TryGetValue(type, out var target)) return target.RectTransform;
-            return null;
+            targetRect = null;
+            spawnPoint = null;
+
+            if (type == TutorialTargetType.OptionsButton)
+            {
+                targetRect = initialOptionsButton;
+                spawnPoint = initialOptionsSpawnPoint;
+                return;
+            }
+
+            if (targets.TryGetValue(type, out var target))
+            {
+                targetRect = target.RectTransform;
+                spawnPoint = target.SpawnPoint;
+            }
         }
 
         public void Dismiss()
         {
             if (!IsTutorialActive) return;
+            Debug.Log("[TUTORIAL LOG] Dismiss called. Ending tutorial.");
 
             IsTutorialActive = false;
             PlayerPrefs.SetInt("Tutorial_Skin_Completed", 1);
@@ -159,103 +203,199 @@ namespace SoftAware.PocketAmp.Tutorial
         {
             if (!IsTutorialActive) return;
             currentStep = 1;
-            var rect = GetTargetRect(TutorialTargetType.OptionsButton);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToOptions (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.OptionsButton, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textOptions.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Kliknij tutaj, aby otworzyć opcje!";
-                activeAlpaccino.Show(rect, text, ArrowDirection.Up);
+                activeAlpaccino.Show(rect, spawn, text, ArrowDirection.Up);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToOptions FAILED: rect is null? {rect == null}");
             }
         }
 
         public void AdvanceToSkinsLibraryButton()
         {
-            if (!IsTutorialActive || currentStep >= 2) return;
+            if (!IsTutorialActive || currentStep > 2) return;
             currentStep = 2;
-            var rect = GetTargetRect(TutorialTargetType.SkinsLibraryButton);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToSkinsLibraryButton (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.SkinsLibraryButton, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textSkinsLib.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Wybierz 'Open Skins Library'!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Left);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Left);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToSkinsLibraryButton FAILED: rect is null? {rect == null}");
             }
         }
 
         public void AdvanceToWebToggle()
         {
-            if (!IsTutorialActive || currentStep >= 3) return;
+            if (!IsTutorialActive || currentStep > 3) return;
             currentStep = 3;
-            var rect = GetTargetRect(TutorialTargetType.WebToggle);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToWebToggle (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.WebToggle, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textWebToggle.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Przełącz się na przeglądarkę skórek online!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Up);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Up);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToWebToggle FAILED: rect is null? {rect == null}");
             }
         }
 
         public void AdvanceToSearch()
         {
-            if (!IsTutorialActive || currentStep >= 4) return;
+            if (!IsTutorialActive || currentStep > 4) return;
             currentStep = 4;
-            var rect = GetTargetRect(TutorialTargetType.SearchField);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToSearch (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.SearchField, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textSearch.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Wpisz tutaj np. 'retro', aby znaleźć coś fajnego!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Up);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Up);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToSearch FAILED: rect is null? {rect == null}");
             }
         }
 
-        public void AdvanceToSelectSkin()
+        public void AdvanceToSelectSkin(RectTransform actualTarget = null)
         {
-            if (!IsTutorialActive || currentStep >= 5) return;
+            if (!IsTutorialActive || currentStep > 5) return;
             currentStep = 5;
-            var rect = GetTargetRect(TutorialTargetType.FirstSkinItem);
-            if (rect != null && activeAlpaccino != null)
+            Debug.Log($"[TUTORIAL LOG] AdvanceToSelectSkin (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.FirstSkinItem, out var rect, out var spawn);
+            
+            var target = actualTarget != null ? actualTarget : rect;
+
+            if (target != null && activeAlpaccino != null)
             {
                 string text = textSelectSkin.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "O! Wybierz tę skórkę z listy!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Left);
+                activeAlpaccino.PointToTarget(target, spawn, text, ArrowDirection.Left);
             }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToSelectSkin FAILED: target is null? {target == null}");
+            }
+        }
+
+        private void HandleSkinsLoaded()
+        {
+            if (!IsTutorialActive || currentStep > 5) return;
+            
+            if (skinsWindow != null && string.IsNullOrEmpty(skinsWindow.SearchText))
+            {
+                Debug.Log("[TUTORIAL LOG] HandleSkinsLoaded: Otrzymano wynik, ale SearchText jest pusty. Zatrzymuję się na kroku wyszukiwarki.");
+                return;
+            }
+            
+            Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Otrzymano wynik. SearchText = '{(skinsWindow != null ? skinsWindow.SearchText : "")}'");
+            
+            RectTransform targetRect = null;
+            if (skinsWindow != null && skinsWindow.CurrentItems.Count > 0)
+            {
+                var targetItem = skinsWindow.CurrentItems[0];
+                if (!string.IsNullOrEmpty(expectedSkinName))
+                {
+                    bool found = false;
+                    foreach (var item in skinsWindow.CurrentItems)
+                    {
+                        if (item.SkinName != null && item.SkinName.IndexOf(expectedSkinName, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            targetItem = item;
+                            found = true;
+                            Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Znaleziono pasującą skórkę: {item.SkinName}");
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Nie znaleziono skórki pasującej do '{expectedSkinName}'. Celuję w pierwszą pozycję z brzegu.");
+                    }
+                }
+                targetRect = targetItem.GetComponent<RectTransform>();
+            }
+            else
+            {
+                Debug.Log("[TUTORIAL LOG] HandleSkinsLoaded: Lista skórek jest pusta. Czekam dalej na krok 4.");
+                return;
+            }
+
+            AdvanceToSelectSkin(targetRect);
         }
 
         public void AdvanceToDownload()
         {
-            if (!IsTutorialActive || currentStep >= 6) return;
+            if (!IsTutorialActive || currentStep > 6) return;
             currentStep = 6;
-            var rect = GetTargetRect(TutorialTargetType.DownloadButton);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToDownload (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.DownloadButton, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textDownload.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Teraz kliknij Pobierz!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Down);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Down);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToDownload FAILED: rect is null? {rect == null}");
             }
         }
 
         public void AdvanceToWait()
         {
-            if (!IsTutorialActive || currentStep >= 7) return;
+            if (!IsTutorialActive || currentStep > 7) return;
             currentStep = 7;
-            var rect = GetTargetRect(TutorialTargetType.DownloadButton);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToWait (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.DownloadButton, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textWait.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Pobieram... poczekaj chwilę!";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Down);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Down);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToWait FAILED: rect is null? {rect == null}");
             }
         }
 
         public void AdvanceToClose()
         {
-            if (!IsTutorialActive || currentStep >= 8) return;
+            if (!IsTutorialActive || currentStep > 8) return;
             currentStep = 8;
-            var rect = GetTargetRect(TutorialTargetType.CloseButton);
+            Debug.Log($"[TUTORIAL LOG] AdvanceToClose (Step {currentStep}) called.");
+            
+            GetTargetInfo(TutorialTargetType.CloseButton, out var rect, out var spawn);
             if (rect != null && activeAlpaccino != null)
             {
                 string text = textClose.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Świetnie! Twoja skórka została załadowana. Kliknij tu, by zamknąć okno.";
-                activeAlpaccino.PointToTarget(rect, text, ArrowDirection.Up);
+                activeAlpaccino.PointToTarget(rect, spawn, text, ArrowDirection.Up);
+            }
+            else
+            {
+                Debug.Log($"[TUTORIAL LOG] AdvanceToClose FAILED: rect is null? {rect == null}");
             }
         }
     }

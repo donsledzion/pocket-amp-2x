@@ -12,7 +12,7 @@ namespace SoftAware.PocketAmp
         [SerializeField] private GameObject addUrlWindow;
         
         
-        internal void OpenMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, true);
+        public void OpenMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, true);
 
         internal void CloseMiscOptionsMenu() => SetWindowVisibility(miscOptionsMenu, false);
 

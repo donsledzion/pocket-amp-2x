@@ -27,9 +27,6 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private Sprite alpacaIdle;
         [SerializeField] private Sprite alpacaPointing;
 
-        [Header("Offsets")]
-        [SerializeField] private Vector2 defaultOffset = new Vector2(0, -100f);
-
         private void Awake()
         {
             if (dismissButton != null)
@@ -38,7 +35,7 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
-        public void Show(RectTransform target, string text, ArrowDirection arrowDir)
+        public void Show(RectTransform target, RectTransform spawnPoint, string text, ArrowDirection arrowDir)
         {
             gameObject.SetActive(true);
             speechText.text = text;
@@ -50,14 +47,14 @@ namespace SoftAware.PocketAmp.Tutorial
             }
 
             SetupArrow(arrowDir);
-            PositionNearTarget(target, arrowDir);
+            PositionNearTarget(target, spawnPoint, arrowDir);
 
             // Pop animation
             rootRect.localScale = Vector3.zero;
             Tween.Scale(rootRect, 1f, duration: 0.4f, ease: Ease.OutBack);
         }
 
-        public void PointToTarget(RectTransform target, string text, ArrowDirection arrowDir)
+        public void PointToTarget(RectTransform target, RectTransform spawnPoint, string text, ArrowDirection arrowDir)
         {
             speechText.text = text;
             
@@ -67,48 +64,52 @@ namespace SoftAware.PocketAmp.Tutorial
             }
 
             SetupArrow(arrowDir);
-            PositionNearTarget(target, arrowDir);
+            PositionNearTarget(target, spawnPoint, arrowDir);
         }
 
         private void SetupArrow(ArrowDirection dir)
         {
-            if (arrowImage == null) return;
-
-            arrowImage.gameObject.SetActive(dir != ArrowDirection.None);
-            if (dir == ArrowDirection.None) return;
-
-            // Rotate arrow based on direction
-            float angle = 0f;
-            switch (dir)
+            if (arrowImage != null)
             {
-                case ArrowDirection.Up: angle = 0f; break;
-                case ArrowDirection.Right: angle = -90f; break;
-                case ArrowDirection.Down: angle = 180f; break;
-                case ArrowDirection.Left: angle = 90f; break;
+                arrowImage.gameObject.SetActive(dir != ArrowDirection.None);
             }
-            arrowImage.rectTransform.localEulerAngles = new Vector3(0, 0, angle);
         }
 
-        private void PositionNearTarget(RectTransform target, ArrowDirection arrowDir)
+        private void PositionNearTarget(RectTransform target, RectTransform spawnPoint, ArrowDirection arrowDir)
         {
             if (target == null) return;
 
-            // Simple positioning logic
-            Vector3 targetPos = target.position;
-            Vector2 offset = defaultOffset;
+            Vector3 finalPos = spawnPoint != null ? spawnPoint.position : target.position;
 
-            // Adjust offset based on arrow direction so Alpaccino doesn't cover the target
-            float padding = 150f;
-            switch (arrowDir)
+            if (arrowDir != ArrowDirection.None && arrowImage != null)
             {
-                case ArrowDirection.Up: offset = new Vector2(0, -padding); break;
-                case ArrowDirection.Down: offset = new Vector2(0, padding); break;
-                case ArrowDirection.Left: offset = new Vector2(padding, 0); break;
-                case ArrowDirection.Right: offset = new Vector2(-padding, 0); break;
+                Transform parent = rootRect.parent;
+                Vector3 localTarget = parent.InverseTransformPoint(target.position);
+                Vector3 localFinal = parent.InverseTransformPoint(finalPos);
+
+                Vector3 direction = localTarget - localFinal;
+                Vector2 dir2D = new Vector2(direction.x, direction.y).normalized;
+
+                Vector3 center = alpacaImage != null ? alpacaImage.rectTransform.localPosition : Vector3.zero;
+                float radiusX = alpacaImage != null ? alpacaImage.rectTransform.rect.width * 0.5f : 0f;
+                float radiusY = alpacaImage != null ? alpacaImage.rectTransform.rect.height * 0.5f : 0f;
+
+                Vector3 edgeOffset = new Vector3(dir2D.x * radiusX, dir2D.y * radiusY, 0);
+                arrowImage.rectTransform.localPosition = center + edgeOffset;
+
+                Vector3 edgeLocalPos = localFinal + center + edgeOffset;
+                Vector3 trueDirection = localTarget - edgeLocalPos;
+
+                if (trueDirection.sqrMagnitude > 0.001f)
+                {
+                    float angle = Mathf.Atan2(trueDirection.y, trueDirection.x) * Mathf.Rad2Deg;
+                    arrowImage.rectTransform.localRotation = Quaternion.Euler(0, 0, angle);
+
+                    float distance = trueDirection.magnitude;
+                    arrowImage.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, distance);
+                }
             }
 
-            // Move smoothly to the new position
-            Vector3 finalPos = targetPos + (Vector3)offset;
             Tween.Position(rootRect, finalPos, duration: 0.5f, ease: Ease.OutQuad);
         }
 

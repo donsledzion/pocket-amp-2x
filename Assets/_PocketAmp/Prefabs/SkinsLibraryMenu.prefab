@@ -121,6 +121,41 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1030899427725047763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1300914329892969951}
+  m_Layer: 0
+  m_Name: 03 TutorialTarget DownloadButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1300914329892969951
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030899427725047763}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5614554038373904608}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -65.1, y: 106.2}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1200251373217119865
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,6 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1644553347836684750}
   - component: {fileID: 8342966685602179546}
+  - component: {fileID: 4291889668081148840}
   m_Layer: 0
   m_Name: Online Browse Toggle
   m_TagString: Untagged
@@ -343,6 +379,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!114 &4291889668081148840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716836259455313763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 3
+  spawnPoint: {fileID: 0}
 --- !u!1 &1885925589815533699
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,6 +789,7 @@ GameObject:
   - component: {fileID: 6547140418079559981}
   - component: {fileID: 114312331525594303}
   - component: {fileID: 39844442785071626}
+  - component: {fileID: 3027144636070536760}
   m_Layer: 0
   m_Name: Close Button
   m_TagString: Untagged
@@ -847,6 +898,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3027144636070536760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909622943672139756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 7
+  spawnPoint: {fileID: 0}
 --- !u!1 &2976738243260388472
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +924,7 @@ GameObject:
   - component: {fileID: 7543474037778115602}
   - component: {fileID: 1441405688981290757}
   - component: {fileID: 4764987239402050319}
+  - component: {fileID: 3035020612856950400}
   m_Layer: 0
   m_Name: SearchField
   m_TagString: Untagged
@@ -1025,6 +1091,70 @@ MonoBehaviour:
   isAlert: 0
   m_InputValidator: {fileID: 0}
   m_ShouldActivateOnSelect: 1
+--- !u!114 &3035020612856950400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2976738243260388472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 4
+  spawnPoint: {fileID: 0}
+--- !u!1 &3253190099516749104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8223372972931527995}
+  - component: {fileID: 5421568212854673714}
+  m_Layer: 0
+  m_Name: FoundSkinItem TutorialTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8223372972931527995
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253190099516749104}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8288634473155255130}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 44, y: -35.4}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5421568212854673714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253190099516749104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 5
+  spawnPoint: {fileID: 8223372972931527995}
 --- !u!1 &3418719416136205291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,6 +1904,7 @@ GameObject:
   - component: {fileID: 8945610916779149165}
   - component: {fileID: 4301878496339473877}
   - component: {fileID: 7839064499766923386}
+  - component: {fileID: 4117154502497726508}
   m_Layer: 0
   m_Name: DownloadButton
   m_TagString: Untagged
@@ -1794,6 +1925,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 118617424342696421}
+  - {fileID: 1300914329892969951}
   m_Father: {fileID: 4214890485277150319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1883,6 +2015,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4117154502497726508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4622150577934021545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae9b14ef8f919643aba0326c63a3467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoftAware.PocketAmp.Tutorial.TutorialTarget
+  targetType: 6
+  spawnPoint: {fileID: 1300914329892969951}
 --- !u!1 &5020863874599059517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3616,6 +3762,7 @@ RectTransform:
   - {fileID: 113962216512496843}
   - {fileID: 3906898007310190243}
   - {fileID: 5439281055391662250}
+  - {fileID: 8223372972931527995}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
