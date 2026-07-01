@@ -183,22 +183,34 @@ namespace SoftAware.PocketAmp
 
         private IEnumerator CheckPermissionsCoroutine()
         {
-            #if UNITY_ANDROID
+            if (Application.platform != RuntimePlatform.Android) yield break;
+
+            // CRITICAL FIX: Wait for the Unity Activity to fully initialize and gain focus 
+            // before showing system permission dialogs to prevent Android WindowManager deadlocks.
+            yield return null;
+            while (!Application.isFocused)
+            {
+                yield return null;
+            }
 
             var audioPerm = "android.permission.READ_MEDIA_AUDIO";
-            var storagePerm = Permission.ExternalStorageRead;
+            var storagePerm = "android.permission.READ_EXTERNAL_STORAGE";
             var micPerm = "android.permission.RECORD_AUDIO";
-
-            if (Application.platform != RuntimePlatform.Android) yield break;
-            // Request permissions if they are not granted
+            
+            var permsToRequest = new System.Collections.Generic.List<string>();
             if (!Permission.HasUserAuthorizedPermission(audioPerm))
-                Permission.RequestUserPermission(audioPerm);
+                permsToRequest.Add(audioPerm);
 
             if (!Permission.HasUserAuthorizedPermission(storagePerm))
-                Permission.RequestUserPermission(storagePerm);
+                permsToRequest.Add(storagePerm);
                 
             if (!Permission.HasUserAuthorizedPermission(micPerm))
-                Permission.RequestUserPermission(micPerm);
+                permsToRequest.Add(micPerm);
+
+            if (permsToRequest.Count > 0)
+            {
+                Permission.RequestUserPermissions(permsToRequest.ToArray());
+            }
 
             // Poll for permission status (up to 10 seconds)
             float timer = 0;
@@ -212,7 +224,6 @@ namespace SoftAware.PocketAmp
                 yield return new WaitForSeconds(0.5f);
                 timer += 0.5f;
             }
-#endif
             yield break;
         }
 

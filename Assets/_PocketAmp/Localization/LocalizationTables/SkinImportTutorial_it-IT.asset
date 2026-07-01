@@ -48,7 +48,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: Seleziona 'Apri Libreria Skin'!
+    m_Localized: Scegli 'Apri Libreria Skin'!
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -70,6 +70,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: Ops, vuoi riprovare?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: "Ricorda! Qui troverai le opzioni pi\xF9 importanti!"
     m_Metadata:
       m_Items: []
   references:

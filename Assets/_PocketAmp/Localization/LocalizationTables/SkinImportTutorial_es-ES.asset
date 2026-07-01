@@ -49,7 +49,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: "\xA1Selecciona 'Abrir biblioteca de skins'!"
+    m_Localized: "\xA1Elige 'Abrir biblioteca de apariencias'!"
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -72,6 +72,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: "Ups, \xBFquieres intentarlo de nuevo?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: "\xA1Recuerda! \xA1Aqu\xED encontrar\xE1s las opciones m\xE1s importantes!"
     m_Metadata:
       m_Items: []
   references:

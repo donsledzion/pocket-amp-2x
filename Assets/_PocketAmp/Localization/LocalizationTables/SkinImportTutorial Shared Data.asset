@@ -67,6 +67,10 @@ MonoBehaviour:
     m_Key: tutorial-oops
     m_Metadata:
       m_Items: []
+  - m_Id: 237181909065728
+    m_Key: tutorial-options-reminder
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -49,7 +49,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: "Vyberte 'Otev\u0159\xEDt knihovnu skin\u016F'!"
+    m_Localized: "Zvolte 'Otev\u0159\xEDt knihovnu vzhled\u016F'!"
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -71,6 +71,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: Jejda, chcete to zkusit znovu?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: "Pamatujte! Zde najdete nejd\u016Fle\u017Eit\u011Bj\u0161\xED mo\u017Enosti!"
     m_Metadata:
       m_Items: []
   references:

@@ -44,12 +44,14 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private LocalizedString textDownload;
         [SerializeField] private LocalizedString textWait;
         [SerializeField] private LocalizedString textClose;
+        [SerializeField] private LocalizedString textReminder;
 
         private AlpaccinoController activeAlpaccino;
         private Dictionary<TutorialTargetType, TutorialTarget> targets = new Dictionary<TutorialTargetType, TutorialTarget>();
         
         public bool IsTutorialActive { get; private set; }
         private int currentStep = -2;
+        private bool hasShownReminder = false;
 
 #if UNITY_EDITOR
         private const string EditorPrefKey = "PocketAmp_ShowTutorial";
@@ -105,6 +107,7 @@ namespace SoftAware.PocketAmp.Tutorial
             }
 
             await Awaitable.WaitForSecondsAsync(startupDelay);
+            while (!Application.isFocused) await Awaitable.NextFrameAsync();
             CheckAndStartTutorial();
         }
 
@@ -174,6 +177,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 activeAlpaccino.Show(null, introSpawnPoint, text, ArrowDirection.None);
             }
             await UnityEngine.Awaitable.WaitForSecondsAsync(4f);
+            while (!Application.isFocused) await UnityEngine.Awaitable.NextFrameAsync();
             if (IsTutorialActive && currentStep == -1) AdvanceToIntro2();
         }
 
@@ -187,6 +191,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 activeAlpaccino.PointToTarget(null, introSpawnPoint, text, ArrowDirection.None);
             }
             await UnityEngine.Awaitable.WaitForSecondsAsync(4f);
+            while (!Application.isFocused) await UnityEngine.Awaitable.NextFrameAsync();
             if (IsTutorialActive && currentStep == 0) AdvanceToOptions();
         }
 
@@ -230,6 +235,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 activeAlpaccino.Show(null, introSpawnPoint, text, ArrowDirection.None);
             }
             await UnityEngine.Awaitable.WaitForSecondsAsync(3.5f);
+            while (!Application.isFocused) await UnityEngine.Awaitable.NextFrameAsync();
             if (IsTutorialActive && currentStep == -99) AdvanceToOptions();
         }
 
@@ -284,16 +290,53 @@ namespace SoftAware.PocketAmp.Tutorial
         public void Dismiss()
         {
             StopOptionsButtonAnim();
-            if (!IsTutorialActive) return;
-            Debug.Log("[TUTORIAL LOG] Dismiss called. Ending tutorial.");
 
+            if (activeAlpaccino != null && activeAlpaccino.gameObject.activeInHierarchy)
+            {
+                activeAlpaccino.Dismiss(initialOptionsButton);
+            }
+
+            if (!IsTutorialActive) return;
+            
+            Debug.Log("[TUTORIAL LOG] Dismiss called. Ending tutorial.");
             IsTutorialActive = false;
             PlayerPrefs.SetInt("Tutorial_Skin_Completed", 1);
             PlayerPrefs.Save();
 
+            if (!hasShownReminder)
+            {
+                hasShownReminder = true;
+                ShowReminderSequence();
+            }
+        }
+
+        private async void ShowReminderSequence()
+        {
+            await UnityEngine.Awaitable.WaitForSecondsAsync(3f);
+            while (!Application.isFocused) await UnityEngine.Awaitable.NextFrameAsync();
+            
+            if (activeAlpaccino != null && !activeAlpaccino.gameObject.activeInHierarchy)
+            {
+                Destroy(activeAlpaccino.gameObject);
+                activeAlpaccino = null;
+            }
+            if (activeAlpaccino == null) InstantiateAlpaccino();
+            
             if (activeAlpaccino != null)
             {
-                activeAlpaccino.Dismiss(initialOptionsButton);
+                string text = textReminder != null ? textReminder.GetLocalizedString() : "";
+                if (string.IsNullOrEmpty(text)) text = "Pamiętaj! Tutaj znajdziesz najważniejsze ustawienia!";
+                
+                activeAlpaccino.Show(initialOptionsButton, initialOptionsSpawnPoint, text, ArrowDirection.Up);
+                StartOptionsButtonAnim();
+                
+                await UnityEngine.Awaitable.WaitForSecondsAsync(3.5f);
+                
+                if (activeAlpaccino != null && activeAlpaccino.gameObject.activeInHierarchy)
+                {
+                    activeAlpaccino.Dismiss(initialOptionsButton);
+                }
+                StopOptionsButtonAnim();
             }
         }
 
@@ -321,9 +364,21 @@ namespace SoftAware.PocketAmp.Tutorial
             if (optionsButtonGraphic != null)
             {
                 var color = optionsButtonGraphic.color;
-                color.a = 1f;
+                color.a = 0f;
                 optionsButtonGraphic.color = color;
                 optionsButtonGraphic = null;
+            }
+        }
+
+        private void StartOptionsButtonAnim()
+        {
+            if (initialOptionsButton == null) return;
+            optionsButtonGraphic = initialOptionsButton.GetComponent<UnityEngine.UI.Graphic>();
+            if (optionsButtonGraphic != null)
+            {
+                StopOptionsButtonAnim(); // ensures previous is clear
+                optionsButtonGraphic = initialOptionsButton.GetComponent<UnityEngine.UI.Graphic>();
+                optionsButtonTween = Tween.Alpha(optionsButtonGraphic, optionsButtonMinAlpha, optionsButtonMaxAlpha, duration: optionsButtonAnimDuration, cycles: -1, cycleMode: CycleMode.Yoyo);
             }
         }
 
@@ -340,13 +395,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 if (string.IsNullOrEmpty(text)) text = "Kliknij tutaj, aby otworzyć opcje!";
                 activeAlpaccino.Show(rect, spawn, text, ArrowDirection.Up);
 
-                optionsButtonGraphic = rect.GetComponent<UnityEngine.UI.Graphic>();
-                if (optionsButtonGraphic != null)
-                {
-                    StopOptionsButtonAnim(); // ensures previous is clear
-                    optionsButtonGraphic = rect.GetComponent<UnityEngine.UI.Graphic>();
-                    optionsButtonTween = Tween.Alpha(optionsButtonGraphic, optionsButtonMinAlpha, optionsButtonMaxAlpha, duration: optionsButtonAnimDuration, cycles: -1, cycleMode: CycleMode.Yoyo);
-                }
+                StartOptionsButtonAnim();
             }
             else
             {

@@ -50,7 +50,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: Wybierz 'Open Skins Library'!
+    m_Localized: "Wybierz 'Otw\xF3rz Bibliotek\u0119 Sk\xF3rek'!"
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -73,6 +73,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: "Ups, chcesz spr\xF3bowa\u0107 jeszcze raz?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: "Pami\u0119taj! Tutaj znajdziesz najwa\u017Cniejsze opcje!"
     m_Metadata:
       m_Items: []
   references:

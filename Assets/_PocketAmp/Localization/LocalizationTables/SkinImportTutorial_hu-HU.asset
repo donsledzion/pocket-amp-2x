@@ -49,7 +49,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: "V\xE1laszd az 'Open Skins Library' lehet\u0151s\xE9get!"
+    m_Localized: "V\xE1lassza az 'Open Skins Library' lehet\u0151s\xE9get!"
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -71,6 +71,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: "Upsz, szeretn\xE9d \xFAjra megpr\xF3b\xE1lni?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: "Ne feledd! Itt tal\xE1lod a legfontosabb opci\xF3kat!"
     m_Metadata:
       m_Items: []
   references:

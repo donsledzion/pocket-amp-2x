@@ -15,10 +15,11 @@ namespace SoftAware.PocketAmp
             {
                 Release();
 
-                // Ensure permission is granted (required for Visualizer API on many devices)
+                // Ensure permission is granted before initializing the Visualizer API
                 if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Microphone))
                 {
-                    UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Microphone);
+                    Debug.LogWarning("[Viz] Microphone permission not granted. Skipping Visualizer initialization.");
+                    return;
                 }
                 
                 // Use the provided sessionId (e.g. from MediaPlayer)

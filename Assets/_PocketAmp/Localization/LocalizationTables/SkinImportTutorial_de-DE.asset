@@ -48,7 +48,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3125799804928
-    m_Localized: "W\xE4hle 'Open Skins Library'!"
+    m_Localized: "W\xE4hlen Sie 'Skins-Bibliothek \xF6ffnen'!"
     m_Metadata:
       m_Items: []
   - m_Id: 3067213766656
@@ -70,6 +70,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 159899135762432
     m_Localized: "Ups, m\xF6chtest du es noch einmal versuchen?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: Denke daran! Hier findest du die wichtigsten Optionen!
     m_Metadata:
       m_Items: []
   references:

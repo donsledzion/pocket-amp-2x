@@ -7602,6 +7602,7 @@ MonoBehaviour:
   loadFromPersistentOnStart: 0
   baseSkinFileName: base-2.91.wsz
   useBaseSkinFallback: 1
+  defaultSkinFileName: Simplicity.wsz
   currentSkin:
     SkinName: 
     MainBackground: {fileID: 0}
@@ -9321,6 +9322,9 @@ MonoBehaviour:
   skinsWindow: {fileID: 1498955846}
   expectedSkinName: 'Winamp Classic [CM]'
   startupDelay: 3
+  optionsButtonMinAlpha: 0.1
+  optionsButtonMaxAlpha: 0.5
+  optionsButtonAnimDuration: 0.5
   textIntro1:
     m_TableReference:
       m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
@@ -9416,6 +9420,15 @@ MonoBehaviour:
       m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
     m_TableEntryReference:
       m_KeyId: 3465949470720
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  textReminder:
+    m_TableReference:
+      m_TableCollectionName: GUID:7d89c2291a3249945ab40960971e5c35
+    m_TableEntryReference:
+      m_KeyId: 237181909065728
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0

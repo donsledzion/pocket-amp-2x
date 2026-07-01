@@ -70,6 +70,10 @@ MonoBehaviour:
     m_Localized: Oops, want to try again?
     m_Metadata:
       m_Items: []
+  - m_Id: 237181909065728
+    m_Localized: Remember! Here you will find the most important options!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
