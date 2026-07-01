@@ -16,6 +16,9 @@ namespace SoftAware
         [SerializeField] private string baseSkinFileName = "base.wsz";
         [SerializeField] private bool useBaseSkinFallback = true;
         
+        [SerializeField] private string defaultSkinFileName = "Simplicity.wsz";
+        public string DefaultSkinPath => System.IO.Path.Combine(Application.persistentDataPath, "skins", defaultSkinFileName);
+        
         [Header("Runtime Data")]
         [SerializeField] private Skin currentSkin;
         
@@ -64,8 +67,8 @@ namespace SoftAware
             var demoTask = skinFileSystem.EnsureDemoSkinsExist();
             yield return new WaitUntil(() => demoTask.IsCompleted);
 
-            // 0.6 Ensure Default Skin Exists (Simplicity.wsz)
-            var defaultSkinTask = skinFileSystem.EnsureDefaultSkinExists();
+            // 0.6 Ensure Default Skin Exists
+            var defaultSkinTask = skinFileSystem.EnsureDefaultSkinExists(defaultSkinFileName);
             yield return new WaitUntil(() => defaultSkinTask.IsCompleted);
 
             var skinToLoad = "";
@@ -95,10 +98,10 @@ namespace SoftAware
                 }
             }
 
-            // 2.5 Fallback: Default Skin (Simplicity.wsz)
+            // 2.5 Fallback: Default Skin
             if (!foundSkin)
             {
-                var defaultSkinPath = System.IO.Path.Combine(Application.persistentDataPath, "skins", "Simplicity.wsz");
+                var defaultSkinPath = DefaultSkinPath;
                 if (System.IO.File.Exists(defaultSkinPath))
                 {
                     Debug.Log($"[PocketAmpSkinManager] Loading DEFAULT skin: {defaultSkinPath}");

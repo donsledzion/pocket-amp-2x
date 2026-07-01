@@ -204,13 +204,13 @@ namespace SoftAware
             PlayerPrefs.Save();
         }
 
-        public async Task EnsureDefaultSkinExists()
+        public async Task EnsureDefaultSkinExists(string defaultSkinFileName)
         {
-            var dest = Path.Combine(Application.persistentDataPath, "skins", "Simplicity.wsz");
+            var dest = Path.Combine(Application.persistentDataPath, "skins", defaultSkinFileName);
             if (!File.Exists(dest))
             {
                 Debug.Log("[SkinFileSystem] Default skin missing. Copying from StreamingAssets...");
-                var source = Path.Combine(Application.streamingAssetsPath, DEMO_SKINS_DIR, "Simplicity.wsz").Replace("\\", "/");
+                var source = Path.Combine(Application.streamingAssetsPath, DEMO_SKINS_DIR, defaultSkinFileName).Replace("\\", "/");
                 var data = await ReadStreamingAssetAsync(source);
                 if (data != null)
                 {

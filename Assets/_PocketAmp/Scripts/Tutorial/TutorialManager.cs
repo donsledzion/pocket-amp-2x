@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using PrimeTween;
 using UnityEngine.Localization;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,6 +23,14 @@ namespace SoftAware.PocketAmp.Tutorial
         [SerializeField] private SoftAware.PocketAmp.SystemMenus.Skins.UI.SkinsLibraryWindow skinsWindow;
         [SerializeField] private string expectedSkinName;
         [SerializeField] private float startupDelay = 2.0f;
+
+        [Header("Options Button Animation")]
+        [SerializeField] private float optionsButtonMinAlpha = 0.1f;
+        [SerializeField] private float optionsButtonMaxAlpha = 0.5f;
+        [SerializeField] private float optionsButtonAnimDuration = 0.5f;
+
+        private Tween optionsButtonTween;
+        private UnityEngine.UI.Graphic optionsButtonGraphic;
 
         [Header("Localization Texts")]
         [SerializeField] private LocalizedString textIntro1;
@@ -58,6 +67,14 @@ namespace SoftAware.PocketAmp.Tutorial
         {
             Menu.SetChecked("PocketAmp/Show Tutorial", EditorPrefs.GetBool(EditorPrefKey, false));
             return true;
+        }
+
+        [MenuItem("PocketAmp/Clear Tutorial Completed Pref")]
+        public static void ClearTutorialCompletedPrefs()
+        {
+            PlayerPrefs.DeleteKey("Tutorial_Skin_Completed");
+            PlayerPrefs.Save();
+            Debug.Log("[TutorialManager] Tutorial_Skin_Completed PlayerPref cleared.");
         }
 #endif
 
@@ -112,7 +129,17 @@ namespace SoftAware.PocketAmp.Tutorial
 #endif
 
             bool hasCompleted = PlayerPrefs.GetInt("Tutorial_Skin_Completed", 0) == 1;
-            bool isDefaultSkin = SettingsManager.Instance != null && string.IsNullOrEmpty(SettingsManager.Instance.LastSkinPath); // Assuming empty or null is default skin
+            
+            bool isDefaultSkin = false;
+            if (SettingsManager.Instance != null)
+            {
+                string path = SettingsManager.Instance.LastSkinPath;
+                var skinManager = FindAnyObjectByType<SkinManager>();
+                string defaultPath = skinManager != null ? skinManager.DefaultSkinPath : "";
+
+                isDefaultSkin = string.IsNullOrEmpty(path) || 
+                                (!string.IsNullOrEmpty(defaultPath) && path.Equals(defaultPath, System.StringComparison.OrdinalIgnoreCase));
+            }
 
             if (forceStart || (!hasCompleted && isDefaultSkin))
             {
@@ -194,6 +221,7 @@ namespace SoftAware.PocketAmp.Tutorial
 
         private async void RestartTutorialFromOops()
         {
+            StopOptionsButtonAnim();
             currentStep = -99;
             if (activeAlpaccino != null)
             {
@@ -255,6 +283,7 @@ namespace SoftAware.PocketAmp.Tutorial
 
         public void Dismiss()
         {
+            StopOptionsButtonAnim();
             if (!IsTutorialActive) return;
             Debug.Log("[TUTORIAL LOG] Dismiss called. Ending tutorial.");
 
@@ -283,6 +312,21 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
+        private void StopOptionsButtonAnim()
+        {
+            if (optionsButtonTween.isAlive)
+            {
+                optionsButtonTween.Stop();
+            }
+            if (optionsButtonGraphic != null)
+            {
+                var color = optionsButtonGraphic.color;
+                color.a = 1f;
+                optionsButtonGraphic.color = color;
+                optionsButtonGraphic = null;
+            }
+        }
+
         public void AdvanceToOptions()
         {
             if (!IsTutorialActive) return;
@@ -295,6 +339,14 @@ namespace SoftAware.PocketAmp.Tutorial
                 string text = textOptions.GetLocalizedString();
                 if (string.IsNullOrEmpty(text)) text = "Kliknij tutaj, aby otworzyć opcje!";
                 activeAlpaccino.Show(rect, spawn, text, ArrowDirection.Up);
+
+                optionsButtonGraphic = rect.GetComponent<UnityEngine.UI.Graphic>();
+                if (optionsButtonGraphic != null)
+                {
+                    StopOptionsButtonAnim(); // ensures previous is clear
+                    optionsButtonGraphic = rect.GetComponent<UnityEngine.UI.Graphic>();
+                    optionsButtonTween = Tween.Alpha(optionsButtonGraphic, optionsButtonMinAlpha, optionsButtonMaxAlpha, duration: optionsButtonAnimDuration, cycles: -1, cycleMode: CycleMode.Yoyo);
+                }
             }
             else
             {
@@ -304,6 +356,7 @@ namespace SoftAware.PocketAmp.Tutorial
 
         public void AdvanceToSkinsLibraryButton()
         {
+            StopOptionsButtonAnim();
             if (!IsTutorialActive || currentStep > 2) return;
             currentStep = 2;
             Debug.Log($"[TUTORIAL LOG] AdvanceToSkinsLibraryButton (Step {currentStep}) called.");
