@@ -20,6 +20,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins.UI
         [SerializeField] private Color normalTextColor = Color.white;
 
         public string SkinName { get; private set; } // This acts as ID (full filename)
+        public string DisplayName => skinNameText != null ? skinNameText.text : "";
         private System.Action<string> onClick;
         private System.Action<string> onDoubleClick;
 

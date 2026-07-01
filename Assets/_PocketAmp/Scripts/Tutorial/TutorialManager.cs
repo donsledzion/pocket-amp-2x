@@ -147,6 +147,12 @@ namespace SoftAware.PocketAmp.Tutorial
             {
                 targets.Remove(target.TargetType);
                 Debug.Log($"[TUTORIAL LOG] Target Unregistered: {target.TargetType}");
+                
+                if (IsTutorialActive && currentStep == 8 && target.TargetType == TutorialTargetType.CloseButton)
+                {
+                    Debug.Log("[TUTORIAL LOG] Ostatni cel (CloseButton) zniknął (okno zamknięte). Automatycznie kończę samouczek.");
+                    Dismiss();
+                }
             }
         }
 
@@ -318,17 +324,17 @@ namespace SoftAware.PocketAmp.Tutorial
                     bool found = false;
                     foreach (var item in skinsWindow.CurrentItems)
                     {
-                        if (item.SkinName != null && item.SkinName.IndexOf(expectedSkinName, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (item.DisplayName != null && item.DisplayName.IndexOf(expectedSkinName, System.StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             targetItem = item;
                             found = true;
-                            Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Znaleziono pasującą skórkę: {item.SkinName}");
+                            Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Znaleziono pasującą skórkę po nazwie: {item.DisplayName}");
                             break;
                         }
                     }
                     if (!found)
                     {
-                        Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Nie znaleziono skórki pasującej do '{expectedSkinName}'. Celuję w pierwszą pozycję z brzegu.");
+                        Debug.Log($"[TUTORIAL LOG] HandleSkinsLoaded: Na obecnej liście nie ma skórki pasującej do '{expectedSkinName}'. Celuję w pierwszą pozycję z brzegu.");
                     }
                 }
                 targetRect = targetItem.GetComponent<RectTransform>();
@@ -339,6 +345,7 @@ namespace SoftAware.PocketAmp.Tutorial
                 return;
             }
 
+            Canvas.ForceUpdateCanvases();
             AdvanceToSelectSkin(targetRect);
         }
 
