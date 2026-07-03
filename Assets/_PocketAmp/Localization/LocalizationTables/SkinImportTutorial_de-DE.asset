@@ -76,6 +76,10 @@ MonoBehaviour:
     m_Localized: Denke daran! Hier findest du die wichtigsten Optionen!
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: "Ich bereite alles f\xFCr den ersten Start vor. <br> Geduld.."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

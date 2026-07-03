@@ -71,6 +71,10 @@ MonoBehaviour:
     m_Key: tutorial-options-reminder
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Key: first-run-prompt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

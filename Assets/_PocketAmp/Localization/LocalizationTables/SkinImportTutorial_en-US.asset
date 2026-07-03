@@ -74,6 +74,10 @@ MonoBehaviour:
     m_Localized: Remember! Here you will find the most important options!
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: I'm getting everything ready for the first run. <br> Please be patient..
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

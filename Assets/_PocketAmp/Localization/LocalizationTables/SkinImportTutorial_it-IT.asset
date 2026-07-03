@@ -76,6 +76,10 @@ MonoBehaviour:
     m_Localized: "Ricorda! Qui troverai le opzioni pi\xF9 importanti!"
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: Sto preparando tutto per il primo avvio. <br> Pazienza..
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

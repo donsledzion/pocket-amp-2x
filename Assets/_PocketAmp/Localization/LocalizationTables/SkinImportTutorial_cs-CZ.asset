@@ -77,6 +77,11 @@ MonoBehaviour:
     m_Localized: "Pamatujte! Zde najdete nejd\u016Fle\u017Eit\u011Bj\u0161\xED mo\u017Enosti!"
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: "P\u0159ipravuji v\u0161e pro prvn\xED spu\u0161t\u011Bn\xED. <br>
+      Trp\u011Blivost.."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

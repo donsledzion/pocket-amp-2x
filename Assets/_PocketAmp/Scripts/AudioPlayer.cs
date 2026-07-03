@@ -85,7 +85,7 @@ namespace SoftAware.PocketAmp
             {
                 Debug.Log("AudioPlayer: First run detected. Auto-playing demo track.");
                 SettingsManager.Instance.IsFirstRun = false; // Clear the flag
-                Play();
+                // Play(); // DEBUG: Disabled auto-playing demo track to check for ANR issues
             }
         }
 

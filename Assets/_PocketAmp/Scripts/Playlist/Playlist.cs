@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleFileBrowser;
@@ -71,13 +72,9 @@ namespace SoftAware.PocketAmp
             instance = this;
         }
 
-        private void Start()
+        public async Task InitializeAsync()
         {
             InitializeInspectorSongs();
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            StartCoroutine(CheckPermissionsCoroutine());
-#endif
 
             LoadPlaylist();
 
@@ -88,7 +85,7 @@ namespace SoftAware.PocketAmp
                 addContextMenu.OnAddUrlRequested += main.OverlayWindowsController.OpenAddUrlWindow;
             }
 
-            StartCoroutine(InitializeDemoTrackCoroutine());
+            await InitializeDemoTrackAsync();
         }
 
         private void OnDestroy()
@@ -101,7 +98,7 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        private IEnumerator InitializeDemoTrackCoroutine()
+        private async Task InitializeDemoTrackAsync()
         {
             var demoFileName = "demo.mp3";
             var targetPath = Path.Combine(Application.persistentDataPath, demoFileName);
@@ -117,10 +114,14 @@ namespace SoftAware.PocketAmp
 #if UNITY_ANDROID && !UNITY_EDITOR
                 using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
                 {
-                    yield return www.SendWebRequest();
+                    var op = www.SendWebRequest();
+                    var tcs = new TaskCompletionSource<bool>();
+                    op.completed += _ => tcs.TrySetResult(true);
+                    await tcs.Task;
+
                     if (www.result == UnityWebRequest.Result.Success)
                     {
-                        File.WriteAllBytes(targetPath, www.downloadHandler.data);
+                        await File.WriteAllBytesAsync(targetPath, www.downloadHandler.data);
                     }
                     else
                     {
@@ -167,7 +168,6 @@ namespace SoftAware.PocketAmp
             }
 
             OnPlaylistReady?.Invoke();
-            yield break;
         }
 
         private void InitializeInspectorSongs()
@@ -181,51 +181,6 @@ namespace SoftAware.PocketAmp
             }
         }
 
-        private IEnumerator CheckPermissionsCoroutine()
-        {
-            if (Application.platform != RuntimePlatform.Android) yield break;
-
-            // CRITICAL FIX: Wait for the Unity Activity to fully initialize and gain focus 
-            // before showing system permission dialogs to prevent Android WindowManager deadlocks.
-            yield return null;
-            while (!Application.isFocused)
-            {
-                yield return null;
-            }
-
-            var audioPerm = "android.permission.READ_MEDIA_AUDIO";
-            var storagePerm = "android.permission.READ_EXTERNAL_STORAGE";
-            var micPerm = "android.permission.RECORD_AUDIO";
-            
-            var permsToRequest = new System.Collections.Generic.List<string>();
-            if (!Permission.HasUserAuthorizedPermission(audioPerm))
-                permsToRequest.Add(audioPerm);
-
-            if (!Permission.HasUserAuthorizedPermission(storagePerm))
-                permsToRequest.Add(storagePerm);
-                
-            if (!Permission.HasUserAuthorizedPermission(micPerm))
-                permsToRequest.Add(micPerm);
-
-            if (permsToRequest.Count > 0)
-            {
-                Permission.RequestUserPermissions(permsToRequest.ToArray());
-            }
-
-            // Poll for permission status (up to 10 seconds)
-            float timer = 0;
-            while (timer < 10f)
-            {
-                var hasAudio = Permission.HasUserAuthorizedPermission(audioPerm);
-                var hasStorage = Permission.HasUserAuthorizedPermission(storagePerm);
-                    
-                if (hasAudio || hasStorage) break;
-
-                yield return new WaitForSeconds(0.5f);
-                timer += 0.5f;
-            }
-            yield break;
-        }
 
         private void AddDirectory(string directoryPath)
         {

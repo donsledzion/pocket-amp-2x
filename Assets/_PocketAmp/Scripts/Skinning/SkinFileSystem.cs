@@ -169,12 +169,15 @@ namespace SoftAware
 
         public async Task EnsureDemoSkinsExist()
         {
+            Debug.Log($"[DIAG] SkinFileSystem.EnsureDemoSkinsExist() - Poczatek. DemoSkinsCopied: {PlayerPrefs.GetInt("DemoSkinsCopied", 0)}");
             if (PlayerPrefs.GetInt("DemoSkinsCopied", 0) == 1) return;
 
-            Debug.Log("[SkinFileSystem] First run: Copying demo skins...");
+            Debug.Log("[DIAG] SkinFileSystem.EnsureDemoSkinsExist() - First run: Copying demo skins...");
             
             string manifestPath = Path.Combine(Application.streamingAssetsPath, DEMO_SKINS_DIR, "manifest.txt").Replace("\\", "/");
+            Debug.Log($"[DIAG] SkinFileSystem.EnsureDemoSkinsExist() - Czytam manifest: {manifestPath}");
             string manifestText = await ReadStreamingAssetTextAsync(manifestPath);
+            Debug.Log($"[DIAG] SkinFileSystem.EnsureDemoSkinsExist() - Zakończono czytanie manifestu. Znaleziono tekst: {!string.IsNullOrEmpty(manifestText)}");
 
             if (!string.IsNullOrEmpty(manifestText))
             {
@@ -236,12 +239,14 @@ namespace SoftAware
                 using (var wr = UnityEngine.Networking.UnityWebRequest.Get(path))
                 {
                     var op = wr.SendWebRequest();
-                    while (!op.isDone) await Task.Yield();
+                    var tcs = new TaskCompletionSource<bool>();
+                    op.completed += _ => tcs.TrySetResult(true);
+                    await tcs.Task;
 
                     if (wr.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
                         return wr.downloadHandler.data;
                     
-                    Debug.LogWarning($"[SkinFileSystem] Failed to read streaming asset: {path} ({wr.error})");
+                    Debug.LogWarning($"[DIAG] SkinFileSystem.ReadStreamingAssetAsync() - Failed to read streaming asset: {path} ({wr.error})");
                     return null;
                 }
             }

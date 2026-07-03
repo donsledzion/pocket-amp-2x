@@ -94,7 +94,7 @@ namespace SoftAware.PocketAmp.Tutorial
             }
         }
 
-        private async void Start()
+        public void InitializeTutorialState()
         {
             if (skinsWindow != null)
             {
@@ -106,8 +106,6 @@ namespace SoftAware.PocketAmp.Tutorial
                 skinsWindow.OnSkinLoadedSuccessfully += AdvanceToClose;
             }
 
-            await Awaitable.WaitForSecondsAsync(startupDelay);
-            while (!Application.isFocused) await Awaitable.NextFrameAsync();
             CheckAndStartTutorial();
         }
 

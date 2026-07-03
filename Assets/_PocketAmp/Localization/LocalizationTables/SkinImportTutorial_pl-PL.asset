@@ -79,6 +79,10 @@ MonoBehaviour:
     m_Localized: "Pami\u0119taj! Tutaj znajdziesz najwa\u017Cniejsze opcje!"
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: "Przygotowuj\u0119 wszystko do pierwszego uruchomienia. <br> Cierpliwo\u015Bci.."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

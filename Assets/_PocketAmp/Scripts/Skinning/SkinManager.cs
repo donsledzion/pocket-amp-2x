@@ -51,93 +51,55 @@ namespace SoftAware
             }
         }
 
-        private IEnumerator Start()
+        public async System.Threading.Tasks.Task InitializeAsync()
         {
+            Debug.Log("[DIAG] SkinManager.InitializeAsync() - Oczekuje na inicjalizacje...");
             // Wait for systems to initialize
-            yield return null;
+            await System.Threading.Tasks.Task.Yield();
+            Debug.Log("[DIAG] SkinManager.InitializeAsync() - Po yield. Sprawdzam Base Skin...");
 
             // 0. Ensure Base Skin Exists
             if (useBaseSkinFallback)
             {
-                var copyTask = skinFileSystem.EnsureBaseSkinExists(baseSkinFileName);
-                yield return new WaitUntil(() => copyTask.IsCompleted);
+                await skinFileSystem.EnsureBaseSkinExists(baseSkinFileName);
             }
 
-            // 0.5 Ensure Demo Skins
             var demoTask = skinFileSystem.EnsureDemoSkinsExist();
-            yield return new WaitUntil(() => demoTask.IsCompleted);
+            await demoTask;
+            Debug.Log("[DIAG] SkinManager.InitializeAsync() - Demo skins done");
 
-            // 0.6 Ensure Default Skin Exists
-            var defaultSkinTask = skinFileSystem.EnsureDefaultSkinExists(defaultSkinFileName);
-            yield return new WaitUntil(() => defaultSkinTask.IsCompleted);
+            // 1. Ensure Default Skin
+            await skinFileSystem.EnsureDefaultSkinExists(defaultSkinFileName);
 
             var skinToLoad = "";
             var foundSkin = false;
 
-            // 1. Priority: Settings (Last used skin)
-            if (SettingsManager.Instance != null && !string.IsNullOrEmpty(SettingsManager.Instance.LastSkinPath))
+            // 1.5 Check Last Skin
+            var lastSkin = SettingsManager.Instance?.LastSkinPath;
+            if (!string.IsNullOrEmpty(lastSkin) && System.IO.File.Exists(lastSkin))
             {
-                var savedPath = SettingsManager.Instance.LastSkinPath;
-                if (System.IO.File.Exists(savedPath))
-                {
-                    Debug.Log($"[PocketAmpSkinManager] Loading saved skin from Settings: {savedPath}");
-                    skinToLoad = savedPath;
-                    foundSkin = true;
-                }
+                skinToLoad = lastSkin;
+                foundSkin = true;
             }
 
-            // 2. Fallback: Persistent Data Path
-            if (!foundSkin && loadFromPersistentOnStart)
-            {
-                var pPath = System.IO.Path.Combine(Application.persistentDataPath, persistentSkinFileName);
-                if (System.IO.File.Exists(pPath))
-                {
-                    Debug.Log($"[PocketAmpSkinManager] Loading persistent fallback skin: {pPath}");
-                    skinToLoad = pPath;
-                    foundSkin = true;
-                }
-            }
-
-            // 2.5 Fallback: Default Skin
             if (!foundSkin)
             {
                 var defaultSkinPath = DefaultSkinPath;
                 if (System.IO.File.Exists(defaultSkinPath))
                 {
-                    Debug.Log($"[PocketAmpSkinManager] Loading DEFAULT skin: {defaultSkinPath}");
                     skinToLoad = defaultSkinPath;
                     foundSkin = true;
                 }
             }
 
-            // 3. Fallback: Base Skin
-            if (!foundSkin && useBaseSkinFallback)
-            {
-                var basePath = System.IO.Path.Combine(Application.persistentDataPath, "Skins", baseSkinFileName);
-                if (System.IO.File.Exists(basePath))
-                {
-                    Debug.Log($"[PocketAmpSkinManager] Loading BASE skin: {basePath}");
-                    skinToLoad = basePath;
-                    foundSkin = true;
-                }
-            }
-
-            // 4. Fallback: Test Skin Path
-            if (!foundSkin && loadOnStart && !string.IsNullOrEmpty(testSkinPath))
-            {
-                 Debug.Log($"[PocketAmpSkinManager] Loading test skin: {testSkinPath}");
-                 skinToLoad = testSkinPath;
-                 foundSkin = true;
-            }
-
-            // Execute Load
             if (foundSkin && !string.IsNullOrEmpty(skinToLoad))
             {
-                var loadTask = LoadSkin(skinToLoad);
+                Debug.Log($"[DIAG] SkinManager.InitializeAsync() - Wywoluje LoadSkin dla: {skinToLoad}");
+                await LoadSkin(skinToLoad);
             }
             else
             {
-                ShowUI();
+                Debug.LogWarning("[PocketAmpSkinManager] No skins found to load at startup.");
             }
         }
 
@@ -178,7 +140,6 @@ namespace SoftAware
             if (string.IsNullOrEmpty(testSkinPath))
             {
                 Debug.LogError("Test Skin Path is empty!");
-                ShowUI();
                 return;
             }
 
@@ -188,7 +149,6 @@ namespace SoftAware
             string unpackedDir = SkinImporter.Instance.UnpackWsz(testSkinPath);
             if (unpackedDir == null)
             {
-                ShowUI();
                 return;
             }
             
@@ -203,7 +163,6 @@ namespace SoftAware
             catch (System.Exception ex)
             {
                  Debug.LogError($"[PocketAmpSkinManager] CRITICAL: Failed to load skin assets: {ex.Message}\n{ex.StackTrace}");
-                 ShowUI();
                  return;
             }
         }
@@ -223,16 +182,6 @@ namespace SoftAware
             // Distribute to known applicators
             main.ApplySkin(currentSkin);
             playlistUI.ApplySkin(currentSkin);
-
-            ShowUI();
-        }
-
-        private void ShowUI()
-        {
-            if (playerUiCanvasGroup != null)
-            {
-                playerUiCanvasGroup.alpha = 1f;
-            }
         }
     }
 }

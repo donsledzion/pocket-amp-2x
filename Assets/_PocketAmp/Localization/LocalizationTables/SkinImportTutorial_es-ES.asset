@@ -78,6 +78,10 @@ MonoBehaviour:
     m_Localized: "\xA1Recuerda! \xA1Aqu\xED encontrar\xE1s las opciones m\xE1s importantes!"
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: "Estoy preparando todo para la primera ejecuci\xF3n. <br> Paciencia.."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

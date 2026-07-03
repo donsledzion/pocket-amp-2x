@@ -137,7 +137,9 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             using (var uwr = UnityEngine.Networking.UnityWebRequest.Get(uri))
             {
                 var op = uwr.SendWebRequest();
-                while (!op.isDone) await Task.Yield();
+                var tcs = new TaskCompletionSource<bool>();
+                op.completed += _ => tcs.TrySetResult(true);
+                await tcs.Task;
 
                 if (uwr.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
                 {
@@ -285,7 +287,7 @@ namespace SoftAware.PocketAmp.SystemMenus.Skins
             using (var www = UnityWebRequest.Get(url))
             {
                 var op = www.SendWebRequest();
-                while (!op.isDone) await Task.Yield();
+                while (!op.isDone) await Task.Delay(15);
 
                 if (www.result == UnityWebRequest.Result.Success)
                 {

@@ -77,6 +77,11 @@ MonoBehaviour:
     m_Localized: "Ne feledd! Itt tal\xE1lod a legfontosabb opci\xF3kat!"
     m_Metadata:
       m_Items: []
+  - m_Id: 544078411325440
+    m_Localized: "Mindent el\u0151k\xE9sz\xEDtek az els\u0151 ind\xEDt\xE1shoz. <br>
+      K\xE9rj\xFCk, v\xE1rjon t\xFCrelmesen.."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
